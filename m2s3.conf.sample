@@ -1,0 +1,10 @@
+{
+  "debug" : true,
+  "log" : {
+    "level" : -2
+  },
+  "aws" : {
+    "id" : "Holaaaa!",
+    "access_key" : "bb54j3enfb32nbr"
+  }
+}

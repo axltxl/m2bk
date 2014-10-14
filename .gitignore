@@ -1,0 +1,6 @@
+bin
+lib
+*.pyc
+__pycache__
+*.conf
+.idea
