@@ -42,9 +42,11 @@ def init(argv):
         },
         # MongoDB
         "mongodb": {
+            "output_dir": "/tmp/m2s3",
+            "mongodump": "mongodump",
             "host": "127.0.0.1",
             "port": 27017,
-            "user_name": "mongo",
+            "user_name": "m2s3",
             "password": "pass",
             "dbs": ["test"]
         }
@@ -77,10 +79,8 @@ def main(argv=None):
     try:
         # Bootstrap
         init(argv)
-        #TODO design and implement mongodump phase for each db
+        mongo.make_backup_file(config.get_entry('mongodb'))
         #TODO design and implement s3 phase for each mongodump
-        # aws.mongodump()
-        mongo.fetch(config.get_entry('mongodb'))
     # ... and if everything else fails
     #TODO better exception handling
     except Exception as e:
