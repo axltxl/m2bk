@@ -15,6 +15,7 @@ import stat
 import subprocess
 import time
 import tarfile
+import sys
 from . import log
 
 
@@ -62,7 +63,6 @@ def make_backup_file(data):
 
     # The mongodump directory is going to have a name indicating
     # the UNIX timestamp corresponding to the current creation time
-    #now = str(int(time.time()))
     now = time.strftime("%Y-%m-%d_%H%M", time.gmtime(time.time()))
     out_dir = "{out}/mongodump-{now}".format(out=out, now=now)
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
@@ -101,7 +101,16 @@ def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # wait for the process to finish
     p.wait()
-    log.msg_debug(p.communicate())
+
+    # Print stdout and stderr from the mongodump process
+    stdout_data, stderr_data = p.communicate()
+    stdout_str = stdout_data.decode(sys.stdout.encoding)
+    stderr_str = stderr_data.decode(sys.stdout.encoding)
+    log.msg_debug("{mongodump} > {stdout}"
+                  .format(mongodump=mongodump, stdout=stdout_str))
+    if stderr_str != '':
+        log.msg_err("{mongodump} > {stderr}"
+                    .format(mongodump=mongodump, stderr=stderr_str))
 
     # In this way, we will know what went wrong on mongodump
     if p.returncode != 0:
