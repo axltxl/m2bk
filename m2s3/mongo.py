@@ -18,16 +18,16 @@ import tarfile
 from . import log
 
 
+def _make_tarfile(src_dir):
     """
+    Make gzipped tarball from a source directory
 
-    :param data:
-    :return:
+    :param src_dir: Source directory
     """
-    host, port = data['host'], data['port']
-    user, passwd = data['user_name'], data['password']
-    dbs = data['dbs']
-    for db in dbs:
-        _mongodump(host, port, user, passwd, db)
+    output_file = src_dir + ".tar.gz"
+    log.msg("Tarballing {out}...".format(out=output_file))
+    with tarfile.open(output_file, "w:gz") as tar:
+        tar.add(src_dir, arcname=os.path.basename(src_dir))
 
 
 def make_backup_file(data):
@@ -59,6 +59,7 @@ def make_backup_file(data):
         os.makedirs(out)
         # set folder permissions to 0770
         os.chmod(out, stat.S_IRWXU | stat.S_IRWXG)
+
     # The mongodump directory is going to have a name indicating
     # the UNIX timestamp corresponding to the current creation time
     #now = str(int(time.time()))
@@ -69,6 +70,9 @@ def make_backup_file(data):
     # For each database specified, run mongodump on it
     for db in data['dbs']:
         _mongodump(mongodump, host, port, user, passwd, db, out_dir)
+
+    # After all has been done, make a gzipped tarball from it
+    _make_tarfile(out_dir)
 
 
 def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
