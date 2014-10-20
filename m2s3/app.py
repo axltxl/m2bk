@@ -8,6 +8,7 @@ Main module
 """
 
 import sys
+import traceback
 #TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
 from m2s3 import config, log, mongo
 
@@ -83,7 +84,7 @@ def main(argv=None):
     # ... and if everything else fails
     #TODO better exception handling
     except Exception as e:
-        log.msg_err(str(e))
+        log.msg_err(traceback.format_exc())
         return 1
 
 # Now the sys.exit() calls are annoying: when main() calls
