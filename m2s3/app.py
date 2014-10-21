@@ -10,7 +10,7 @@ Main module
 import sys
 import traceback
 #TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
-from m2s3 import config, log, mongo
+from m2s3 import config, log, mongo, s3
 
 
 def init_parsecmdline(argv):
@@ -79,7 +79,7 @@ def main(argv=None):
     try:
         # Bootstrap
         init(argv)
-        mongo.make_backup_file(config.get_entry('mongodb'))
+        s3.backup_file(mongo.make_backup_file(config.get_entry('mongodb')))
         #TODO design and implement s3 phase for each mongodump
     # ... and if everything else fails
     #TODO better exception handling
