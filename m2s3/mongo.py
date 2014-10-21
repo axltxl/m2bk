@@ -29,6 +29,7 @@ def _make_tarfile(src_dir):
     log.msg("Tarballing {out}...".format(out=output_file))
     with tarfile.open(output_file, "w:gz") as tar:
         tar.add(src_dir, arcname=os.path.basename(src_dir))
+    return output_file
 
 
 def make_backup_file(data):
@@ -72,7 +73,7 @@ def make_backup_file(data):
         _mongodump(mongodump, host, port, user, passwd, db, out_dir)
 
     # After all has been done, make a gzipped tarball from it
-    _make_tarfile(out_dir)
+    return _make_tarfile(out_dir)
 
 
 def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
