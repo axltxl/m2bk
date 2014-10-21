@@ -1,0 +1,2 @@
+include versioneer.py
+include m2s3/_version.py

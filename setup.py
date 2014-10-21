@@ -8,11 +8,19 @@ setuptools config file
 """
 
 from setuptools import setup, find_packages
+import versioneer
 
+# versioneer
+versioneer.VCS = 'git'
+versioneer.versionfile_source = 'm2s3/_version.py'
+versioneer.versionfile_build = 'm2s3/_version.py'
+versioneer.tag_prefix = '' # tags are like 1.2.0
+versioneer.parentdir_prefix = 'm2s3-' # dirname like 'myproject-1.2.0'
 
 setup(
     name = "m2s3",
-    version = "0.1.0a1",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     packages = find_packages(exclude=["tests"]),
     entry_points={
         'console_scripts': [
