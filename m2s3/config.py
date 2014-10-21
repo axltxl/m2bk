@@ -53,6 +53,22 @@ def set_default(cfg):
     _config = cfg
 
 
+def _list_merge(src, dest):
+    """
+    Merge the contents coming from src
+    into dest
+
+    :param src: source list
+    :param dest: destination list
+    :return:
+    """
+    for k in src:
+        if type(src[k]) != dict:
+            dest[k] = src[k]
+        else:
+            _list_merge(src[k], dest[k])
+
+
 def set_from_file(file_name):
     """
     Merge configuration from a file with JSON data
@@ -64,8 +80,7 @@ def set_from_file(file_name):
         with open(file_name, "r") as file:
             data = json.loads(file.read().replace('\n', ''))
         # each value found will overwrite the same value in the config
-        for k in data:
-            _config[k] = data[k]
+        _list_merge(data, _config)
     #TODO a better exception handling is needed here
-    except Exception:
+    except Exception as e:
         pass

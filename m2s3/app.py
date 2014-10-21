@@ -8,8 +8,9 @@ Main module
 """
 
 import sys
+import traceback
 #TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
-from m2s3 import config, log
+from m2s3 import config, log, mongo
 
 
 def init_parsecmdline(argv):
@@ -41,9 +42,11 @@ def init(argv):
         },
         # MongoDB
         "mongodb": {
+            "output_dir": "/tmp/m2s3",
+            "mongodump": "mongodump",
             "host": "127.0.0.1",
             "port": 27017,
-            "user_name": "mongo",
+            "user_name": "m2s3",
             "password": "pass",
             "dbs": ["test"]
         }
@@ -76,13 +79,12 @@ def main(argv=None):
     try:
         # Bootstrap
         init(argv)
-        #TODO design and implement mongodump phase for each db
+        mongo.make_backup_file(config.get_entry('mongodb'))
         #TODO design and implement s3 phase for each mongodump
-        # aws.mongodump()
     # ... and if everything else fails
     #TODO better exception handling
     except Exception as e:
-        log.msg_err(str(e))
+        log.msg_err(traceback.format_exc())
         return 1
 
 # Now the sys.exit() calls are annoying: when main() calls
