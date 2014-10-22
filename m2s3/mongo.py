@@ -69,11 +69,13 @@ def make_backup_file(data):
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
 
     # For each database specified, run mongodump on it
-    for db in data['dbs']:
-        _mongodump(mongodump, host, port, user, passwd, db, out_dir)
-
-    # After all has been done, make a gzipped tarball from it
-    return _make_tarfile(out_dir)
+    if len(data['dbs']) > 0:
+        for db in data['dbs']:
+            _mongodump(mongodump, host, port, user, passwd, db, out_dir)
+        # After all has been done, make a gzipped tarball from it
+        return _make_tarfile(out_dir)
+    else:
+        raise ValueError('There are no databases specified on configuration!')
 
 
 def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
