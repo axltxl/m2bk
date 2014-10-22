@@ -104,13 +104,15 @@ def init(argv):
         }
     })
 
+    # Mark the start of executions
+    log.msg('***************************************')
+
     # Parse the command line
     init_parsecmdline(argv[1:])
 
     # Configure log module
     log.threshold = config.get_entry('log')['level']
     log.debug = config.get_entry('debug')
-    log.msg("Initiating ...")
 
 
 def main(argv=None):
