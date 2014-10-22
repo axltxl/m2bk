@@ -11,6 +11,8 @@ import sys
 import traceback
 #TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
 from m2s3 import config, log, mongo, s3
+from m2s3 import __version__ as version
+from optparse import OptionParser
 from m2s3.const import (
     LOG_LVL_DEFAULT,
     AWS_DEFAULT_ID,
@@ -22,6 +24,7 @@ from m2s3.const import (
     MONGODB_DEFAULT_PORT,
     MONGODB_DEFAULT_USER,
     MONGODB_DEFAULT_PWD,
+    PKG_NAME,
     CONF_DEFAULT_FILE
 )
 
@@ -30,12 +33,42 @@ def init_parsecmdline(argv):
     """
     Parse arguments from the command line
     """
-    #TODO replace this with optparse https://docs.python.org/3.1/library/optparse.html#module-optparse
-    argv_result = {}
-    if len(argv[1:]) >= 1:
-        argv_result['config_file'] = argv[1]
-    return argv_result
+    #https://docs.python.org/3.1/library/optparse.html#module-optparse
+    usage = "Usage: %prog [options]"
+    parser = OptionParser(usage=usage, version=get_desc())
 
+    # -c, --config <file_name>
+    parser.add_option("-c", "--config",
+                  action="store", type="string",
+                  dest="config_file", default=CONF_DEFAULT_FILE,
+                  help="specify configuration file to use")
+
+    # --dry-run (to be implemented)
+    # parser.add_option("-d", "--dry-run",
+    #               action="store_true",  dest="dry_run", default=False,
+    #               help="don’t actually perform the actions, "
+    #                    "just show whether it is possible to do them and how")
+
+    # Absorb the options
+    (options, args) = parser.parse_args(argv)
+
+    # Merge configuration with a JSON file
+    config.set_from_file(options.config_file)
+    log.msg("Using config file '{config_file}"
+            .format(config_file=options.config_file))
+
+    # Set whether we are going to perform a dry run
+    #config.set_entry('dry_run', options.dry_run)
+
+
+def get_desc():
+    """
+    Description string
+
+    :return: a string with the package name and its version
+    """
+    return "{pkg_name} {pkg_version}"\
+        .format(pkg_name=PKG_NAME, pkg_version=version)
 
 def init(argv):
     """
@@ -66,12 +99,8 @@ def init(argv):
         }
     })
 
-    # Merge configuration with a JSON file
-    cmd_result = init_parsecmdline(argv)
-    if 'config_file' in cmd_result:
-        config.set_from_file(cmd_result['config_file'])
-    else:
-        config.set_from_file(CONF_DEFAULT_FILE)
+    # Parse the command line
+    init_parsecmdline(argv[1:])
 
     # Configure log module
     log.threshold = config.get_entry('log')['level']
@@ -93,8 +122,11 @@ def main(argv=None):
     try:
         # Bootstrap
         init(argv)
-        s3.backup_file(mongo.make_backup_file(config.get_entry('mongodb')))
-        #TODO design and implement s3 phase for each mongodump
+
+        #
+        s3.backup_file(
+            mongo.make_backup_file(config.get_entry('mongodb'))
+        )
     # ... and if everything else fails
     #TODO better exception handling
     except Exception as e:
