@@ -75,12 +75,9 @@ def set_from_file(file_name):
 
     :param file_name: name of the file to be read
     """
-    try:
-        # Try to open the file and get the json data into a dictionary
-        with open(file_name, "r") as file:
-            data = json.loads(file.read().replace('\n', ''))
-        # each value found will overwrite the same value in the config
-        _list_merge(data, _config)
-    #TODO a better exception handling is needed here
-    except Exception as e:
-        pass
+    # Try to open the file and get the json data into a dictionary
+    with open(file_name, "r") as file:
+        data = json.loads(file.read().replace('\n', ''))
+    # each value found will overwrite the same value in the config
+    _list_merge(data, _config)
+

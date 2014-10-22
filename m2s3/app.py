@@ -56,6 +56,12 @@ def init_parsecmdline(argv):
     config.set_from_file(options.config_file)
     log.msg("Using config file '{config_file}"
             .format(config_file=options.config_file))
+    log.msg("Attempting to use configuration file '{config_file}'"
+            .format(config_file=config_file))
+    try:
+        config.set_from_file(config_file)
+    except FileNotFoundError:
+        raise FileNotFoundError("Configuration file not found!")
 
     # Set whether we are going to perform a dry run
     #config.set_entry('dry_run', options.dry_run)
