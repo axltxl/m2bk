@@ -1,5 +1,6 @@
 """
-Test for: command line arguments
+Test for: s3
 """
 
-import nose.tools as tools
+from nose.tools import assert_equals
+from m2s3 import app, config, const
