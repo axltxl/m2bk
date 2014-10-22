@@ -7,3 +7,5 @@ __pycache__
 .idea/dictionaries
 m2s3.egg-info
 build
+MANIFEST
+dist

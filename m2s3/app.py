@@ -11,6 +11,19 @@ import sys
 import traceback
 #TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
 from m2s3 import config, log, mongo, s3
+from m2s3.const import (
+    LOG_LVL_DEFAULT,
+    AWS_DEFAULT_ID,
+    AWS_DEFAULT_ACCESS_KEY,
+    AWS_S3_DEFAULT_BUCKET_NAME,
+    MONGODB_DEFAULT_OUTPUT_DIR,
+    MONGODB_DEFAULT_MONGODUMP,
+    MONGODB_DEFAULT_HOST,
+    MONGODB_DEFAULT_PORT,
+    MONGODB_DEFAULT_USER,
+    MONGODB_DEFAULT_PWD,
+    CONF_DEFAULT_FILE
+)
 
 
 def init_parsecmdline(argv):
@@ -32,23 +45,24 @@ def init(argv):
     config.set_default({
         "debug": True,
         "log": {
-            "level": -1
+            "level": LOG_LVL_DEFAULT
         },
         # Not needed if running from an instance
         # with an IAM role
         "aws": {
-            "id": "",
-            "access_key": ""
+            "id": AWS_DEFAULT_ID,
+            "access_key": AWS_DEFAULT_ACCESS_KEY,
+            "bucket": AWS_S3_DEFAULT_BUCKET_NAME
         },
         # MongoDB
         "mongodb": {
-            "output_dir": "/tmp/m2s3",
-            "mongodump": "mongodump",
-            "host": "127.0.0.1",
-            "port": 27017,
-            "user_name": "m2s3",
-            "password": "pass",
-            "dbs": ["test"]
+            "output_dir": MONGODB_DEFAULT_OUTPUT_DIR,
+            "mongodump": MONGODB_DEFAULT_MONGODUMP,
+            "host": MONGODB_DEFAULT_HOST,
+            "port": MONGODB_DEFAULT_PORT,
+            "user_name": MONGODB_DEFAULT_USER,
+            "password": MONGODB_DEFAULT_PWD,
+            "dbs": []
         }
     })
 
@@ -57,7 +71,7 @@ def init(argv):
     if 'config_file' in cmd_result:
         config.set_from_file(cmd_result['config_file'])
     else:
-        config.set_from_file("/etc/m2s3.conf")
+        config.set_from_file(CONF_DEFAULT_FILE)
 
     # Configure log module
     log.threshold = config.get_entry('log')['level']
