@@ -11,7 +11,7 @@ Constants
 PKG_NAME = "m2s3"
 
 # Logs
-LOG_LVL_DEFAULT = -1
+LOG_LVL_DEFAULT = 0
 
 # Amazon S3
 AWS_DEFAULT_ID = ""
