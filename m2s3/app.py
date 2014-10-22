@@ -7,6 +7,7 @@ Author: Alejandro Ricoveri <alejandro.ricoveri@blanclink.com>
 Main module
 """
 
+import os
 import sys
 import traceback
 #TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
@@ -53,9 +54,7 @@ def init_parsecmdline(argv):
     (options, args) = parser.parse_args(argv)
 
     # Merge configuration with a JSON file
-    config.set_from_file(options.config_file)
-    log.msg("Using config file '{config_file}"
-            .format(config_file=options.config_file))
+    config_file = os.path.abspath(options.config_file)
     log.msg("Attempting to use configuration file '{config_file}'"
             .format(config_file=config_file))
     try:
