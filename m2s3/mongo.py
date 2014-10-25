@@ -25,6 +25,8 @@ def _make_tarfile(src_dir):
 
     :param src_dir: Source directory
     """
+    if type(src_dir) != str:
+        raise TypeError('src_dir must be a valid string')
     output_file = src_dir + ".tar.gz"
     log.msg("Tarballing '{out}' ...".format(out=output_file))
     with tarfile.open(output_file, "w:gz") as tar:
@@ -32,12 +34,22 @@ def _make_tarfile(src_dir):
     return output_file
 
 
+def _chkstr(data):
+    if type(data) != str:
+        raise TypeError
+
+
+#TODO replace this with **kwargs
 def make_backup_file(data):
     """
     Backup all specified databases into a gzipped tarball
 
     :param data: list containing mongodb-related parameters
     """
+
+    # First of all, check if data is an actual dictionnary
+    if type(data) != dict:
+        raise TypeError("data must be dict")
 
     # Path to the mongodump executable
     mongodump = data['mongodump']
@@ -52,6 +64,22 @@ def make_backup_file(data):
     # The user and password for connecting to the databases
     user = data['user_name']
     passwd = data['password']
+
+    # databases
+    dbs = data['dbs']
+
+    # Chekf if these are strings
+    _chkstr(mongodump)
+    _chkstr(out)
+    _chkstr(host)
+    _chkstr(user)
+    _chkstr(passwd)
+
+    # Type checks
+    if type(port) != int:
+        raise TypeError
+    if type(dbs) != list:
+        raise TypeError
 
     # Create output directory if it does not exist
     if not os.path.exists(out):
@@ -69,8 +97,8 @@ def make_backup_file(data):
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
 
     # For each database specified, run mongodump on it
-    if len(data['dbs']) > 0:
-        for db in data['dbs']:
+    if len(dbs) > 0:
+        for db in dbs:
             _mongodump(mongodump, host, port, user, passwd, db, out_dir)
         # After all has been done, make a gzipped tarball from it
         return _make_tarfile(out_dir)
