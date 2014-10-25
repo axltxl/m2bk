@@ -9,3 +9,5 @@ m2s3.egg-info
 build
 MANIFEST
 dist
+.python-version
+.tox
