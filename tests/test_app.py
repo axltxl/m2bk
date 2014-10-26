@@ -6,13 +6,6 @@ from nose.tools import eq_
 from m2s3 import app, config, const
 import os
 
-# Test whether a relative file specification is well interpreted
-# Test invalid arguments
-
-#
-# Command line tests
-#
-
 
 def _get_arg_cfg_file_name(arg, filename):
     try:

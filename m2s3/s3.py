@@ -21,19 +21,24 @@ def backup_file(file_name):
 
     :param file_name: full path to the file to be backed up
     """
+    if type(file_name) != str:
+        raise TypeError("file_name must be str")
     # AWS parameters from config
     aws_conf = config.get_entry('aws')
     aws_id = aws_conf['id']
     aws_key = aws_conf['access_key']
-
     # Connect to S3 service
     log.msg("Connecting to Amazon S3 service ...")
-    if not aws_id or not aws_key:
+    if not aws_id and not aws_key:
         conn = boto.connect_s3()
+    if not aws_id or not aws_key:
+        if aws_id:
+            raise ValueError("AWS ID given with no access key!")
+        else:
+            raise ValueError("AWS access key given with no ID!")
     else:
         conn = boto.connect_s3(aws_access_key_id=aws_id,
                                aws_secret_access_key=aws_key)
-
     # If the destination bucket does not exist, create one
     bucket_name = config.get_entry('aws')['bucket']
     try:
@@ -42,15 +47,12 @@ def backup_file(file_name):
         log.msg_warn("Bucket '{bucket_name}' does not exist!, creating it..."
                      .format(bucket_name=bucket_name))
         bucket = conn.create_bucket(bucket_name)
-
     # Create a new bucket key
     k = Key(bucket)
-
     # The key is the name of the file itself who needs to be stripped
     # from its full path
     key_name = ntpath.basename(file_name)
     k.key = key_name
-
     # Upload the file to Amazon
     log.msg("Backing up '{key_name}' on bucket '{bucket_name}' ..."
             .format(key_name=key_name, bucket_name=bucket_name))
