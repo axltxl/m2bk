@@ -30,7 +30,7 @@ from m2s3.const import (
 )
 
 
-def init_parsecmdline(argv):
+def init_parsecmdline(argv=[]):
     """
     Parse arguments from the command line
     """

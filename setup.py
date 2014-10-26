@@ -38,11 +38,15 @@ setup(
     install_requires = [
         'boto >= 2.33.0'
     ],
+    tests_require = [
+        'nose >= 1.3'
+    ],
     author = "Alejandro Ricoveri",
     author_email = "alejandro.ricoveri@blanclink.com",
     description = "mongodump straight to Amazon S3",
     long_description = "m2s3 is able to perform mongodb backups via mongodump "
                        "and then send them straight to Amazon S3 buckets",
+    test_suite="nose.collector",
     data_files = [
         (conf_dir, ['data/m2s3.conf'])
     ]
