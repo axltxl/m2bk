@@ -2,7 +2,7 @@
 Test for: mongo
 """
 
-from nose.tools import raises, eq_, ok_
+from nose.tools import assert_raises, raises, eq_, ok_
 from m2s3 import mongo
 import os
 
@@ -23,21 +23,30 @@ def test_make_tarfile():
     os.remove(out_file)
 
 
-@raises(TypeError)
-def test_make_backup_file_nondict():
-    # make_backup_file with non-dict data
-    mongo.make_backup_file(123)
+def test_make_backup_file_invalid_kwargs():
+    # mongodump must be str
+    assert_raises(TypeError, mongo.make_backup_file, mongodump=123)
+    assert_raises(TypeError, mongo.make_backup_file, mongodump='')
+    # output_dir must be str
+    assert_raises(TypeError, mongo.make_backup_file, output_dir=123)
+    assert_raises(TypeError, mongo.make_backup_file, output_dir='')
+    # host must be str
+    assert_raises(TypeError, mongo.make_backup_file, host=123)
+    assert_raises(TypeError, mongo.make_backup_file, host='')
+    # port must be int
+    assert_raises(TypeError, mongo.make_backup_file, port="123")
+    assert_raises(TypeError, mongo.make_backup_file, port='')
+    # user_name must be str
+    assert_raises(TypeError, mongo.make_backup_file, user_name=123)
+    assert_raises(TypeError, mongo.make_backup_file, user_name='')
+    # password must be str
+    assert_raises(TypeError, mongo.make_backup_file, password=123)
+    assert_raises(TypeError, mongo.make_backup_file, password='')
 
 
-@raises(TypeError)
-def test_make_backup_file_invalid():
-    # make_backup_file with invalid values within data
-    # (for example, when type(data['mongodump']) == int)
-    mongo.make_backup_file({'mongodump': 123})
-
-
-@raises(ValueError)
-def test_make_backup_file_empty_db():
+def test_make_backup_file_invalid_dbs():
     # with either invalid or empty dbs, it has to be an array in the first place
-    mongo.make_backup_file({'db': []})
+    assert_raises(ValueError, mongo.make_backup_file, dbs=[])
+    assert_raises(ValueError, mongo.make_backup_file, dbs=123)
+    assert_raises(TypeError, mongo.make_backup_file, dbs=['asd', 123])
 

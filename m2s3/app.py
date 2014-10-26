@@ -16,12 +16,6 @@ from m2s3 import __version__ as version
 from optparse import OptionParser
 from m2s3.const import (
     LOG_LVL_DEFAULT,
-    MONGODB_DEFAULT_OUTPUT_DIR,
-    MONGODB_DEFAULT_MONGODUMP,
-    MONGODB_DEFAULT_HOST,
-    MONGODB_DEFAULT_PORT,
-    MONGODB_DEFAULT_USER,
-    MONGODB_DEFAULT_PWD,
     PKG_NAME,
     CONF_DEFAULT_FILE
 )
@@ -86,15 +80,7 @@ def init(argv):
         # with an IAM role
         "aws": {},
         # MongoDB
-        "mongodb": {
-            "output_dir": MONGODB_DEFAULT_OUTPUT_DIR,
-            "mongodump": MONGODB_DEFAULT_MONGODUMP,
-            "host": MONGODB_DEFAULT_HOST,
-            "port": MONGODB_DEFAULT_PORT,
-            "user_name": MONGODB_DEFAULT_USER,
-            "password": MONGODB_DEFAULT_PWD,
-            "dbs": []
-        }
+        "mongodb": {}
     })
 
     # Mark the start of executions
@@ -122,14 +108,13 @@ def main(argv=None):
     try:
         # Bootstrap
         init(argv)
-
-        #
-        s3.backup_file(
-            mongo.make_backup_file(config.get_entry('mongodb'), **config.get_entry('aws'))
-        )
-    # ... and if everything else fails
+        # Get the thing done
+        mongodump_filename = mongo.make_backup_file(**config.get_entry('mongodb'))
+        # Upload the resulting file to AWS
+        s3.backup_file(mongodump_filename, **config.get_entry('aws'))
     #TODO better exception handling
     except Exception as e:
+        # ... and if everything else fails
         log.msg_err(traceback.format_exc())
         return 1
 
