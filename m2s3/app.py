@@ -16,9 +16,6 @@ from m2s3 import __version__ as version
 from optparse import OptionParser
 from m2s3.const import (
     LOG_LVL_DEFAULT,
-    AWS_DEFAULT_ID,
-    AWS_DEFAULT_ACCESS_KEY,
-    AWS_S3_DEFAULT_BUCKET_NAME,
     MONGODB_DEFAULT_OUTPUT_DIR,
     MONGODB_DEFAULT_MONGODUMP,
     MONGODB_DEFAULT_HOST,
@@ -87,11 +84,7 @@ def init(argv):
         },
         # Not needed if running from an instance
         # with an IAM role
-        "aws": {
-            "id": AWS_DEFAULT_ID,
-            "access_key": AWS_DEFAULT_ACCESS_KEY,
-            "bucket": AWS_S3_DEFAULT_BUCKET_NAME
-        },
+        "aws": {},
         # MongoDB
         "mongodb": {
             "output_dir": MONGODB_DEFAULT_OUTPUT_DIR,
@@ -132,7 +125,7 @@ def main(argv=None):
 
         #
         s3.backup_file(
-            mongo.make_backup_file(config.get_entry('mongodb'))
+            mongo.make_backup_file(config.get_entry('mongodb'), **config.get_entry('aws'))
         )
     # ... and if everything else fails
     #TODO better exception handling

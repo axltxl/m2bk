@@ -2,17 +2,26 @@
 Test for: s3
 """
 
-from nose.tools import eq_, ok_, raises
-from m2s3 import s3, config
+from nose.tools import eq_, ok_, raises, assert_raises
+from m2s3 import s3
 
-def setup():
-    config.clear()
+FILE = 'example.txt'
 
-@raises(TypeError)
-def test_backup_file_nonstr():
-    s3.backup_file(123)
 
-@raises(ValueError)
-def test_backup_file_incomplete_aws():
-    config.set_entry('aws', {'id' : 123})
-    s3.backup_file('file.txt')
+def test_backup_file_incomplete_aws_credentials():
+    # Raises Value error if either id or access_key are not present
+    assert_raises(ValueError, s3.backup_file, FILE, aws_id='123456')
+    assert_raises(ValueError, s3.backup_file, FILE, aws_access_key='asd')
+
+
+def test_backup_file_invalid_types():
+    # Wrong ID
+    assert_raises(TypeError, s3.backup_file, FILE, aws_id=123)
+    # Wrong access key
+    assert_raises(TypeError, s3.backup_file, FILE, aws_access_key=True)
+    # Wrong bucket name
+    assert_raises(TypeError, s3.backup_file, FILE, s3_bucket=123)
+    assert_raises(TypeError, s3.backup_file, FILE, s3_bucket='')
+    # Wrong file_name
+    assert_raises(TypeError, s3.backup_file, 123)
+    assert_raises(TypeError, s3.backup_file, '')
