@@ -19,7 +19,7 @@ def test_make_tarfile():
     out_file = out_dir + '.tar.gz'
     eq_(mongo._make_tarfile(out_dir), out_file)
     # whether the expected file exists
-    ok_(open(out_file))
+    ok_(open(out_file), msg="Could not open expected output file")
     os.remove(out_file)
 
 

@@ -6,7 +6,10 @@ from nose.tools import raises, eq_, ok_
 from m2s3 import config
 import json, os
 
-def_config = {'test': 'hello', 'moonwatcher': 'omg'}
+def_config = {
+    'test': 'hello',
+    'moonwatcher': 'Oh my god!. It\'s full of stars!'
+}
 
 
 def setup():
@@ -16,7 +19,9 @@ def setup():
 def test_default_cfg():
     # Test set_default_cfg with valid dict
     config.set_default(def_config)
-    eq_(def_config, config.get_config())
+    eq_(def_config, config.get_config(),
+        msg="def_config should be equal to the dict returned by "
+            "config.get_config")
 
 
 @raises(TypeError)
@@ -28,9 +33,11 @@ def test_default_cfg_nondict():
 def test_set_get_entry():
     # Test whether set_entry is working well
     config.set_entry('x', 'y')
-    eq_(config.get_entry('x'), 'y')
+    eq_(config.get_entry('x'), 'y',
+        msg="Value under entry 'x' should have a value of 'y'")
     config.set_entry('x', 'w')
-    eq_(config.get_entry('x'), 'w')
+    eq_(config.get_entry('x'), 'w',
+        msg="'x' does not have expected value after modifying it")
 
 
 @raises(KeyError)
@@ -41,13 +48,13 @@ def test_set_entry_key():
 
 @raises(TypeError)
 def test_get_entry_key():
-    v = config.get_entry(1)
+    config.get_entry(1)
 
 
 @raises(KeyError)
 def test_get_entry_nonexistent():
     config.set_default(def_config)
-    v = config.get_entry('i_do_not_exist')
+    config.get_entry('i_do_not_exist')
 
 
 def test_list_merge():
