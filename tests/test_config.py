@@ -2,7 +2,7 @@
 Test for: config
 """
 
-from nose.tools import raises, eq_, ok_
+from nose.tools import raises, eq_, ok_, assert_raises
 from m2s3 import config
 import json, os
 
@@ -46,15 +46,9 @@ def test_set_entry_key():
     config.set_entry(1, 4)
 
 
-@raises(TypeError)
 def test_get_entry_key():
-    config.get_entry(1)
-
-
-@raises(KeyError)
-def test_get_entry_nonexistent():
-    config.set_default(def_config)
-    config.get_entry('i_do_not_exist')
+    assert_raises(TypeError, config.get_entry, 1)
+    assert_raises(KeyError,config.get_entry, 'i_do_not_exist')
 
 
 def test_list_merge():
