@@ -6,7 +6,7 @@ Author: Alejandro Ricoveri <alejandro.ricoveri@blanclink.com>
 ---------------------------
 MongoDB module:
 ~~~~~~~~~~~~~~
-Make gzipped database backups through mongodump
+Make gzipped database backups via mongodump
 """
 
 
@@ -17,6 +17,14 @@ import time
 import tarfile
 import sys
 from . import log
+from .const import (
+    MONGODB_DEFAULT_HOST,
+    MONGODB_DEFAULT_PORT,
+    MONGODB_DEFAULT_MONGODUMP,
+    MONGODB_DEFAULT_OUTPUT_DIR,
+    MONGODB_DEFAULT_USER,
+    MONGODB_DEFAULT_PWD
+)
 
 
 def _make_tarfile(src_dir):
@@ -26,49 +34,60 @@ def _make_tarfile(src_dir):
     :param src_dir: Source directory
     """
     if type(src_dir) != str:
-        raise TypeError('src_dir must be a valid string')
+        raise TypeError('src_dir must be str')
     output_file = src_dir + ".tar.gz"
-    log.msg("Tarballing '{out}' ...".format(out=output_file))
+    log.msg("Wrapping tarball '{out}' ...".format(out=output_file))
     with tarfile.open(output_file, "w:gz") as tar:
         tar.add(src_dir, arcname=os.path.basename(src_dir))
     return output_file
 
 
-def _chkstr(data):
-    if type(data) != str:
-        raise TypeError
+def _chkstr(s, v):
+    if type(s) != str:
+        raise TypeError("{var} must be str".format(var=v))
+    if not s:
+        raise ValueError("{var} cannot be empty".format(var=v))
 
 
-#TODO replace this with **kwargs
-def make_backup_file(data):
+def make_backup_file(**kwargs):
     """
     Backup all specified databases into a gzipped tarball
 
     :param data: list containing mongodb-related parameters
+    :param kwargs:
     """
 
-    # First of all, check if data is an actual dictionnary
-    if type(data) != dict:
-        raise TypeError("data must be dict")
-
     # Path to the mongodump executable
-    mongodump = data['mongodump']
-
+    mongodump = kwargs.get('mongodump', MONGODB_DEFAULT_MONGODUMP)
     # Output directory
-    out = data['output_dir']
-
+    out = kwargs.get('output_dir', MONGODB_DEFAULT_OUTPUT_DIR)
     # Host and port
-    host = data['host']
-    port = data['port']
-
+    host = kwargs.get('host', MONGODB_DEFAULT_HOST)
+    port = kwargs.get('port', MONGODB_DEFAULT_PORT)
     # The user and password for connecting to the databases
-    user = data['user_name']
-    passwd = data['password']
-
+    user = kwargs.get('user_name', MONGODB_DEFAULT_USER)
+    passwd = kwargs.get('password', MONGODB_DEFAULT_PWD)
     # databases
-    dbs = data['dbs']
+    dbs = kwargs.get('dbs', [])
 
-    # Chekf if these are strings
+    # Type checks
+    _chkstr(mongodump, 'mongodump')
+    _chkstr(out, 'output_dir')
+    _chkstr(host, 'host')
+    _chkstr(user, 'user_name')
+    _chkstr(passwd, 'password')
+    if type(port) != int:
+        raise TypeError('port must be int')
+    if port < 1 and port > 65535: # check valid range in port
+        raise ValueError('port must be between 1 and 65535')
+    if type(dbs) != list or len(dbs) == 0:
+        raise ValueError('dbs must be filled list')
+    for db in dbs:
+        if type(db) != str:
+            raise TypeError('all values within dbs must be str')
+
+
+    # Check if these are strings
     _chkstr(mongodump)
     _chkstr(out)
     _chkstr(host)
@@ -97,13 +116,10 @@ def make_backup_file(data):
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
 
     # For each database specified, run mongodump on it
-    if len(dbs) > 0:
-        for db in dbs:
-            _mongodump(mongodump, host, port, user, passwd, db, out_dir)
-        # After all has been done, make a gzipped tarball from it
-        return _make_tarfile(out_dir)
-    else:
-        raise ValueError('There are no databases specified on configuration!')
+    for db in dbs:
+        _mongodump(mongodump, host, port, user, passwd, db, out_dir)
+    # After all has been done, make a gzipped tarball from it
+    return _make_tarfile(out_dir)
 
 
 def _mongodump(mongodump, host, port, user, passwd, db, out_dir):

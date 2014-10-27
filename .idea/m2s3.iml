@@ -10,7 +10,7 @@
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/m2s3.egg-info" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.4.0 virtualenv at ~/Projects/blanclink/m2s3_py" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.4.0 virtualenv at ~/python/m2s3" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">

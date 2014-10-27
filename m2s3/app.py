@@ -10,21 +10,11 @@ Main module
 import os
 import sys
 import traceback
-#TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
 from m2s3 import config, log, mongo, s3
 from m2s3 import __version__ as version
 from optparse import OptionParser
 from m2s3.const import (
     LOG_LVL_DEFAULT,
-    AWS_DEFAULT_ID,
-    AWS_DEFAULT_ACCESS_KEY,
-    AWS_S3_DEFAULT_BUCKET_NAME,
-    MONGODB_DEFAULT_OUTPUT_DIR,
-    MONGODB_DEFAULT_MONGODUMP,
-    MONGODB_DEFAULT_HOST,
-    MONGODB_DEFAULT_PORT,
-    MONGODB_DEFAULT_USER,
-    MONGODB_DEFAULT_PWD,
     PKG_NAME,
     CONF_DEFAULT_FILE
 )
@@ -47,8 +37,7 @@ def init_parsecmdline(argv=[]):
     # --dry-run (to be implemented)
     # parser.add_option("-d", "--dry-run",
     #               action="store_true",  dest="dry_run", default=False,
-    #               help="don’t actually perform the actions, "
-    #                    "just show whether it is possible to do them and how")
+    #               help="don't actually do anything")
 
     # Absorb the options
     (options, args) = parser.parse_args(argv)
@@ -60,7 +49,8 @@ def init_parsecmdline(argv=[]):
     try:
         config.set_from_file(config_file)
     except FileNotFoundError:
-        raise FileNotFoundError("Configuration file not found!")
+        raise FileNotFoundError("Configuration file '{config_file}' not found!"
+                                .format(config_file=config_file))
 
     # Set whether we are going to perform a dry run
     #config.set_entry('dry_run', options.dry_run)
@@ -81,27 +71,16 @@ def init(argv):
     """
     # Setting initial configuration values
     config.set_default({
+        # Debug flag
         "debug": True,
+        # Logging section
         "log": {
             "level": LOG_LVL_DEFAULT
         },
-        # Not needed if running from an instance
-        # with an IAM role
-        "aws": {
-            "id": AWS_DEFAULT_ID,
-            "access_key": AWS_DEFAULT_ACCESS_KEY,
-            "bucket": AWS_S3_DEFAULT_BUCKET_NAME
-        },
-        # MongoDB
-        "mongodb": {
-            "output_dir": MONGODB_DEFAULT_OUTPUT_DIR,
-            "mongodump": MONGODB_DEFAULT_MONGODUMP,
-            "host": MONGODB_DEFAULT_HOST,
-            "port": MONGODB_DEFAULT_PORT,
-            "user_name": MONGODB_DEFAULT_USER,
-            "password": MONGODB_DEFAULT_PWD,
-            "dbs": []
-        }
+        # Amazon Web Services section
+        "aws": {},
+        # MongoDB section
+        "mongodb": {}
     })
 
     # Mark the start of executions
@@ -114,6 +93,21 @@ def init(argv):
     log.threshold = config.get_entry('log')['level']
     log.debug = config.get_entry('debug')
 
+
+def _handle_except(e):
+    """
+    Handle (log) any exception
+
+    """
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    log.msg_err("Unhandled {e} at {file}:{line}: '{msg}'"
+                .format(e=exc_type.__name__, file=fname,
+                        line=exc_tb.tb_lineno,  msg=e))
+    log.msg_err(traceback.format_exc())
+    log.msg_err("An error has occurred!. "
+                "For more details, review the logs.")
+    return 1
 
 def main(argv=None):
     """
@@ -129,16 +123,18 @@ def main(argv=None):
     try:
         # Bootstrap
         init(argv)
-
-        #
-        s3.backup_file(
-            mongo.make_backup_file(config.get_entry('mongodb'))
+        # Generate a backup file from mongodump
+        # This file should be compressed as a gzipped tarball
+        mongodump_filename = mongo.make_backup_file(
+            **config.get_entry('mongodb')
         )
-    # ... and if everything else fails
-    #TODO better exception handling
+        # Upload the resulting file to AWS
+        s3.upload_file(mongodump_filename, **config.get_entry('aws'))
     except Exception as e:
-        log.msg_err(traceback.format_exc())
-        return 1
+        # ... and if everything else fails
+        return _handle_except(e)
+    finally:
+        log.msg("Exiting...")
 
 # Now the sys.exit() calls are annoying: when main() calls
 # sys.exit(), your interactive Python interpreter will exit!.
