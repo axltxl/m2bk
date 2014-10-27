@@ -15,7 +15,7 @@ def test_make_tarfile_nonstr():
 
 def test_make_tarfile():
     # whether the file name return is the expected
-    out_dir = "../data"
+    out_dir = "data"
     out_file = out_dir + '.tar.gz'
     eq_(mongo._make_tarfile(out_dir), out_file)
     # whether the expected file exists
