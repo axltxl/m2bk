@@ -6,7 +6,7 @@ Author: Alejandro Ricoveri <alejandro.ricoveri@blanclink.com>
 ---------------------------
 MongoDB module:
 ~~~~~~~~~~~~~~
-Make gzipped database backups through mongodump
+Make gzipped database backups via mongodump
 """
 
 
@@ -36,7 +36,7 @@ def _make_tarfile(src_dir):
     if type(src_dir) != str:
         raise TypeError('src_dir must be str')
     output_file = src_dir + ".tar.gz"
-    log.msg("Tarballing '{out}' ...".format(out=output_file))
+    log.msg("Wrapping tarball '{out}' ...".format(out=output_file))
     with tarfile.open(output_file, "w:gz") as tar:
         tar.add(src_dir, arcname=os.path.basename(src_dir))
     return output_file

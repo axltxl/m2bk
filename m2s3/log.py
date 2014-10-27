@@ -10,8 +10,8 @@ Handles local and system-wide logging into files.
 System-wide messages are logged through syslog.
 """
 
-#TODO convert module into Stream(s), one for each file
 
+#TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
 import syslog
 
 # Globals

@@ -47,9 +47,9 @@ def upload_file(file_name, **kwargs):
         raise ValueError("s3_bucket cannot be empty")
 
     # Connect to S3 service
-    log.msg("Connecting to Amazon S3 service")
+    log.msg("Connecting to Amazon S3 Service")
     if not aws_id and not aws_key:
-        log.msg_warn('No AWS credentials given, assuming access via IAM role')
+        log.msg_warn('No AWS credentials given. Assuming access via IAM role')
         conn = boto.connect_s3()
     elif not aws_id or not aws_key:
         if aws_id:
@@ -73,8 +73,9 @@ def upload_file(file_name, **kwargs):
     key_name = ntpath.basename(file_name)
     k.key = key_name
     # Upload the file to Amazon
-    log.msg("Backing up '{key_name}' on bucket '{bucket_name}' ..."
+    log.msg("Uploading '{key_name}' to bucket '{bucket_name}' ..."
             .format(key_name=key_name, bucket_name=bucket_name))
     # It is import to encrypt the data on the server side
     k.set_contents_from_filename(file_name, encrypt_key=True)
-    log.msg('Backup done on S3!')
+    log.msg("The file '{key_name}' has been successfully uploaded to S3!"
+            .format(key_name=key_name))
