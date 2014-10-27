@@ -72,7 +72,7 @@ def init(argv):
     # Setting initial configuration values
     config.set_default({
         # Debug flag
-        "debug": True,
+        "debug": False,
         # Logging section
         "log": {
             "level": LOG_LVL_DEFAULT
