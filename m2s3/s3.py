@@ -20,7 +20,7 @@ from .const import (
 )
 
 
-def backup_file(file_name, **kwargs):
+def upload_file(file_name, **kwargs):
     """
     Backup a file on S3
 

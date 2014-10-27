@@ -111,7 +111,7 @@ def main(argv=None):
         # Get the thing done
         mongodump_filename = mongo.make_backup_file(**config.get_entry('mongodb'))
         # Upload the resulting file to AWS
-        s3.backup_file(mongodump_filename, **config.get_entry('aws'))
+        s3.upload_file(mongodump_filename, **config.get_entry('aws'))
     #TODO better exception handling
     except Exception as e:
         # ... and if everything else fails
