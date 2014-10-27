@@ -26,10 +26,12 @@ def get_config_file_name():
 
 
 def get_config():
+    """Get current configuration"""
     return _config
 
 
 def clear():
+    """Clear current configuration"""
     set_default({})
 
 
@@ -39,8 +41,8 @@ def get_entry(key):
 
     :param key: key name
     :returns: mixed value
-    :raises KeyError:
-    :raises TypeError:
+    :raises KeyError: if key has not been found
+    :raises TypeError: if key is not str
     """
     if type(key) != str:
         raise TypeError("key must be str")
@@ -83,12 +85,10 @@ def set_default(cfg):
 
 def _list_merge(src, dest):
     """
-    Merge the contents coming from src
-    into dest
+    Merge the contents coming from src into dest
 
-    :param src: source list
-    :param dest: destination list
-    :return:
+    :param src: source dictionary
+    :param dest: destination dictionary
     """
     for k in src:
         if type(src[k]) != dict:
@@ -102,6 +102,7 @@ def set_from_file(file_name):
     Merge configuration from a file with JSON data
 
     :param file_name: name of the file to be read
+    :raises TypeError: if file_name is not str
     """
     if type(file_name) != str:
         raise TypeError('file_name must be str')

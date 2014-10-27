@@ -23,6 +23,8 @@ from m2s3.const import (
 def init_parsecmdline(argv=[]):
     """
     Parse arguments from the command line
+
+    :param argv: list of arguments
     """
     #https://docs.python.org/3.1/library/optparse.html#module-optparse
     usage = "Usage: %prog [options]"
@@ -68,6 +70,8 @@ def get_desc():
 def init(argv):
     """
     Bootstrap the whole thing
+
+    :param argv: list of command line arguments
     """
     # Setting initial configuration values
     config.set_default({
@@ -98,6 +102,7 @@ def _handle_except(e):
     """
     Handle (log) any exception
 
+    :param e: exception to be handled
     """
     exc_type, exc_obj, exc_tb = sys.exc_info()
     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -112,6 +117,8 @@ def _handle_except(e):
 def main(argv=None):
     """
     This is the main thread of execution
+
+    :param argv: list of command line arguments
     """
 
     # First, we change main() to take an optional 'argv'
