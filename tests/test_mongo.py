@@ -26,22 +26,24 @@ def test_make_tarfile():
 def test_make_backup_file_invalid_kwargs():
     # mongodump must be str
     assert_raises(TypeError, mongo.make_backup_file, mongodump=123)
-    assert_raises(TypeError, mongo.make_backup_file, mongodump='')
+    assert_raises(ValueError, mongo.make_backup_file, mongodump='')
     # output_dir must be str
     assert_raises(TypeError, mongo.make_backup_file, output_dir=123)
-    assert_raises(TypeError, mongo.make_backup_file, output_dir='')
+    assert_raises(ValueError, mongo.make_backup_file, output_dir='')
     # host must be str
     assert_raises(TypeError, mongo.make_backup_file, host=123)
-    assert_raises(TypeError, mongo.make_backup_file, host='')
+    assert_raises(ValueError, mongo.make_backup_file, host='')
     # port must be int
     assert_raises(TypeError, mongo.make_backup_file, port="123")
-    assert_raises(TypeError, mongo.make_backup_file, port='')
+    # port must be between 1 and 65535
+    assert_raises(ValueError, mongo.make_backup_file, port=-40)
+    assert_raises(ValueError, mongo.make_backup_file, port=340535)
     # user_name must be str
     assert_raises(TypeError, mongo.make_backup_file, user_name=123)
-    assert_raises(TypeError, mongo.make_backup_file, user_name='')
+    assert_raises(ValueError, mongo.make_backup_file, user_name='')
     # password must be str
     assert_raises(TypeError, mongo.make_backup_file, password=123)
-    assert_raises(TypeError, mongo.make_backup_file, password='')
+    assert_raises(ValueError, mongo.make_backup_file, password='')
 
 
 def test_make_backup_file_invalid_dbs():
