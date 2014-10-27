@@ -43,7 +43,7 @@ def get_entry(key):
     :raises TypeError:
     """
     if type(key) != str:
-        raise TypeError("Invalid key")
+        raise TypeError("key must be str")
     if key not in _config:
         raise KeyError("Nonexistent entry '{key}'".format(key=key))
     return _config[key]
@@ -58,7 +58,7 @@ def set_entry(key, value):
     :raises KeyError: if key is not str
     """
     if type(key) != str:
-        raise KeyError('Invalid entry')
+        raise KeyError('key must be str')
     _config[key] = value
 
 
@@ -77,7 +77,7 @@ def set_default(cfg):
     """
     global _config
     if type(cfg) != dict:
-        raise TypeError('Only a dictionary is accepted!')
+        raise TypeError('cfg must be dict')
     _config = cfg
 
 
@@ -104,7 +104,7 @@ def set_from_file(file_name):
     :param file_name: name of the file to be read
     """
     if type(file_name) != str:
-        raise TypeError('str expected')
+        raise TypeError('file_name must be str')
     #
     global _config_file_name
     _config_file_name = file_name

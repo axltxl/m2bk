@@ -51,7 +51,8 @@ def init_parsecmdline(argv=[]):
     try:
         config.set_from_file(config_file)
     except FileNotFoundError:
-        raise FileNotFoundError("Configuration file not found!")
+        raise FileNotFoundError("Configuration file '{config_file}' not found!"
+                                .format(config_file=config_file))
 
     # Set whether we are going to perform a dry run
     #config.set_entry('dry_run', options.dry_run)

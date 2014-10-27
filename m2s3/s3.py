@@ -28,8 +28,10 @@ def upload_file(file_name, **kwargs):
     :param kwargs:
     """
     # Check everything is ok with the file name
-    if type(file_name) != str or not file_name:
-        raise TypeError("Invalid or empty file name")
+    if type(file_name) != str:
+        raise TypeError("file_name must be str")
+    if not file_name:
+        raise ValueError("file_name cannot be empty")
     # AWS parameters from kwargs
     aws_id = kwargs.get('aws_id', AWS_DEFAULT_ID)
     aws_key = kwargs.get('aws_access_key', AWS_DEFAULT_ACCESS_KEY)
@@ -39,8 +41,10 @@ def upload_file(file_name, **kwargs):
         raise TypeError('aws_access_key must be str')
     # Check the bucket name before doing anything
     bucket_name = kwargs.get('s3_bucket', AWS_S3_DEFAULT_BUCKET_NAME)
-    if type(bucket_name) != str or not bucket_name:
-        raise TypeError('Invalid or emtpy S3 bucket name')
+    if type(bucket_name) != str:
+        raise TypeError('s3_bucket must be str')
+    if not bucket_name:
+        raise ValueError("s3_bucket cannot be empty")
 
     # Connect to S3 service
     log.msg("Connecting to Amazon S3 service")

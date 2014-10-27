@@ -34,7 +34,7 @@ def _make_tarfile(src_dir):
     :param src_dir: Source directory
     """
     if type(src_dir) != str:
-        raise TypeError('src_dir must be a valid string')
+        raise TypeError('src_dir must be str')
     output_file = src_dir + ".tar.gz"
     log.msg("Tarballing '{out}' ...".format(out=output_file))
     with tarfile.open(output_file, "w:gz") as tar:
@@ -42,9 +42,11 @@ def _make_tarfile(src_dir):
     return output_file
 
 
-def _chkstr(s, msg=""):
-    if type(s) != str or not s:
-        raise TypeError(msg)
+def _chkstr(s, v):
+    if type(s) != str:
+        raise TypeError("{var} must be str".format(var=v))
+    if not s:
+        raise ValueError("{var} cannot be empty".format(var=v))
 
 
 def make_backup_file(**kwargs):
@@ -69,13 +71,15 @@ def make_backup_file(**kwargs):
     dbs = kwargs.get('dbs', [])
 
     # Type checks
-    _chkstr(mongodump, 'mongodump must be str')
-    _chkstr(out, 'output_dir must be str')
-    _chkstr(host, 'host must be str')
-    _chkstr(user, 'user must be str')
-    _chkstr(passwd, 'password must be str')
+    _chkstr(mongodump, 'mongodump')
+    _chkstr(out, 'output_dir')
+    _chkstr(host, 'host')
+    _chkstr(user, 'user_name')
+    _chkstr(passwd, 'password')
     if type(port) != int:
         raise TypeError('port must be int')
+    if port < 1 and port > 65535: # check valid range in port
+        raise ValueError('port must be between 1 and 65535')
     if type(dbs) != list or len(dbs) == 0:
         raise ValueError('dbs must be filled list')
     for db in dbs:
