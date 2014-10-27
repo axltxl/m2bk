@@ -95,6 +95,21 @@ def init(argv):
     log.debug = config.get_entry('debug')
 
 
+def _handle_except(e):
+    """
+    Handle (log) any exception
+
+    """
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    log.msg_err("Unhandled {e} at {file}:{line}: '{msg}'"
+                .format(e=exc_type.__name__, file=fname,
+                        line=exc_tb.tb_lineno,  msg=e))
+    log.msg_err(traceback.format_exc())
+    log.msg_err("An error has occurred!. "
+                "For more details, review the logs.")
+    return 1
+
 def main(argv=None):
     """
     This is the main thread of execution
@@ -113,11 +128,11 @@ def main(argv=None):
         mongodump_filename = mongo.make_backup_file(**config.get_entry('mongodb'))
         # Upload the resulting file to AWS
         s3.upload_file(mongodump_filename, **config.get_entry('aws'))
-    #TODO better exception handling
     except Exception as e:
         # ... and if everything else fails
-        log.msg_err(traceback.format_exc())
-        return 1
+        return _handle_except(e)
+    finally:
+        log.msg("Exiting...")
 
 # Now the sys.exit() calls are annoying: when main() calls
 # sys.exit(), your interactive Python interpreter will exit!.
