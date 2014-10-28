@@ -25,7 +25,9 @@ def upload_file(file_name, **kwargs):
     Backup a file on S3
 
     :param file_name: full path to the file to be backed up
-    :param kwargs:
+    :param \*\*kwargs: arbitrary keyword arguments
+    :raises TypeError: if an argument in kwargs does not have the type expected
+    :raises ValueError: if an argument within kwargs has an invalid value
     """
 
     # Check everything is ok with the file name

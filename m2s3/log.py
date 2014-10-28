@@ -24,7 +24,7 @@ def msg(message, lvl=0):
     Logs a single message
 
     :param message: the message string itself
-    :param lvl: Priority level of the message
+    :param lvl: message priority level
     """
 
     # The message would be logged only if its level

@@ -31,7 +31,8 @@ def _make_tarfile(src_dir):
     """
     Make gzipped tarball from a source directory
 
-    :param src_dir: Source directory
+    :param src_dir: source directory
+    :raises TypeError: if src_dir is not str
     """
     if type(src_dir) != str:
         raise TypeError('src_dir must be str')
@@ -53,8 +54,10 @@ def make_backup_file(**kwargs):
     """
     Backup all specified databases into a gzipped tarball
 
-    :param data: list containing mongodb-related parameters
-    :param kwargs:
+    :param data: a list containing mongodb-related parameters
+    :param \*\*kwargs: arbitrary keyword arguments
+    :raises TypeError: if an argument in kwargs does not have the type expected
+    :raises ValueError: if an argument within kwargs has an invalid value
     """
 
     # Path to the mongodump executable
@@ -126,11 +129,12 @@ def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
     """
     Run mongodump on a database
 
-    :param host: host name or IP address
-    :param port: port
+    :param host: server host name or IP address
+    :param port: server port
     :param user: user name
     :param passwd: password
     :param db: database name
+    :raises OSError: if mongodump process returns error
     """
 
     # Log the call
