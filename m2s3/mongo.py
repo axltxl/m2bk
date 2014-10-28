@@ -124,8 +124,9 @@ def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
     """
 
     # Log the call
-    log.msg_debug("mongodump [{mongodump}] - {db}@{host}:{port} > {output}"
-                  .format(mongodump=mongodump, host=host,
+    log.msg("mongodump [{mongodump}] db={db} "
+                  "mongodb://{user}@{host}:{port} > {output}"
+                  .format(mongodump=mongodump, user=user, host=host,
                           port=port, db=db, output=out_dir))
 
     # Prepare the call
