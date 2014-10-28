@@ -89,20 +89,6 @@ def make_backup_file(**kwargs):
         if type(db) != str:
             raise TypeError('all values within dbs must be str')
 
-
-    # Check if these are strings
-    _chkstr(mongodump)
-    _chkstr(out)
-    _chkstr(host)
-    _chkstr(user)
-    _chkstr(passwd)
-
-    # Type checks
-    if type(port) != int:
-        raise TypeError
-    if type(dbs) != list:
-        raise TypeError
-
     # Create output directory if it does not exist
     if not os.path.exists(out):
         log.msg_debug("Output path '{output}' does not exist, creating it ..."
