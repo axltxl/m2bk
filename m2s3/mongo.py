@@ -101,7 +101,7 @@ def make_backup_file(**kwargs):
     # The mongodump directory is going to have a name indicating
     # the UNIX timestamp corresponding to the current creation time
     now = time.strftime("%Y-%m-%d_%H%M", time.gmtime(time.time()))
-    out_dir = "{out}/mongodump-{now}".format(out=out, now=now)
+    out_dir = "{out}/mongodump-{host}-{now}".format(host=host, out=out, now=now)
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
 
     # For each database specified, run mongodump on it
