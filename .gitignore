@@ -1,6 +1,13 @@
-bin
 lib
 *.pyc
 __pycache__
-*.conf
-.idea
+*.egg
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+m2s3.egg-info
+build
+MANIFEST
+dist
+.python-version
+.tox
