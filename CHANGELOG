@@ -6,3 +6,4 @@ Version 0.2.0:
 Version 0.1.1
 ------------
 + Include CHANGELOG file
++ mongodump: Host address is included in output file
