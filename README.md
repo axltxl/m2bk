@@ -19,7 +19,8 @@ This program was made as part of [Blanclink](http://www.blanclink.com)'s IT Infr
 * `-h | --help` show a help message and exit
 * `-c [file] | --config=[file] | --config [file]` specify configuration file to use
 * `-d | --dry-run` don't actually do anything
-* `-s | --stdout` log also to stdout
+* `-s | --stdout` log messages to stdout too
+* `--ll | --log-level=[num]` set logging output level
 
 #Installation
 Once the source distribution has been downloaded, installation can be made via **setuptools** or **pip**, whichever you prefer.

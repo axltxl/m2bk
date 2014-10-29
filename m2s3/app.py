@@ -48,6 +48,12 @@ def init_parsecmdline(argv=[]):
                    action="store_true",  dest="log_to_stdout", default=False,
                    help="log also to stdout")
 
+    # --ll <level>
+    parser.add_option("--ll", "--log-level",
+                  action="store", type="int",
+                  dest="log_lvl", default=LOG_LVL_DEFAULT,
+                  help="set logging level")
+
     # Absorb the options
     (options, args) = parser.parse_args(argv)
 
@@ -55,9 +61,12 @@ def init_parsecmdline(argv=[]):
     global _opt
     _opt["dry_run"] = options.dry_run
     _opt["log_to_stdout"] = options.log_to_stdout
+    _opt["log_lvl"] = options.log_lvl
 
-    # Do I log to stdout?
-    log.to_stdout = _opt["log_to_stdout"]
+    log.init(_opt['log_lvl'], _opt["log_to_stdout"])
+
+    # Mark the start of executions
+    log.msg('***************************************')
 
     # Merge configuration with a JSON file
     config_file = os.path.abspath(options.config_file)
@@ -89,25 +98,14 @@ def init(argv):
     config.set_default({
         # Debug flag
         "debug": False,
-        # Logging section
-        "log": {
-            "level": LOG_LVL_DEFAULT
-        },
         # Amazon Web Services section
         "aws": {},
         # MongoDB section
         "mongodb": {}
     })
 
-    # Mark the start of executions
-    log.msg('***************************************')
-
     # Parse the command line
     init_parsecmdline(argv[1:])
-
-    # Configure log module
-    log.threshold = config.get_entry('log')['level']
-    log.debug = config.get_entry('debug')
 
 
 def _handle_except(e):
