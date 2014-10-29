@@ -28,7 +28,7 @@ def init_parsecmdline(argv=[]):
     """
     #https://docs.python.org/3.1/library/optparse.html#module-optparse
     usage = "Usage: %prog [options]"
-    parser = OptionParser(usage=usage, version=get_desc())
+    parser = OptionParser(usage=usage, version=version)
 
     # -c, --config <file_name>
     parser.add_option("-c", "--config",
@@ -57,15 +57,6 @@ def init_parsecmdline(argv=[]):
     # Set whether we are going to perform a dry run
     #config.set_entry('dry_run', options.dry_run)
 
-
-def get_desc():
-    """
-    Description string
-
-    :return: a string with the package name and its version
-    """
-    return "{pkg_name} {pkg_version}"\
-        .format(pkg_name=PKG_NAME, pkg_version=version)
 
 def init(argv):
     """
