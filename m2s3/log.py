@@ -7,46 +7,77 @@ Author: Alejandro Ricoveri <alejandro.ricoveri@blanclink.com>
 Log messages:
 ~~~~~~~~~~~~~
 Handles local and system-wide logging into files.
-System-wide messages are logged through syslog.
+System-wide messages are logged through logging.
 """
 
 
-#TODO replace log with logging https://docs.python.org/3.4/howto/logging.html#logging-basic-tutorial
-import syslog
+import sys
+import logging
+from .const import PKG_NAME
 
 # Globals
-threshold = 0
-debug = __debug__
-to_stdout = False
+_logger = None
 
-def msg(message, lvl=0):
+
+def _set_lvl(lvl):
+    if lvl == 0:
+        return logging.DEBUG
+    elif lvl == 1:
+        return logging.INFO
+    elif lvl == 2:
+        return logging.WARNING
+    elif lvl == 3:
+        return logging.ERROR
+    elif lvl >= 4:
+        return logging.CRITICAL
+    else:
+        return logging.INFO
+
+
+def init(threshold_lvl, to_stdout):
     """
-    Logs a single message
+    Initiate the log module
 
-    :param message: the message string itself
-    :param lvl: message priority level
+    :param threshold_lvl: messages under this level won't be issued/logged
+    :param to_stdout: activate stdout log stream
     """
+    global _logger
 
-    # The message would be logged only if its level
-    # is equal or greater than the established log threshold
-    if lvl >= threshold:
-        syslog_prio = 0  # syslog priority
-        if lvl == -1:
-            syslog_prio = syslog.LOG_DEBUG
-        elif lvl == 0:
-            syslog_prio = syslog.LOG_INFO
-        elif lvl == 1:
-            syslog_prio = syslog.LOG_WARNING
-        elif lvl >= 2:
-            syslog_prio = syslog.LOG_ERR
+    # translate lvl to those used by 'logging' module
+    log_lvl = _set_lvl(threshold_lvl)
 
-        # Post the message into syslog
-        syslog.syslog(syslog_prio, message)
+    # logger Creation
+    _logger = logging.getLogger(PKG_NAME)
+    _logger.setLevel(log_lvl)
 
-    #
+    # create syslog handler and set level to info
+    syslog_h = logging.handlers.SysLogHandler(address='/dev/log')
+
+    # Base message format
+    base_fmt = '%(name)s - [%(levelname)s] - %(message)s'
+
+    # set formatter
+    syslog_fmt = logging.Formatter(base_fmt)
+    syslog_h.setFormatter(syslog_fmt)
+    # add Handler
+    _logger.addHandler(syslog_h)
+
+    # create stout handler
     if to_stdout:
-        print("* {m}".format(m=message))
+        stdout_h = logging.StreamHandler(sys.stdout)
+        #formatter
+        stdout_fmt = logging.Formatter("* {fmt}".format(fmt=base_fmt))
+        stdout_h.setFormatter(stdout_fmt)
+        _logger.addHandler(stdout_h)
 
+
+def msg (message):
+    """
+    Log a regular message
+
+    :param message: the message to be logged
+    """
+    _logger.info(message)
 
 def msg_warn(message):
     """
@@ -54,7 +85,7 @@ def msg_warn(message):
 
     :param message: the message to be logged
     """
-    msg(_fmt('warn', message), 1)
+    _logger.warn(message)
 
 
 def msg_err(message):
@@ -63,7 +94,7 @@ def msg_err(message):
 
     :param message: the message to be logged
     """
-    msg(_fmt('error', message), 2)
+    _logger.error(message)
 
 
 def msg_debug(message):
@@ -72,15 +103,4 @@ def msg_debug(message):
 
     :param message: the message to be logged
     """
-    if debug:
-        msg(_fmt('debug', message), -1)
-
-
-def _fmt(prefix, message):
-    """
-    Format a message
-
-    :param message: the message to be formatted
-    :return: formatted string
-    """
-    return "[{prefix}] -- {msg}".format(prefix=prefix.upper(), msg=message)
+    _logger.debug(message)

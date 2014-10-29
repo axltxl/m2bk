@@ -2,6 +2,8 @@ Version 0.2.0:
 ------------
 + Option: Dry run mode -> doesn't do a thing (--dry-run or -d)
 + Option: Log to stdout (-s or --stdout)
++ Option: set log level (--ll or --log-level)
++ 'log' module is now using 'logging' module
 
 Version 0.1.1
 ------------
