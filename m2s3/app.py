@@ -19,6 +19,8 @@ from m2s3.const import (
     CONF_DEFAULT_FILE
 )
 
+# command line options and flags
+_opt = {}
 
 def init_parsecmdline(argv=[]):
     """
