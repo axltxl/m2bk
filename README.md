@@ -18,6 +18,7 @@ This program was made as part of [Blanclink](http://www.blanclink.com)'s IT Infr
 * `--version` show version number and exit
 * `-h | --help` show a help message and exit
 * `-c [file] | --config=[file] | --config [file]` specify configuration file to use
+* `-d | --dry-run` don't actually do anything
 
 #Installation
 Once the source distribution has been downloaded, installation can be made via **setuptools** or **pip**, whichever you prefer.

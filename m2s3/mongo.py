@@ -72,6 +72,8 @@ def make_backup_file(**kwargs):
     passwd = kwargs.get('password', MONGODB_DEFAULT_PWD)
     # databases
     dbs = kwargs.get('dbs', [])
+    #dry run
+    dry_run = kwargs.get('dry_run', False)
 
     # Type checks
     _chkstr(mongodump, 'mongodump')
@@ -93,7 +95,7 @@ def make_backup_file(**kwargs):
     if not os.path.exists(out):
         log.msg_debug("Output path '{output}' does not exist, creating it ..."
                       .format(output=out))
-        # create the actual directory
+        # create the actual root output directory
         os.makedirs(out)
         # set folder permissions to 0770
         os.chmod(out, stat.S_IRWXU | stat.S_IRWXG)
@@ -102,16 +104,18 @@ def make_backup_file(**kwargs):
     # the UNIX timestamp corresponding to the current creation time
     now = time.strftime("%Y-%m-%d_%H%M", time.gmtime(time.time()))
     out_dir = "{out}/mongodump-{now}".format(out=out, now=now)
+    # create the current backup directory
+    os.makedirs(out_dir)
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
 
     # For each database specified, run mongodump on it
     for db in dbs:
-        _mongodump(mongodump, host, port, user, passwd, db, out_dir)
+        _mongodump(mongodump, host, port, user, passwd, db, out_dir, dry_run)
     # After all has been done, make a gzipped tarball from it
     return _make_tarfile(out_dir)
 
 
-def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
+def _mongodump(mongodump, host, port, user, passwd, db, out_dir, dry_run):
     """
     Run mongodump on a database
 
@@ -133,23 +137,24 @@ def _mongodump(mongodump, host, port, user, passwd, db, out_dir):
            "-o {output}".format(mongodump=mongodump, host=host, port=port,
                                 db=db, user=user, passwd=passwd, output=out_dir)
 
-    # Make the actual call to mongodump
-    p = subprocess.Popen(args.split(),
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # wait for the process to finish
-    p.wait()
+    if not dry_run:
+        # Make the actual call to mongodump
+        p = subprocess.Popen(args.split(),
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # wait for the process to finish
+        p.wait()
 
-    # Print stdout and stderr from the mongodump process
-    stdout_data, stderr_data = p.communicate()
-    stdout_str = stdout_data.decode(sys.stdout.encoding)
-    stderr_str = stderr_data.decode(sys.stdout.encoding)
-    log.msg_debug("{mongodump} > {stdout}"
-                  .format(mongodump=mongodump, stdout=stdout_str))
-    if stderr_str != '':
-        log.msg_err("{mongodump} > {stderr}"
-                    .format(mongodump=mongodump, stderr=stderr_str))
+        # Print stdout and stderr from the mongodump process
+        stdout_data, stderr_data = p.communicate()
+        stdout_str = stdout_data.decode(sys.stdout.encoding)
+        stderr_str = stderr_data.decode(sys.stdout.encoding)
+        log.msg_debug("{mongodump} > {stdout}"
+                      .format(mongodump=mongodump, stdout=stdout_str))
+        if stderr_str != '':
+            log.msg_err("{mongodump} > {stderr}"
+                        .format(mongodump=mongodump, stderr=stderr_str))
 
-    # In this way, we will know what went wrong on mongodump
-    if p.returncode != 0:
-        raise OSError("mongodump failed!. Reason: {reason}"
-                      .format(reason=p.communicate()))
+        # In this way, we will know what went wrong on mongodump
+        if p.returncode != 0:
+            raise OSError("mongodump failed!. Reason: {reason}"
+                          .format(reason=p.communicate()))

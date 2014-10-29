@@ -1,3 +1,4 @@
++ Option: Dry run mode -> doesn't do a thing (--dry-run or -d)
 Version 0.1.1
 ------------
 * Include CHANGELOG file

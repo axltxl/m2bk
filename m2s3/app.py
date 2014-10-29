@@ -38,14 +38,17 @@ def init_parsecmdline(argv=[]):
                   dest="config_file", default=CONF_DEFAULT_FILE,
                   help="specify configuration file to use")
 
-    # --dry-run (to be implemented)
-    # parser.add_option("-d", "--dry-run",
-    #               action="store_true",  dest="dry_run", default=False,
-    #               help="don't actually do anything")
+    # --dry-run
+    parser.add_option("-d", "--dry-run",
+                   action="store_true",  dest="dry_run", default=False,
+                   help="don't actually do anything")
 
     # Absorb the options
     (options, args) = parser.parse_args(argv)
 
+    # Set whether we are going to perform a dry run
+    global _opt
+    _opt["dry_run"] = options.dry_run
     # Merge configuration with a JSON file
     config_file = os.path.abspath(options.config_file)
     log.msg("Attempting to use configuration file '{config_file}'"
@@ -55,9 +58,6 @@ def init_parsecmdline(argv=[]):
     except FileNotFoundError:
         raise FileNotFoundError("Configuration file '{config_file}' not found!"
                                 .format(config_file=config_file))
-
-    # Set whether we are going to perform a dry run
-    #config.set_entry('dry_run', options.dry_run)
 
 
 def get_desc():
@@ -135,10 +135,12 @@ def main(argv=None):
         # Generate a backup file from mongodump
         # This file should be compressed as a gzipped tarball
         mongodump_filename = mongo.make_backup_file(
-            **config.get_entry('mongodb')
+            dry_run=_opt["dry_run"], **config.get_entry('mongodb')
         )
         # Upload the resulting file to AWS
-        s3.upload_file(mongodump_filename, **config.get_entry('aws'))
+        s3.upload_file(mongodump_filename,
+            dry_run=_opt["dry_run"], **config.get_entry('aws')
+        )
     except Exception as e:
         # ... and if everything else fails
         return _handle_except(e)
