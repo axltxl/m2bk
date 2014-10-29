@@ -1,0 +1,5 @@
+Version 0.1.1
+------------
++ Include CHANGELOG file
++ mongodump: Host address is included in output file
+- app.get_desc was disposed, --version will only show m2s3.__version__
