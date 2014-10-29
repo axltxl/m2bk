@@ -49,6 +49,7 @@ def init_parsecmdline(argv=[]):
                    help="log also to stdout")
 
     # --ll <level>
+    # logging level
     parser.add_option("--ll", "--log-level",
                   action="store", type="int",
                   dest="log_lvl", default=LOG_LVL_DEFAULT,
@@ -63,6 +64,7 @@ def init_parsecmdline(argv=[]):
     _opt["log_to_stdout"] = options.log_to_stdout
     _opt["log_lvl"] = options.log_lvl
 
+    # Initiate the log level
     log.init(_opt['log_lvl'], _opt["log_to_stdout"])
 
     # Mark the start of executions
