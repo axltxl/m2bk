@@ -1,4 +1,8 @@
+Version 0.2.0:
+------------
 + Option: Dry run mode -> doesn't do a thing (--dry-run or -d)
++ Option: Log to stdout (-s or --stdout)
+
 Version 0.1.1
 ------------
-* Include CHANGELOG file
++ Include CHANGELOG file

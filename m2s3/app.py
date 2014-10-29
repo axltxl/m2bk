@@ -43,12 +43,22 @@ def init_parsecmdline(argv=[]):
                    action="store_true",  dest="dry_run", default=False,
                    help="don't actually do anything")
 
+    # --log-to-stdout
+    parser.add_option("-s", "--stdout",
+                   action="store_true",  dest="log_to_stdout", default=False,
+                   help="log also to stdout")
+
     # Absorb the options
     (options, args) = parser.parse_args(argv)
 
     # Set whether we are going to perform a dry run
     global _opt
     _opt["dry_run"] = options.dry_run
+    _opt["log_to_stdout"] = options.log_to_stdout
+
+    # Do I log to stdout?
+    log.to_stdout = _opt["log_to_stdout"]
+
     # Merge configuration with a JSON file
     config_file = os.path.abspath(options.config_file)
     log.msg("Attempting to use configuration file '{config_file}'"
@@ -132,6 +142,7 @@ def main(argv=None):
     try:
         # Bootstrap
         init(argv)
+
         # Generate a backup file from mongodump
         # This file should be compressed as a gzipped tarball
         mongodump_filename = mongo.make_backup_file(

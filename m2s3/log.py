@@ -17,7 +17,7 @@ import syslog
 # Globals
 threshold = 0
 debug = __debug__
-
+to_stdout = False
 
 def msg(message, lvl=0):
     """
@@ -42,6 +42,10 @@ def msg(message, lvl=0):
 
         # Post the message into syslog
         syslog.syslog(syslog_prio, message)
+
+    #
+    if to_stdout:
+        print("* {m}".format(m=message))
 
 
 def msg_warn(message):
