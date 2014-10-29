@@ -103,7 +103,7 @@ def make_backup_file(**kwargs):
     # The mongodump directory is going to have a name indicating
     # the UNIX timestamp corresponding to the current creation time
     now = time.strftime("%Y-%m-%d_%H%M", time.gmtime(time.time()))
-    out_dir = "{out}/mongodump-{now}".format(out=out, now=now)
+    out_dir = "{out}/mongodump-{host}-{now}".format(host=host, out=out, now=now)
     # create the current backup directory
     os.makedirs(out_dir)
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
@@ -128,8 +128,9 @@ def _mongodump(mongodump, host, port, user, passwd, db, out_dir, dry_run):
     """
 
     # Log the call
-    log.msg_debug("mongodump [{mongodump}] - {db}@{host}:{port} > {output}"
-                  .format(mongodump=mongodump, host=host,
+    log.msg("mongodump [{mongodump}] db={db} "
+                  "mongodb://{user}@{host}:{port} > {output}"
+                  .format(mongodump=mongodump, user=user, host=host,
                           port=port, db=db, output=out_dir))
 
     # Prepare the call
