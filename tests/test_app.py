@@ -2,7 +2,7 @@
 Test for: command line arguments
 """
 
-from nose.tools import eq_
+from nose.tools import eq_, assert_raises
 from m2s3 import app, config, const
 import os
 
@@ -20,18 +20,18 @@ def test_args_config():
     f1 = 'f1.txt'
     f2 = 'f2.txt'
     f3 = 'f3.txt'
+    # ---
     # Test whether -c works as --config
     eq_(_get_arg_cfg_file_name('-c', f1),
         _get_arg_cfg_file_name('--config', f1),
         msg="-c and --config are not capturing the expected file name")
+    # ---
     # Test -c and --config with more than one value
-    try:
-        app.init_parsecmdline(['-c', f1, f2])
-    except FileNotFoundError:
-        pass
+    assert_raises(SystemExit, app.init_parsecmdline, ['-c', f1, f2])
     # absolute path is expected for f1
     eq_(config.get_config_file_name(), os.path.abspath(f1),
         msg="Unexpected file, it should be within its absolute path")
+    # ---
     # test when several config directives are specified
     try:
         app.init_parsecmdline(['-c', f1, '--config', f2, '-c', f3])

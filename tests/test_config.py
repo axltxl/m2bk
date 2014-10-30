@@ -64,6 +64,12 @@ def test_list_merge():
     src['beatles'].append('yoko')
     config._list_merge(src, dst)
     ok_('yoko' in dst['beatles'])
+    # ---
+    # src could have a key whose value is a list
+    # and does not yet exist on dest
+    src['boom'] = {}
+    config._list_merge(src, dst)
+    ok_('boom' in dst)
 
 
 @raises(FileNotFoundError)

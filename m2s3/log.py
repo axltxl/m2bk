@@ -71,13 +71,15 @@ def init(threshold_lvl, to_stdout):
         _logger.addHandler(stdout_h)
 
 
-def msg (message):
+def msg(message):
     """
     Log a regular message
 
     :param message: the message to be logged
     """
-    _logger.info(message)
+    if _logger:
+        _logger.info(message)
+
 
 def msg_warn(message):
     """
@@ -85,7 +87,8 @@ def msg_warn(message):
 
     :param message: the message to be logged
     """
-    _logger.warn(message)
+    if _logger:
+        _logger.warn(message)
 
 
 def msg_err(message):
@@ -94,7 +97,8 @@ def msg_err(message):
 
     :param message: the message to be logged
     """
-    _logger.error(message)
+    if _logger:
+        _logger.error(message)
 
 
 def msg_debug(message):
@@ -103,4 +107,5 @@ def msg_debug(message):
 
     :param message: the message to be logged
     """
-    _logger.debug(message)
+    if _logger:
+        _logger.debug(message)
