@@ -9,6 +9,7 @@ This program was made as part of [Blanclink](http://www.blanclink.com)'s IT Infr
 ##Requirements
 * [python](http://python.org) >= 3.3
 * [boto](http://docs.pythonboto.org/en/latest/) >= 2.33
+* mongodump >= 2.4
 
 ##Usage
 
@@ -50,7 +51,6 @@ The following is an example of what a configuration file looks like:
     {
       "debug": true,
       "log": {
-        "level": 1
       },
       "aws": {
         "aws_id": "SDF73HSDF3663KSKDJ",
@@ -74,13 +74,6 @@ Through this configuration file, you can set key variables about the databases y
 ####`log` section
 Directives regarding logging output
 #####Directives
-***
-    "level": <level> 
-* Type: **integer**
-* *Default value: 0*
-* **Role: set the log messages threshold, the lower the more verbose is going to be the log output**
-* **Examples:** 
->`"level": 0`   
  
 ####`mongodb` section
 This section holds directives regarding the [**mongodb**](http://mongodb.org) server where **`m2s3`** is going to connect to and also the databases that are going to be backed up through *mongodump*.
