@@ -125,6 +125,8 @@ def main(argv=None):
 
     :param argv: list of command line arguments
     """
+    # Exit code
+    exit_code = 0
 
     # First, we change main() to take an optional 'argv'
     # argument, which allows us to call it from the interactive
@@ -147,9 +149,12 @@ def main(argv=None):
         )
     except Exception as e:
         # ... and if everything else fails
-        return _handle_except(e)
+        _handle_except(e)
+        exit_code = 1
     finally:
         log.msg("Exiting...")
+        return exit_code
+
 
 # Now the sys.exit() calls are annoying: when main() calls
 # sys.exit(), your interactive Python interpreter will exit!.
