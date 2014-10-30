@@ -10,9 +10,9 @@ Main module
 import os
 import sys
 import traceback
+import argparse
 from m2s3 import config, log, mongo, s3
 from m2s3 import __version__ as version
-from optparse import OptionParser
 from m2s3.const import (
     LOG_LVL_DEFAULT,
     PKG_NAME,
@@ -28,35 +28,37 @@ def init_parsecmdline(argv=[]):
 
     :param argv: list of arguments
     """
-    #https://docs.python.org/3.1/library/optparse.html#module-optparse
-    usage = "Usage: %prog [options]"
-    parser = OptionParser(usage=usage, version=version)
+    # main argument parser
+    parser = argparse.ArgumentParser(prog=PKG_NAME)
+
+    # --version
+    parser.add_argument('--version', action='version', version=version)
 
     # -c, --config <file_name>
-    parser.add_option("-c", "--config",
-                  action="store", type="string",
+    parser.add_argument("-c", "--config",
+                  action="store",
                   dest="config_file", default=CONF_DEFAULT_FILE,
                   help="specify configuration file to use")
 
     # --dry-run
-    parser.add_option("-d", "--dry-run",
+    parser.add_argument("-d", "--dry-run",
                    action="store_true",  dest="dry_run", default=False,
                    help="don't actually do anything")
 
     # --log-to-stdout
-    parser.add_option("-s", "--stdout",
+    parser.add_argument("-s", "--stdout",
                    action="store_true",  dest="log_to_stdout", default=False,
                    help="log also to stdout")
 
     # --ll <level>
     # logging level
-    parser.add_option("--ll", "--log-level",
-                  action="store", type="int",
+    parser.add_argument("--ll", "--log-level",
+                  action="store", type=int,
                   dest="log_lvl", default=LOG_LVL_DEFAULT,
                   help="set logging level")
 
     # Absorb the options
-    (options, args) = parser.parse_args(argv)
+    options = parser.parse_args(argv)
 
     # Set whether we are going to perform a dry run
     global _opt

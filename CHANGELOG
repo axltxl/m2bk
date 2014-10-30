@@ -4,6 +4,7 @@ Version 0.2.0:
 + Option: Log to stdout (-s or --stdout)
 + Option: set log level (--ll or --log-level)
 + 'log' module is now using 'logging' module
+* app.init_cmdline is now using argparse instead of the old optparse
 
 Version 0.1.1
 ------------
