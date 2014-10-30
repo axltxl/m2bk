@@ -16,6 +16,7 @@ import subprocess
 import time
 import tarfile
 import sys
+import uuid
 from . import log
 from .const import (
     MONGODB_DEFAULT_HOST,
@@ -103,7 +104,11 @@ def make_backup_file(**kwargs):
     # The mongodump directory is going to have a name indicating
     # the UNIX timestamp corresponding to the current creation time
     now = time.strftime("%Y-%m-%d_%H%M", time.gmtime(time.time()))
-    out_dir = "{out}/mongodump-{host}-{now}".format(host=host, out=out, now=now)
+    # A random UUID is appended to the output directory in order to
+    # avoid name collisions
+    f_uuid = uuid.uuid4().hex
+    out_dir = "{out}/mongodump-{name}-{uuid}-{now}"\
+                .format(name=name, out=out, now=now, uuid=f_uuid)
     # create the current backup directory
     os.makedirs(out_dir)
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
