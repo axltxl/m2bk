@@ -5,6 +5,7 @@ Version 0.2.0:
 + Option: set log level (--ll or --log-level)
 + 'log' module is now using 'logging' module
 * app.init_cmdline is now using argparse instead of the old optparse
+* FIX: config._list_merge: dest dict was not being checked out before insertion
 
 Version 0.1.1
 ------------
