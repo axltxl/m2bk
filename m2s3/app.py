@@ -124,12 +124,12 @@ def make_backup_files(mongodb, aws):
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
 
-    mongodump_filenames = mongo.make_backup_files(
+    mongodump_files = mongo.make_backup_files(
         dry_run=_opt["dry_run"], **mongodb)
 
-    for mongodump_filename in mongodump_filenames:
+    for file, key in mongodump_files:
         # Upload the resulting file to AWS
-        s3.upload_file(mongodump_filename, dry_run=_opt["dry_run"], **aws)
+        s3.upload_file(file, key, dry_run=_opt["dry_run"], **aws)
 
 def main(argv=None):
     """
