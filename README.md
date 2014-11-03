@@ -57,9 +57,22 @@ The following is an example of what a configuration file looks like:
         "aws_access_key": "d577273ff885c3f84dadb8578bb41399"
       },
       "mongodb": {
-	      "host": "db.example.com",
-	      "port": 34127,
-	      "dbs": ["app", "sessions", "another_one"]
+		"defaults" : {
+			"port" : 666,
+			"user_name" : "satan",
+			"password" : "14mh4x0r",
+		},
+		"hosts" : [
+			{
+				"port": 34127,
+				"dbs": ["app", "sessions", "another_one"]
+			},
+			{
+				"name" : "bar",
+				"address" : "bar.example.com",
+				"password" : "1AmAn07h3rh4x0r"
+			}
+		]
       }
     }
 Through this configuration file, you can set key variables about the databases you want to backup and the AWS S3 bucket you wish to send them to.

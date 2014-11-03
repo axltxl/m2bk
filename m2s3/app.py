@@ -119,6 +119,18 @@ def _handle_except(e):
                 "For more details, review the logs.")
     return 1
 
+
+def make_backup_files(mongodb, aws):
+    # Generate a backup file from mongodump
+    # This file should be compressed as a gzipped tarball
+
+    mongodump_filenames = mongo.make_backup_files(
+        dry_run=_opt["dry_run"], **mongodb)
+
+    for mongodump_filename in mongodump_filenames:
+        # Upload the resulting file to AWS
+        s3.upload_file(mongodump_filename, dry_run=_opt["dry_run"], **aws)
+
 def main(argv=None):
     """
     This is the main thread of execution
@@ -138,15 +150,9 @@ def main(argv=None):
         # Bootstrap
         init(argv)
 
-        # Generate a backup file from mongodump
-        # This file should be compressed as a gzipped tarball
-        mongodump_filename = mongo.make_backup_file(
-            dry_run=_opt["dry_run"], **config.get_entry('mongodb')
-        )
-        # Upload the resulting file to AWS
-        s3.upload_file(mongodump_filename,
-            dry_run=_opt["dry_run"], **config.get_entry('aws')
-        )
+        #
+        make_backup_files(config.get_entry('mongodb'), config.get_entry('aws'))
+
     except Exception as e:
         # ... and if everything else fails
         _handle_except(e)
