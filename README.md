@@ -57,7 +57,9 @@ The following is an example of what a configuration file looks like:
         "aws_access_key": "d577273ff885c3f84dadb8578bb41399"
       },
       "mongodb": {
-		"defaults" : {
+		"mongodump" : "/opt/bin/mongodump",
+		"output_dir" : "/opt/tmp/mydir",
+		"host_defaults" : {
 			"port" : 666,
 			"user_name" : "satan",
 			"password" : "14mh4x0r",
