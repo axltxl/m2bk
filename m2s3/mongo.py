@@ -159,8 +159,11 @@ def make_backup_files(**kwargs):
 
         """Merge dbs list with that of the host_defaults section (if any)"""
         if 'dbs' in mongodb_defaults:
-            mongodb_host['dbs'] = _merge_dbs(mongodb_defaults['dbs'],
-                                             mongodb_host['dbs'])
+            if 'dbs' in mongodb_host:
+                mongodb_host['dbs'] = _merge_dbs(mongodb_defaults['dbs'],
+                                                 mongodb_host['dbs'])
+            else:
+                mongodb_host['dbs'] = mongodb_defaults['dbs']
 
         # Add the file name to the list to be returned
         mongodump_file = (
