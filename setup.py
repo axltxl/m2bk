@@ -36,10 +36,10 @@ setup(
         ],
     },
     install_requires = [
-        'boto >= 2.33.0'
+        'boto==2.34.0'
     ],
     tests_require = [
-        'nose >= 1.3'
+        'nose>=1.3'
     ],
     author = "Alejandro Ricoveri",
     author_email = "alejandro.ricoveri@blanclink.com",
