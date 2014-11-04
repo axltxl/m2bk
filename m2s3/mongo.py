@@ -40,7 +40,7 @@ def _make_tarfile(src_dir):
     log.msg("Wrapping tarball '{out}' ...".format(out=output_file))
     with tarfile.open(output_file, "w:gz") as tar:
         tar.add(src_dir, arcname=os.path.basename(src_dir))
-        return tar
+    return output_file
 
 
 def _chkstr(s, v):

@@ -74,17 +74,17 @@ def upload_file(file, key, **kwargs):
     # The key is the name of the file itself who needs to be stripped
     # from its full path
     key_name = "{key}/{file_name}".format(key=key,
-                                          file_name=ntpath.basename(file.name))
+                                          file_name=ntpath.basename(file))
 
     if not dry_run:
         # Create a new bucket key
-        k = boto.s3.Key(bucket)
+        k = boto.s3.key.Key(bucket)
         k.key = key_name
     # Upload the file to Amazon
     log.msg("Uploading '{key_name}' to bucket '{bucket_name}' ..."
             .format(key_name=key_name, bucket_name=bucket_name))
     if not dry_run:
         # It is important to encrypt the data on the server side
-        k.set_contents_from_file(file, encrypt_key=True)
+        k.set_contents_from_filename(file, encrypt_key=True)
     log.msg("The file '{key_name}' has been successfully uploaded to S3!"
             .format(key_name=key_name))
