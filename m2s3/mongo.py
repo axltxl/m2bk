@@ -40,7 +40,7 @@ def _make_tarfile(src_dir):
     log.msg("Wrapping tarball '{out}' ...".format(out=output_file))
     with tarfile.open(output_file, "w:gz") as tar:
         tar.add(src_dir, arcname=os.path.basename(src_dir))
-    return output_file
+        return tar
 
 
 def _chkstr(s, v):
@@ -163,10 +163,12 @@ def make_backup_files(**kwargs):
                                              mongodb_host['dbs'])
 
         # Add the file name to the list to be returned
-        mongodump_files.append(
+        mongodump_file = (
             _make_backup_file(dry_run=dry_run, mongodump=mongodump,
-                              output_dir=output_dir, **mongodb_host)
+                              output_dir=output_dir, **mongodb_host),
+            mongodb_host['name']
         )
+        mongodump_files.append(mongodump_file)
 
     # .. and finally, give it
     return mongodump_files

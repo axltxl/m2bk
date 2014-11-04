@@ -19,7 +19,7 @@ from .const import (
 )
 
 
-def upload_file(file_name, **kwargs):
+def upload_file(file, key, **kwargs):
     """
     Backup a file on S3
 
@@ -29,11 +29,6 @@ def upload_file(file_name, **kwargs):
     :raises ValueError: if an argument within kwargs has an invalid value
     """
 
-    # Check everything is ok with the file name
-    if type(file_name) != str:
-        raise TypeError("file_name must be str")
-    if not file_name:
-        raise ValueError("file_name cannot be empty")
     # AWS parameters from kwargs
     aws_id = kwargs.get('aws_id', AWS_DEFAULT_ID)
     aws_key = kwargs.get('aws_access_key', AWS_DEFAULT_ACCESS_KEY)
@@ -54,19 +49,21 @@ def upload_file(file_name, **kwargs):
     log.msg("Connecting to Amazon S3 Service")
     if not aws_id and not aws_key:
         log.msg_warn('No AWS credentials given. Assuming access via IAM role')
-        conn = boto.connect_s3()
+        if not dry_run:
+            conn = boto.connect_s3()
     elif not aws_id or not aws_key:
         if aws_id:
             raise ValueError("aws_id given with no aws_access_key")
         else:
             raise ValueError("aws_access_key given with no aws_id")
-    else:
+    elif not dry_run:
         conn = boto.connect_s3(aws_access_key_id=aws_id,
                                aws_secret_access_key=aws_key)
     log.msg("Connected to AWS S3 service successfully!")
     # If the destination bucket does not exist, create one
     try:
-        bucket = conn.get_bucket(bucket_name)
+        if not dry_run:
+            bucket = conn.get_bucket(bucket_name)
     except boto.exception.S3ResponseError:
         log.msg_warn("Bucket '{bucket_name}' does not exist!, creating it..."
                      .format(bucket_name=bucket_name))
@@ -76,7 +73,8 @@ def upload_file(file_name, **kwargs):
 
     # The key is the name of the file itself who needs to be stripped
     # from its full path
-    key_name = ntpath.basename(file_name)
+    key_name = "{key}/{file_name}".format(key=key,
+                                          file_name=ntpath.basename(file.name))
 
     if not dry_run:
         # Create a new bucket key
@@ -87,6 +85,6 @@ def upload_file(file_name, **kwargs):
             .format(key_name=key_name, bucket_name=bucket_name))
     if not dry_run:
         # It is important to encrypt the data on the server side
-        k.set_contents_from_filename(file_name, encrypt_key=True)
+        k.set_contents_from_file(file, encrypt_key=True)
     log.msg("The file '{key_name}' has been successfully uploaded to S3!"
             .format(key_name=key_name))

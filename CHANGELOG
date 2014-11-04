@@ -1,5 +1,6 @@
 Version 0.2.0:
 ------------
++ Each file will be inside its own bucket key (s3_bucket+name)
 + For each mongodump, a random UUID is appended to the output directory in order to avoid name collisions
 + One config to rule them all: one config file can handle several hosts and their databases
 + Option: Dry run mode -> doesn't do a thing (--dry-run or -d)
