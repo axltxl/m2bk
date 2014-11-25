@@ -264,8 +264,9 @@ def _mongodump(mongodump, address, port, user, passwd, db, out_dir, dry_run):
 
     # Prepare the call
     args = "{mongodump} --host {host}:{port} -d {db} -u {user} -p {passwd} " \
-           "-o {output}".format(mongodump=mongodump, host=address, port=port,
-                                db=db, user=user, passwd=passwd, output=out_dir)
+           "--authenticationDatabase admin -o {output}"\
+          .format(mongodump=mongodump, host=address, port=port,
+                  db=db, user=user, passwd=passwd, output=out_dir)
 
     if not dry_run:
         # Make the actual call to mongodump

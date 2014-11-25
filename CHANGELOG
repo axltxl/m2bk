@@ -1,3 +1,9 @@
+Version 0.2.1:
+------------
+* FIX: mongodump specifies --authenticationDatabase admin. That means
+  the 'admin' database is assumed to hold the users used for authentication
+  against the listed mongodb server on configuration
+
 Version 0.2.0:
 ------------
 + Upgrade to boto 2.34
