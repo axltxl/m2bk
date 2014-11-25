@@ -94,6 +94,11 @@ def _list_merge(src, dest):
         if type(src[k]) != dict:
             dest[k] = src[k]
         else:
+            # ---
+            # src could have a key whose value is a list
+            # and does not yet exist on dest
+            if not k in dest:
+                dest[k] = {}
             _list_merge(src[k], dest[k])
 
 

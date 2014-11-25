@@ -1,3 +1,18 @@
+Version 0.2.0:
+------------
++ Upgrade to boto 2.34
++ Each file will be inside its own bucket key (s3_bucket+name)
++ For each mongodump, a random UUID is appended to the
+  output directory in order to avoid name collisions
++ One config to rule them all: one config file can handle several
+  hosts and their databases
++ Option: Dry run mode -> doesn't do a thing (--dry-run or -d)
++ Option: Log to stdout (-s or --stdout)
++ Option: set log level (--ll or --log-level)
++ 'log' module is now using 'logging' module
+* app.init_cmdline is now using argparse instead of the old optparse
+* FIX: config._list_merge: dest dict was not being checked out before insertion
+
 Version 0.1.1
 ------------
 + Include CHANGELOG file
