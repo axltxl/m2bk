@@ -126,9 +126,20 @@ Many directives (such as the user name and/or password) could be common among th
 
 ####`hosts` section
 
-This is an array of objects, each containing the following a series of directives relative to a mongodb database located at a server, its specs and databases themselves contained within it, these are the main values used by `mongodump` when it does its magic. For each entry inside the `hosts` section, these are its valid directives:
+This is an array of objects, each containing the following a series of directives relative to a mongodb database located at a server, its specifications and databases themselves contained within it, these are the main values used by `mongodump` when it does its magic. For each entry inside the `hosts` section, these are its valid directives:
 
 #####Directives
+***
+    "name" : <string> 
+* Type: **string**
+* Required: YES
+* **Role: unique name for the mongodb server configuration**
+**NOTE: This value will be used for setting up a S3 bucket subkey inside the main one, it HAS TO BE UNIQUE among its other companion mongodb servers.** 
+* **Examples:**
+>With a hostname : `"host": "my-hostname"`
+>With a FQDN: `"host": "my.host.name"`
+>With an IPv4 address: `"host": "192.168.1.1"`
+
 ***
     "address" : <hostname> | <fqdn> | <ip_address> 
 * Type: **string**
@@ -168,11 +179,11 @@ This is an array of objects, each containing the following a series of directive
 >`"password": "mySup3rS3cr37P455w0rd"`
 
 ***
-	"dbs" : <array>
+	"dbs" : <list>
 * Type: **array**
 * Required: NO
 * Default value : `host_defaults['dbs']` | []
-* **Role: password used for authentication against the mongodb server**
+* **Role: a list of databases who are expected inside the mongodb server**
 * **Examples:**
 >`"dbs": ["jack", "wendy", "danny"]`
 
@@ -203,6 +214,6 @@ This sections holds directives regarding AWS credentials that **`m2s3`** is goin
 * Type: **string**
 * Required: NO
 * *Default value: "m2s3"*
-* **Role: name of the S3 bucket where m2s3 is going to upload the compressed backup**
+* **Role: name of the main S3 bucket where m2s3 is going to upload the compressed backups for each mongodb server specified in `mongodb` section**
 * **Examples:**
 > `"s3_bucket" : "mybucket"`
