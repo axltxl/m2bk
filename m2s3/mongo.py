@@ -231,7 +231,7 @@ def _make_backup_file(**kwargs):
     # A random UUID is appended to the output directory in order to
     # avoid name collisions
     f_uuid = uuid.uuid4().hex
-    out_dir = "{out}/mongodump-{name}-{uuid}-{now}"\
+    out_dir = "{out}/mongodump-{name}-{now}-{uuid}"\
                 .format(name=name, out=out, now=now, uuid=f_uuid)
     # create the current backup directory
     os.makedirs(out_dir)
