@@ -1,3 +1,7 @@
+Version 0.2.2:
+------------
+* Output directories have their UUID at the end of their names
+
 Version 0.2.1:
 ------------
 * FIX: mongodump specifies --authenticationDatabase admin. That means
