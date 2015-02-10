@@ -2,12 +2,10 @@ lib
 *.pyc
 __pycache__
 *.egg
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/dictionaries
 m2s3.egg-info
 build
 MANIFEST
 dist
 .python-version
 .tox
+.idea
