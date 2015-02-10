@@ -1,10 +1,7 @@
 #m2s3
 ###mongodump straight to Amazon S3
 
-
 *m2s3* is a small program who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.    
-       
-This program was made as part of [Blanclink](http://www.blanclink.com)'s IT Infrastructure strategy to preserve essential data used by [Blancride](http://www.blancride.com)  and other applications developed by the company.
 
 ##Requirements
 * [python](http://python.org) >= 3.3
