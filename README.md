@@ -1,7 +1,7 @@
 #m2s3
 ###mongodump straight to Amazon S3
 
-*m2s3* is a small program who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.    
+*m2s3* is a small DevOps program who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.    
 
 ##Requirements
 * [python](http://python.org) >= 3.3
@@ -24,7 +24,7 @@
 Once the source distribution has been downloaded, installation can be made via **setuptools** or **pip**, whichever you prefer.
 
 	$ # setuptools installation
-	$ cd blancride-is-m2s3
+	$ cd m2s3
 	$ python setup.py install
 	$ # from this point, you can create your configuration file
 	$ cat > /path/to/my/config.conf
