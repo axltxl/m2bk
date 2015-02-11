@@ -1,3 +1,7 @@
+Version 0.2.3:
+------------
+* The project is now distributed under the MIT License
+
 Version 0.2.2:
 ------------
 * Output directories have their UUID at the end of their names

@@ -1,15 +1,23 @@
 #m2s3
 ###mongodump straight to Amazon S3
 
-
-*m2s3* is a small program who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.    
-       
-This program was made as part of [Blanclink](http://www.blanclink.com)'s IT Infrastructure strategy to preserve essential data used by [Blancride](http://www.blancride.com)  and other applications developed by the company.
+*m2s3* is a small DevOps program who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.    
 
 ##Requirements
 * [python](http://python.org) >= 3.3
 * [boto](http://docs.pythonboto.org/en/latest/) >= 2.33
 * mongodump >= 2.4
+
+You may use *m2s3* under the terms of the MIT License
+
+##MIT Open Source License
+Copyright (c) 2014 Alejandro Ricoveri
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ##Usage
 
@@ -27,7 +35,7 @@ This program was made as part of [Blanclink](http://www.blanclink.com)'s IT Infr
 Once the source distribution has been downloaded, installation can be made via **setuptools** or **pip**, whichever you prefer.
 
 	$ # setuptools installation
-	$ cd blancride-is-m2s3
+	$ cd m2s3
 	$ python setup.py install
 	$ # from this point, you can create your configuration file
 	$ cat > /path/to/my/config.conf
