@@ -4,7 +4,7 @@ Test for: config
 
 
 from nose.tools import raises, eq_, ok_, assert_raises
-from m2s3 import config
+from m2bk import config
 import json, os
 
 
