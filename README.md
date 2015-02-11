@@ -49,30 +49,31 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #Installation
 Once the source distribution has been downloaded, installation can be made via **setuptools** or **pip**, whichever you prefer.
-
-	$ # setuptools installation
-	$ cd m2bk
-	$ python setup.py install
-	$ # from this point, you can create your configuration file
-	$ cat > /path/to/my/config.conf
-	$ {
-	$	"aws": {
-	$		"aws_id" : "SDF73HSDF3663KSKDJ",
-	$		"aws_access_key" : "d577273ff885c3f84dadb8578bb41399"
-	$	},
-	$	"mongodb": {
-	$		"hosts": [
-	$			{
-	$				"address": "myserver.com",
-	$				"user_name": "bob",
-	$				"password": "robert",
-	$				"dbs" : ['clients', 'seo_stats']
-	$			}
-	$		]
-	$	}
-	$ }
-	$ # Once installed, you can try it
-	$ m2bk -c /path/to/myconfig.conf
+```bash
+$ # setuptools installation
+$ cd m2bk
+$ python setup.py install
+$ # from this point, you can create your configuration file
+$ cat > /path/to/my/config.conf
+$ {
+$	"aws": {
+$		"aws_id" : "SDF73HSDF3663KSKDJ",
+$		"aws_access_key" : "d577273ff885c3f84dadb8578bb41399"
+$	},
+$	"mongodb": {
+$		"hosts": [
+$			{
+$				"address": "myserver.com",
+$				"user_name": "bob",
+$				"password": "robert",
+$				"dbs" : ['clients', 'seo_stats']
+$			}
+$		]
+$	}
+$ }
+$ # Once installed, you can try it
+$ m2bk -c /path/to/myconfig.conf
+```
 
 If everything went well, you can then check out your S3 bucket to see the backup.
 
@@ -81,16 +82,16 @@ The configuration is handled through a simple [JSON](http://www.json.org) file i
            
 The following is an example of what a configuration file looks like:
 
-    $ cat /etc/m2bk.conf
-    {
-      "debug": true,
-      "log": {
-      },
-      "aws": {
-        "aws_id": "SDF73HSDF3663KSKDJ",
-        "aws_access_key": "d577273ff885c3f84dadb8578bb41399"
-      },
-      "mongodb": {
+```json
+{
+	"debug": true,
+	"log": {
+	},
+	"aws": {
+	"aws_id": "SDF73HSDF3663KSKDJ",
+	"aws_access_key": "d577273ff885c3f84dadb8578bb41399"
+	},
+	"mongodb": {
 		"mongodump" : "/opt/bin/mongodump",
 		"output_dir" : "/opt/tmp/mydir",
 		"host_defaults" : {
@@ -109,8 +110,9 @@ The following is an example of what a configuration file looks like:
 				"password" : "1AmAn07h3rh4x0r"
 			}
 		]
-      }
-    }
+	}
+}
+```
 Through this configuration file, you can set key variables about the databases you want to backup and the AWS S3 bucket you wish to send them to.
 ###Configuration file: sections and directives
 ####Root section
