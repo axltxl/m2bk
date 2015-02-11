@@ -14,8 +14,8 @@ git_full = "$Format:%H$"
 
 # these strings are filled in when 'setup.py versioneer' creates _version.py
 tag_prefix = ""
-parentdir_prefix = "m2s3-"
-versionfile_source = "m2s3/_version.py"
+parentdir_prefix = "m2bk-"
+versionfile_source = "m2bk/_version.py"
 
 import os, sys, re, subprocess, errno
 

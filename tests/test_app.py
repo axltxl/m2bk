@@ -3,7 +3,7 @@ Test for: command line arguments
 """
 
 from nose.tools import eq_, assert_raises
-from m2s3 import app, config, const
+from m2bk import app, config, const
 import os
 
 
@@ -44,7 +44,7 @@ def test_args_config():
 
 
 def test_args_noargs():
-    # Test whether m2s3 tries to use default config file
+    # Test whether m2bk tries to use default config file
     # when no arguments are present
     try:
         app.init_parsecmdline()

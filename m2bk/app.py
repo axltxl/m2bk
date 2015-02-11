@@ -1,6 +1,6 @@
 """
 Copyright (c) Alejandro Ricoveri
-m2s3: A mongodump straight to AWS S3
+m2bk: A command line tool to simplify MongoDB backups
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@ import os
 import sys
 import traceback
 import argparse
-from m2s3 import config, log, mongo, s3
-from m2s3 import __version__ as version
-from m2s3.const import (
+from m2bk import config, log, mongo, s3
+from m2bk import __version__ as version
+from m2bk.const import (
     LOG_LVL_DEFAULT,
     PKG_NAME,
     CONF_DEFAULT_FILE

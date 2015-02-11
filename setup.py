@@ -1,6 +1,6 @@
 """
 Copyright (c) Alejandro Ricoveri
-m2s3: A mongodump straight to AWS S3
+m2bk: A command line tool to simplify MongoDB backups
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,10 +29,10 @@ import os
 
 # versioneer
 versioneer.VCS = 'git'
-versioneer.versionfile_source = 'm2s3/_version.py'
-versioneer.versionfile_build = 'm2s3/_version.py'
+versioneer.versionfile_source = 'm2bk/_version.py'
+versioneer.versionfile_build = 'm2bk/_version.py'
 versioneer.tag_prefix = ''
-versioneer.parentdir_prefix = 'm2s3-'
+versioneer.parentdir_prefix = 'm2bk-'
 
 # default config file location
 if sys.prefix != '/usr':
@@ -41,13 +41,13 @@ else:
     conf_dir = '/etc'
 
 setup(
-    name = "m2s3",
+    name = "m2bk",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     packages = find_packages(exclude=["tests"]),
     entry_points={
         'console_scripts': [
-            'm2s3 = m2s3.app:main',
+            'm2bk = m2bk.app:main',
         ],
     },
     install_requires = [
@@ -59,10 +59,10 @@ setup(
     author = "Alejandro Ricoveri",
     author_email = "alejandro.ricoveri@blanclink.com",
     description = "mongodump straight to Amazon S3",
-    long_description = "m2s3 is able to perform mongodb backups via mongodump "
+    long_description = "m2bk is able to perform mongodb backups via mongodump "
                        "and then send them straight to Amazon S3 buckets",
     test_suite="nose.collector",
     data_files = [
-        (conf_dir, ['data/m2s3.conf'])
+        (conf_dir, ['data/m2bk.conf'])
     ]
 )

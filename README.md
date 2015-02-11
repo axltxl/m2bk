@@ -1,14 +1,14 @@
-#m2s3
+#m2bk
 ###mongodump straight to Amazon S3
 
-*m2s3* is a small DevOps program who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.    
+*m2bk* is a small DevOps command line tool who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
 ##Requirements
 * [python](http://python.org) >= 3.3
 * [boto](http://docs.pythonboto.org/en/latest/) >= 2.33
 * mongodump >= 2.4
 
-You may use *m2s3* under the terms of the MIT License
+You may use *m2bk* under the terms of the MIT License
 
 ##MIT Open Source License
 Copyright (c) 2014 Alejandro Ricoveri
@@ -21,7 +21,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ##Usage
 
-    m2s3 [options]
+    m2bk [options]
 
 ##Options
 * `--version` show version number and exit
@@ -35,7 +35,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Once the source distribution has been downloaded, installation can be made via **setuptools** or **pip**, whichever you prefer.
 
 	$ # setuptools installation
-	$ cd m2s3
+	$ cd m2bk
 	$ python setup.py install
 	$ # from this point, you can create your configuration file
 	$ cat > /path/to/my/config.conf
@@ -56,16 +56,16 @@ Once the source distribution has been downloaded, installation can be made via *
 	$	}
 	$ }
 	$ # Once installed, you can try it
-	$ m2s3 -c /path/to/myconfig.conf
+	$ m2bk -c /path/to/myconfig.conf
 
 If everything went well, you can then check out your S3 bucket to see the backup.
 
 ##Configuration file
-The configuration is handled through a simple [JSON](http://www.json.org) file including a series of *sections* (which are JSON objects), each one composed by *directives* (JSON numbers, strings and arrays) which determine the behavior on **m2s3**.  If **m2s3** does not receive any configuration file on command line, it will try to read `/etc/m2s3.conf`.  
+The configuration is handled through a simple [JSON](http://www.json.org) file including a series of *sections* (which are JSON objects), each one composed by *directives* (JSON numbers, strings and arrays) which determine the behavior on **m2bk**.  If **m2bk** does not receive any configuration file on command line, it will try to read `/etc/m2bk.conf`.
            
 The following is an example of what a configuration file looks like:
 
-    $ cat /etc/m2s3.conf
+    $ cat /etc/m2bk.conf
     {
       "debug": true,
       "log": {
@@ -111,13 +111,13 @@ Directives regarding logging output
 *FOR THE MOMENT RESERVED*
  
 ####`mongodb` section
-This section holds directives regarding the [**mongodb**](http://mongodb.org) server where **`m2s3`** is going to connect to and also the databases that are going to be backed up through *mongodump*.
+This section holds directives regarding the [**mongodb**](http://mongodb.org) server where **`m2bk`** is going to connect to and also the databases that are going to be backed up through *mongodump*.
 
 ***
     "output_dir" : <directory>
 * Type: **string**
-* *Default value : /tmp/m2s3*
-* **Role: directory where m2s3 is going to temporarily save the backup files**
+* *Default value : /tmp/m2bk*
+* **Role: directory where m2bk is going to temporarily save the backup files**
 * **Examples:** 
 >`"output_dir": "/path/to/my/dir"`
 
@@ -125,7 +125,7 @@ This section holds directives regarding the [**mongodb**](http://mongodb.org) se
     "mongodump" : <path_to_executable>
 * Type: **string**
 * *Default value : "mongodump"*
-* **Role: mongodump executable used by m2s3**
+* **Role: mongodump executable used by m2bk**
 * **Examples:** 
 >`"mongodump": "/opt/bin/mongodump"`
 
@@ -172,7 +172,7 @@ This is an array of objects, each containing the following a series of directive
     "user_name" : <user>
 * Type: **string**
 * Required: NO
-* Default value : `host_defaults['user_name']` | "m2s3"
+* Default value : `host_defaults['user_name']` | "m2bk"
 * **Role: user name used for authentication against the mongodb server**
 * **Examples:** 
 >`"user_name": "matt"`
@@ -197,7 +197,7 @@ This is an array of objects, each containing the following a series of directive
 
 **NOTE: particular `dbs` on one host will be merged with those of `host_defaults`**
 ####`aws` section
-This sections holds directives regarding AWS credentials that **`m2s3`** is going to use in order to upload the *mongodump backups* to S3.
+This sections holds directives regarding AWS credentials that **`m2bk`** is going to use in order to upload the *mongodump backups* to S3.
 #####Directives
 ***
     "aws_id" : <id>
@@ -221,7 +221,7 @@ This sections holds directives regarding AWS credentials that **`m2s3`** is goin
 	"s3_bucket"  : <bucket_name>
 * Type: **string**
 * Required: NO
-* *Default value: "m2s3"*
-* **Role: name of the main S3 bucket where m2s3 is going to upload the compressed backups for each mongodb server specified in `mongodb` section**
+* *Default value: "m2bk"*
+* **Role: name of the main S3 bucket where m2bk is going to upload the compressed backups for each mongodb server specified in `mongodb` section**
 * **Examples:**
 > `"s3_bucket" : "mybucket"`
