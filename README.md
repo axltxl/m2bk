@@ -8,9 +8,25 @@
 * [boto](http://docs.pythonboto.org/en/latest/) >= 2.33
 * mongodump >= 2.4
 
-You may use *m2bk* under the terms of the MIT License
+Issues
+------
 
-##MIT Open Source License
+Feel free to submit issues and enhancement requests.
+
+Contributing
+------------
+
+Please refer to each project's style guidelines and guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
+
+ 1. Fork the repo on GitHub
+ 2. Commit changes to a branch in your fork
+ 3. Pull request "upstream" with your changes
+ 4. Merge changes in to "upstream" repo
+
+NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+
+Copyright and Licensing
+-----------------------
 Copyright (c) 2014 Alejandro Ricoveri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
