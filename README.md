@@ -1,4 +1,4 @@
-#m2bk
+#m2bk [![Build Status](https://travis-ci.org/axltxl/m2bk.svg?branch=develop)](https://travis-ci.org/axltxl/m2bk)
 ###mongodump straight to Amazon S3
 
 *m2bk* is a small DevOps command line tool who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.
