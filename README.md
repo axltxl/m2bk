@@ -1,7 +1,7 @@
 #m2bk
 ###mongodump straight to Amazon S3
 
-*m2bk* is a small DevOps program who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.
+*m2bk* is a small DevOps command line tool who performs a number of **mongodb database backups via mongodump**, compresses them into a gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
 ##Requirements
 * [python](http://python.org) >= 3.3
