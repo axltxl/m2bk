@@ -2,7 +2,7 @@ lib
 *.pyc
 __pycache__
 *.egg
-m2s3.egg-info
+m2bk.egg-info
 build
 MANIFEST
 dist

@@ -3,7 +3,7 @@ Test for: s3
 """
 
 from nose.tools import assert_raises
-from m2s3 import s3
+from m2bk import s3
 
 FILE = 'example.txt'
 

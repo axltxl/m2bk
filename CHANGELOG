@@ -1,6 +1,7 @@
 Version 0.2.3:
 ------------
 * The project is now distributed under the MIT License
+* Project renamed to: m2bk
 
 Version 0.2.2:
 ------------
@@ -31,4 +32,4 @@ Version 0.1.1
 ------------
 + Include CHANGELOG file
 + mongodump: Host address is included in output file
-- app.get_desc was disposed, --version will only show m2s3.__version__
+- app.get_desc was disposed, --version will only show m2bk.__version__

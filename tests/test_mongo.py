@@ -4,7 +4,7 @@ Test for: mongo
 
 
 from nose.tools import assert_raises, raises, eq_, ok_
-from m2s3 import mongo
+from m2bk import mongo
 import os
 
 

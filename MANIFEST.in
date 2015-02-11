@@ -1,3 +1,3 @@
 include versioneer.py
-include m2s3/_version.py
-include data/m2s3.conf
+include m2bk/_version.py
+include data/m2bk.conf
