@@ -1,3 +1,10 @@
+Version 0.3.0:
+------------
+
+* New module 'fs' handles file-related operations
+* An UNIX signal handler has been implemented
+* [config] mongodb::output_dir has been migrated to fs::output_dir
+
 Version 0.2.3:
 ------------
 * The project is now distributed under the MIT License
