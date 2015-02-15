@@ -80,12 +80,12 @@ def make_backup_files(**kwargs):
 
     # Path to the mongodump executable
     mongodump = kwargs.get('mongodump', MONGODB_DEFAULT_MONGODUMP)
+
     # Output directory
     output_dir = fs.get_output_dir()
 
     # Type checks
-    _chkstr(mongodump, 'mongodump')
-    _chkstr(output_dir, 'output_dir')
+    utils.chkstr(mongodump, 'mongodump')
 
     # List of mongodb hosts holding databases
     mongodb_hosts = kwargs.get('hosts', [])
@@ -109,11 +109,11 @@ def make_backup_files(**kwargs):
         if not 'name' in mongodb_host:
             raise KeyError("No 'name' for host '{host}' specified!"
                            .format(host=mongodb_host['address']))
-        _chkstr(mongodb_host['name'], 'name')
+        utils.chkstr(mongodb_host['name'], 'name')
 
         if not 'address' in mongodb_host:
             raise KeyError("No 'address' specified!")
-        _chkstr(mongodb_host['address'], 'address')
+        utils.chkstr(mongodb_host['address'], 'address')
 
 
         """
@@ -179,10 +179,10 @@ def _make_backup_file(**kwargs):
     name = kwargs.get('name')
 
     # Type checks
-    _chkstr(name, 'name')
-    _chkstr(address, 'address')
-    _chkstr(user, 'user_name')
-    _chkstr(passwd, 'password')
+    utils.chkstr(name, 'name')
+    utils.chkstr(address, 'address')
+    utils.chkstr(user, 'user_name')
+    utils.chkstr(passwd, 'password')
 
     # Check port
     if type(port) != int:
