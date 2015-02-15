@@ -26,6 +26,7 @@ import os
 import sys
 import traceback
 import argparse
+import signal
 from m2bk import config, log, mongo, s3, fs
 from m2bk import __version__ as version
 from m2bk.const import (
@@ -122,8 +123,17 @@ def init(argv):
     # Initiatize the output directory
     fs.init(**config.get_entry('fs'))
 
+    #
+    signal.signal(signal.SIGINT,  _handle_signal)
+    signal.signal(signal.SIGTERM, _handle_signal)
 
 def _handle_signal (signum, frame):
+    shutdown()
+
+def shutdown():
+    log.msg("Exiting...")
+    #
+    fs.cleanup()
 
 def _handle_except(e):
     """
@@ -140,6 +150,8 @@ def _handle_except(e):
     log.msg_err("An error has occurred!. "
                 "For more details, review the logs.")
     return 1
+
+
 
 
 def make_backup_files(mongodb, aws):
@@ -180,7 +192,7 @@ def main(argv=None):
         _handle_except(e)
         exit_code = 1
     finally:
-        log.msg("Exiting...")
+        shutdown()
         return exit_code
 
 
