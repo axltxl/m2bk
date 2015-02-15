@@ -26,7 +26,8 @@ import os
 import sys
 import traceback
 import argparse
-from m2bk import config, log, mongo, s3
+import signal
+from m2bk import config, log, mongo, s3, fs
 from m2bk import __version__ as version
 from m2bk.const import (
     LOG_LVL_DEFAULT,
@@ -36,6 +37,7 @@ from m2bk.const import (
 
 # command line options and flags
 _opt = {}
+
 
 def init_parsecmdline(argv=[]):
     """
@@ -111,11 +113,36 @@ def init(argv):
         # Amazon Web Services section
         "aws": {},
         # MongoDB section
-        "mongodb": {}
+        "mongodb": {},
+        # fs section
+        "fs": {},
     })
 
     # Parse the command line
     init_parsecmdline(argv[1:])
+
+    # Initiatize the output directory
+    fs.init(**config.get_entry('fs'))
+
+    # This baby will handle UNIX signals
+    signal.signal(signal.SIGINT,  _handle_signal)
+    signal.signal(signal.SIGTERM, _handle_signal)
+
+
+def _handle_signal(signum, frame):
+    """
+    UNIX signal handler
+    """
+    shutdown()
+
+
+def shutdown():
+    """
+    Cleanup
+    """
+    log.msg("Exiting...")
+    #
+    fs.cleanup()
 
 
 def _handle_except(e):
@@ -146,6 +173,7 @@ def make_backup_files(mongodb, aws):
         # Upload the resulting file to AWS
         s3.upload_file(file, key, dry_run=_opt["dry_run"], **aws)
 
+
 def main(argv=None):
     """
     This is the main thread of execution
@@ -173,7 +201,7 @@ def main(argv=None):
         _handle_except(e)
         exit_code = 1
     finally:
-        log.msg("Exiting...")
+        shutdown()
         return exit_code
 
 

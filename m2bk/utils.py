@@ -19,28 +19,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ---------------------------
-Constants
+Utilities
 """
 
-# Basics
-PKG_NAME = "m2bk"
 
-# Logs
-LOG_LVL_DEFAULT = 0
+def chkstr(s, v):
+    """
+    Small routine for checking whether a string is empty
+    even a string
 
-# Amazon S3
-AWS_DEFAULT_ID = ""
-AWS_DEFAULT_ACCESS_KEY = ""
-AWS_S3_DEFAULT_BUCKET_NAME = PKG_NAME
-
-# Config
-CONF_DEFAULT_FILE = "/etc/{pkg_name}.conf".format(pkg_name=PKG_NAME)
-
-# mongodump
-MONGODB_DEFAULT_MONGODUMP = "mongodump"
-MONGODB_DEFAULT_USER = PKG_NAME
-MONGODB_DEFAULT_PWD = "pass"
-MONGODB_DEFAULT_PORT = 27017
-
-#fs
-FS_DEFAULT_OUTPUT_DIR = "/tmp/{pkg_name}".format(pkg_name=PKG_NAME)
+    :param s: the string in question
+    :param v: variable name
+    """
+    if type(s) != str:
+        raise TypeError("{var} must be str".format(var=v))
+    if not s:
+        raise ValueError("{var} cannot be empty".format(var=v))

@@ -8,23 +8,6 @@ from m2bk import mongo
 import os
 
 
-@raises(TypeError)
-def test_make_tarfile_nonstr():
-    # _make_tarfile with non-string src_dir
-    mongo._make_tarfile(123)
-
-
-def test_make_tarfile():
-    # whether the file name return is the expected
-    out_dir = "data"
-    out_file = out_dir + ".tar.gz"
-    #eq_(mongo._make_tarfile(out_dir), out_file)
-    # whether the expected file exists
-    mongo._make_tarfile(out_dir)
-    ok_(open(out_file), msg="Could not open expected output file")
-    os.remove(out_file)
-
-
 def test_set_mongodb_host_val():
     """
     Test whether mongo._set_mongodb_host_val works well
@@ -84,9 +67,6 @@ def test_make_backup_files_invalid_kwargs():
     # mongodump must be str
     _test_make_backup_files(TypeError, mongodump=123)
     _test_make_backup_files(ValueError, mongodump='')
-    # output_dir must be str
-    _test_make_backup_files(TypeError, output_dir=123)
-    _test_make_backup_files(ValueError, output_dir='')
     # port must be int
     _test_make_backup_files(TypeError, host_defaults={"port": "123"})
     # port must be between 1 and 65535
