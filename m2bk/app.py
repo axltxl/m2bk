@@ -124,12 +124,15 @@ def init(argv):
     # Initiatize the output directory
     fs.init(**config.get_entry('fs'))
 
-    #
+    # This baby will handle UNIX signals
     signal.signal(signal.SIGINT,  _handle_signal)
     signal.signal(signal.SIGTERM, _handle_signal)
 
 
 def _handle_signal(signum, frame):
+    """
+    UNIX signal handler
+    """
     shutdown()
 
 
