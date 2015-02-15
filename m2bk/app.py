@@ -26,7 +26,7 @@ import os
 import sys
 import traceback
 import argparse
-from m2bk import config, log, mongo, s3
+from m2bk import config, log, mongo, s3, fs
 from m2bk import __version__ as version
 from m2bk.const import (
     LOG_LVL_DEFAULT,
@@ -111,12 +111,19 @@ def init(argv):
         # Amazon Web Services section
         "aws": {},
         # MongoDB section
-        "mongodb": {}
+        "mongodb": {},
+        # fs section
+        "fs": {},
     })
 
     # Parse the command line
     init_parsecmdline(argv[1:])
 
+    # Initiatize the output directory
+    fs.init(**config.get_entry('fs'))
+
+
+def _handle_signal (signum, frame):
 
 def _handle_except(e):
     """

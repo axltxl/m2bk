@@ -38,7 +38,9 @@ CONF_DEFAULT_FILE = "/etc/{pkg_name}.conf".format(pkg_name=PKG_NAME)
 
 # mongodump
 MONGODB_DEFAULT_MONGODUMP = "mongodump"
-MONGODB_DEFAULT_OUTPUT_DIR = "/tmp/{pkg_name}".format(pkg_name=PKG_NAME)
 MONGODB_DEFAULT_USER = PKG_NAME
 MONGODB_DEFAULT_PWD = "pass"
 MONGODB_DEFAULT_PORT = 27017
+
+#fs
+FS_DEFAULT_OUTPUT_DIR = "/tmp/{pkg_name}".format(pkg_name=PKG_NAME)
