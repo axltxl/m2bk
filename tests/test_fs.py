@@ -3,7 +3,7 @@ Test for: fs
 """
 
 
-from nose.tools import raises, eq_, ok_, assert_raises
+from nose.tools import raises , ok_, assert_raises
 import os
 from m2bk import fs
 

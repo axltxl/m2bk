@@ -29,6 +29,7 @@ import shutil
 from . import utils, log
 from .const import FS_DEFAULT_OUTPUT_DIR
 
+# Output directory name
 _output_dir = None
 
 
@@ -40,7 +41,14 @@ def get_output_dir():
     """
     return _output_dir
 
+
 def init(**kwargs):
+    """
+    Set up output directory
+
+    :param \*\*kwargs: arbitrary keyword arguments
+    :return:
+    """
     # Output directory
     global _output_dir
     _output_dir = kwargs.get('output_dir', FS_DEFAULT_OUTPUT_DIR)
@@ -61,6 +69,9 @@ def init(**kwargs):
 
 
 def cleanup():
+    """
+    Cleanup the output directory
+    """
     if os.path.exists(_output_dir):
         log.msg_warn("Cleaning up output directory at '{output_dir}' ...".format(output_dir=_output_dir))
         shutil.rmtree(_output_dir)

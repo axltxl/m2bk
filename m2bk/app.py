@@ -38,6 +38,7 @@ from m2bk.const import (
 # command line options and flags
 _opt = {}
 
+
 def init_parsecmdline(argv=[]):
     """
     Parse arguments from the command line
@@ -127,13 +128,19 @@ def init(argv):
     signal.signal(signal.SIGINT,  _handle_signal)
     signal.signal(signal.SIGTERM, _handle_signal)
 
-def _handle_signal (signum, frame):
+
+def _handle_signal(signum, frame):
     shutdown()
 
+
 def shutdown():
+    """
+    Cleanup
+    """
     log.msg("Exiting...")
     #
     fs.cleanup()
+
 
 def _handle_except(e):
     """
@@ -152,8 +159,6 @@ def _handle_except(e):
     return 1
 
 
-
-
 def make_backup_files(mongodb, aws):
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
@@ -164,6 +169,7 @@ def make_backup_files(mongodb, aws):
     for file, key in mongodump_files:
         # Upload the resulting file to AWS
         s3.upload_file(file, key, dry_run=_opt["dry_run"], **aws)
+
 
 def main(argv=None):
     """

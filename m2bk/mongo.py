@@ -64,6 +64,7 @@ def _set_mongodb_host_val(key, default, mongodb_host, mongodb_defaults):
             log.msg_debug("Setting default '{key}'='{value}' "
                           .format(key=key, value=mongodb_host[key]))
 
+
 def _merge_dbs(default_dbs, host_dbs):
     return list(set(default_dbs + host_dbs))
 
@@ -114,7 +115,6 @@ def make_backup_files(**kwargs):
         if not 'address' in mongodb_host:
             raise KeyError("No 'address' specified!")
         utils.chkstr(mongodb_host['address'], 'address')
-
 
         """
         For these keys, the value is going to be set in
@@ -205,7 +205,7 @@ def _make_backup_file(**kwargs):
     # avoid name collisions
     f_uuid = uuid.uuid4().hex
     out_dir = "{out}/mongodump-{name}-{now}-{uuid}"\
-                .format(name=name, out=out, now=now, uuid=f_uuid)
+              .format(name=name, out=out, now=now, uuid=f_uuid)
     # create the current backup directory
     os.makedirs(out_dir)
     log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
@@ -231,9 +231,9 @@ def _mongodump(mongodump, address, port, user, passwd, db, out_dir, dry_run):
 
     # Log the call
     log.msg("mongodump [{mongodump}] db={db} "
-                  "mongodb://{user}@{host}:{port} > {output}"
-                  .format(mongodump=mongodump, user=user, host=address,
-                          port=port, db=db, output=out_dir))
+            "mongodb://{user}@{host}:{port} > {output}"
+            .format(mongodump=mongodump, user=user, host=address,
+                    port=port, db=db, output=out_dir))
 
     # Prepare the call
     args = "{mongodump} --host {host}:{port} -d {db} -u {user} -p {passwd} " \
