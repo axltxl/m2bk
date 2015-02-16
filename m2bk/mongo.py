@@ -26,9 +26,7 @@ Make gzipped database backups via mongodump
 
 
 import os
-import subprocess
 import time
-import sys
 import uuid
 from . import log, utils, fs, shell
 from .const import (
@@ -212,12 +210,12 @@ def _make_backup_file(**kwargs):
 
     # For each database specified, run mongodump on it
     for db in dbs:
-        _mongodump(mongodump, address, port, user, passwd, db, out_dir, dry_run)
+        _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, dry_run)
     # After all has been done, make a gzipped tarball from it
     return fs.make_file(out_dir)
 
 
-def _mongodump(mongodump, address, port, user, passwd, db, out_dir, dry_run):
+def _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, dry_run):
     """
     Run mongodump on a database
 
