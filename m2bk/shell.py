@@ -22,11 +22,11 @@ SOFTWARE.
 shell execution wrapper module
 """
 
-import envoy # envoy is awesome for this job
+import envoy  # envoy is awesome for this job
 from . import utils, log
 
 
-def exec(cmd, **kwargs):
+def run(cmd, **kwargs):
     """
     Execute a process
 
