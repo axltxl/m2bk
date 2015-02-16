@@ -30,7 +30,7 @@ import subprocess
 import time
 import sys
 import uuid
-from . import log, utils, fs
+from . import log, utils, fs, shell
 from .const import (
     MONGODB_DEFAULT_PORT,
     MONGODB_DEFAULT_MONGODUMP,
@@ -236,29 +236,11 @@ def _mongodump(mongodump, address, port, user, passwd, db, out_dir, dry_run):
                     port=port, db=db, output=out_dir))
 
     # Prepare the call
-    args = "{mongodump} --host {host}:{port} -d {db} -u {user} -p {passwd} " \
+    cmd  = mongodump
+    args = "--host {host}:{port} -d {db} -u {user} -p {passwd} " \
            "--authenticationDatabase admin -o {output}"\
-          .format(mongodump=mongodump, host=address, port=port,
-                  db=db, user=user, passwd=passwd, output=out_dir)
+          .format(host=address, port=port, db=db, user=user, passwd=passwd, output=out_dir)
 
     if not dry_run:
         # Make the actual call to mongodump
-        p = subprocess.Popen(args.split(),
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # wait for the process to finish
-        p.wait()
-
-        # Print stdout and stderr from the mongodump process
-        stdout_data, stderr_data = p.communicate()
-        stdout_str = stdout_data.decode(sys.stdout.encoding)
-        stderr_str = stderr_data.decode(sys.stdout.encoding)
-        log.msg_debug("{mongodump} > {stdout}"
-                      .format(mongodump=mongodump, stdout=stdout_str))
-        if stderr_str != '':
-            log.msg_err("{mongodump} > {stderr}"
-                        .format(mongodump=mongodump, stderr=stderr_str))
-
-        # In this way, we will know what went wrong on mongodump
-        if p.returncode != 0:
-            raise OSError("mongodump failed!. Reason: {reason}"
-                          .format(reason=p.communicate()))
+        shell.exec(cmd, args=args)
