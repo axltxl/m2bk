@@ -234,11 +234,10 @@ def _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, dry_run
                     port=port, db=db, output=out_dir))
 
     # Prepare the call
-    cmd = mongodump
     args = "--host {host}:{port} -d {db} -u {user} -p {passwd} " \
            "--authenticationDatabase admin -o {output}"\
           .format(host=address, port=port, db=db, user=user, passwd=passwd, output=out_dir)
 
     if not dry_run:
         # Make the actual call to mongodump
-        shell.run(cmd, args=args)
+        shell.run(mongodump, args=args)
