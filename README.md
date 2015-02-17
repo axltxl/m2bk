@@ -6,6 +6,7 @@
 ##Requirements
 * [python](http://python.org) >= 3.3
 * [boto](http://docs.pythonboto.org/en/latest/) >= 2.33
+* [envoy](https://pypi.python.org/pypi/envoy) >= 0.0.3
 * mongodump >= 2.4
 
 Issues

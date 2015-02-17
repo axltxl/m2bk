@@ -51,7 +51,8 @@ setup(
         ],
     },
     install_requires = [
-        'boto==2.34.0'
+        'boto==2.34.0',
+        'envoy>=0.0.3'
     ],
     tests_require = [
         'nose>=1.3'
