@@ -83,36 +83,31 @@ The configuration is handled through a simple [JSON](http://www.json.org) file i
            
 The following is an example of what a configuration file looks like:
 
-```json
-{
-	"debug": true,
-	"log": {
-	},
-	"aws": {
-	"aws_id": "SDF73HSDF3663KSKDJ",
-	"aws_access_key": "d577273ff885c3f84dadb8578bb41399"
-	},
-	"mongodb": {
-		"mongodump" : "/opt/bin/mongodump",
-		"output_dir" : "/opt/tmp/mydir",
-		"host_defaults" : {
-			"port" : 666,
-			"user_name" : "satan",
-			"password" : "14mh4x0r",
-		},
-		"hosts": [
-			{
-				"port": 34127,
-				"dbs": ["app", "sessions", "another_one"]
-			},
-			{
-				"name" : "bar",
-				"address" : "bar.example.com",
-				"password" : "1AmAn07h3rh4x0r"
-			}
-		]
-	}
-}
+```yaml
+---
+debug: true
+log: {}
+aws: 
+  aws_id: "SDF73HSDF3663KSKDJ"
+  aws_access_key: "d577273ff885c3f84dadb8578bb41399"
+mongodb: 
+  mongodump: "/opt/bin/mongodump"
+  output_dir: "/opt/tmp/mydir"
+  host_defaults: 
+    port: 666
+    user_name: "satan"
+    password: "14mh4x0r"
+  hosts: 
+    foo:
+      address: "foo.example.local" 
+      port: 34127
+      dbs: 
+        - "app"
+        - "sessions"
+        - "another_one"
+    bar:
+      address: "bar.example.com"
+      password: "1AmAn07h3rh4x0r"
 ```
 Through this configuration file, you can set key variables about the databases you want to backup and the AWS S3 bucket you wish to send them to.
 ###Configuration file: sections and directives
