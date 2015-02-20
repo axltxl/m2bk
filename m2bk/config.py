@@ -19,12 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ---------------------------
-JSON-based configuration:
+YAML-based configuration:
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-Configuration dictionary via a JSON file
+Configuration dictionary via a YAML file
 """
 
-import json
+import yaml
 
 # Base configuration object
 _config = {}
@@ -130,7 +130,7 @@ def set_from_file(file_name):
     _config_file_name = file_name
     # Try to open the file and get the json data into a dictionary
     with open(file_name, "r") as file:
-        data = json.loads(file.read().replace('\n', ''))
+        data = yaml.load(file)
     # each value found will overwrite the same value in the config
     _list_merge(data, _config)
 

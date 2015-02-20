@@ -51,19 +51,20 @@ setup(
         ],
     },
     install_requires = [
-        'boto==2.34.0',
-        'envoy>=0.0.3'
+        'boto  == 2.34.0',
+        'envoy >= 0.0.3',
+        'pyyaml >= 3.11',
     ],
     tests_require = [
-        'nose>=1.3'
+        'nose >= 1.3'
     ],
     author = "Alejandro Ricoveri",
-    author_email = "alejandro.ricoveri@blanclink.com",
+    author_email = "alejandroricoveri@gmail.com",
     description = "mongodump straight to Amazon S3",
     long_description = "m2bk is able to perform mongodb backups via mongodump "
                        "and then send them straight to Amazon S3 buckets",
     test_suite="nose.collector",
     data_files = [
-        (conf_dir, ['data/m2bk.conf'])
+        (conf_dir, ['data/m2bk.yaml'])
     ]
 )

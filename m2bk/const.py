@@ -34,7 +34,7 @@ AWS_DEFAULT_ACCESS_KEY = ""
 AWS_S3_DEFAULT_BUCKET_NAME = PKG_NAME
 
 # Config
-CONF_DEFAULT_FILE = "/etc/{pkg_name}.conf".format(pkg_name=PKG_NAME)
+CONF_DEFAULT_FILE = "/etc/{pkg_name}.yaml".format(pkg_name=PKG_NAME)
 
 # mongodump
 MONGODB_DEFAULT_MONGODUMP = "mongodump"

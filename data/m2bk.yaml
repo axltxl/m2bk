@@ -1,0 +1,17 @@
+---
+#
+# Copyright (c) Alejandro Ricoveri
+# m2bk: A command line tool to simplify MongoDB backups
+
+
+#
+# Debug mode
+#
+debug: false
+
+#
+# Amazon Web Services credentials
+#
+aws: 
+  aws_id: ""
+  aws_access_key: ""
