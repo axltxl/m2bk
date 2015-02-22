@@ -34,11 +34,12 @@ from .const import (
 )
 
 
-def upload_file(file, key, **kwargs):
+def upload_file(file_name, key_name, **kwargs):
     """
     Backup a file on S3
 
     :param file_name: full path to the file to be backed up
+    :param key_name: this will be used to locate the file on S3
     :param \*\*kwargs: arbitrary keyword arguments
     :raises TypeError: if an argument in kwargs does not have the type expected
     :raises ValueError: if an argument within kwargs has an invalid value
@@ -88,18 +89,17 @@ def upload_file(file, key, **kwargs):
 
     # The key is the name of the file itself who needs to be stripped
     # from its full path
-    key_name = "{key}/{file_name}".format(key=key,
-                                          file_name=ntpath.basename(file))
+    key_path = "{key}/{file}".format(key=key_name, file=ntpath.basename(file_name))
 
     if not dry_run:
         # Create a new bucket key
         k = boto.s3.key.Key(bucket)
-        k.key = key_name
+        k.key = key_path
     # Upload the file to Amazon
-    log.msg("Uploading '{key_name}' to bucket '{bucket_name}' ..."
-            .format(key_name=key_name, bucket_name=bucket_name))
+    log.msg("Uploading '{key_path}' to bucket '{bucket_name}' ..."
+            .format(key_path=key_path, bucket_name=bucket_name))
     if not dry_run:
         # It is important to encrypt the data on the server side
-        k.set_contents_from_filename(file, encrypt_key=True)
-    log.msg("The file '{key_name}' has been successfully uploaded to S3!"
-            .format(key_name=key_name))
+        k.set_contents_from_filename(file_name, encrypt_key=True)
+    log.msg("The file '{key_path}' has been successfully uploaded to S3!"
+            .format(key_path=key_path))

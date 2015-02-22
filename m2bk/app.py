@@ -140,9 +140,8 @@ def shutdown():
     """
     Cleanup
     """
-    log.msg("Exiting...")
-    #
     fs.cleanup()
+    log.msg("Exiting...")
 
 
 def _handle_except(e):
@@ -163,15 +162,17 @@ def _handle_except(e):
 
 
 def make_backup_files(mongodb, aws):
+
+    #  dry run
+    dry_run = _opt["dry_run"]
+
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
+    mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
 
-    mongodump_files = mongo.make_backup_files(
-        dry_run=_opt["dry_run"], **mongodb)
-
-    for file, key in mongodump_files:
-        # Upload the resulting file to AWS
-        s3.upload_file(file, key, dry_run=_opt["dry_run"], **aws)
+    # Upload the resulting file to AWS
+    for key_name, file_name in mongodump_files.items():
+        s3.upload_file(file_name, key_name, dry_run=dry_run, **aws)
 
 
 def main(argv=None):

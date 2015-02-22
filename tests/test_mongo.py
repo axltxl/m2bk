@@ -34,18 +34,16 @@ def _test_make_backup_files(e, **kwargs):
     """
     Individual test for mongo.make_backup_files
     """
-    hosts = [
-        {
-            'name': 'ello',
+    hosts = {
+        'ello': {
             'address' : 'somehost',
             'dbs': ['marco', 'polo']
         },
-        {
-            'name': 'ello_again',
+        'ello_again': {
             'address': 'somehost',
             'dbs': ['marco', 'polo']
         }
-    ]
+    }
     assert_raises(e, mongo.make_backup_files,
                   dry_run=True, hosts=hosts, **kwargs)
 
@@ -79,23 +77,21 @@ def test_make_backup_files_invalid_kwargs():
     _test_make_backup_files(TypeError, host_defaults={"password": 123})
     _test_make_backup_files(ValueError, host_defaults={"password": ''})
     # name must be str
-    assert_raises(TypeError, mongo.make_backup_files, hosts=[{'name': 123}])
-    assert_raises(ValueError, mongo.make_backup_files, hosts=[{'name': ''}])
+    assert_raises(TypeError, mongo.make_backup_files, hosts={123:''})
 
     # with either invalid or empty dbs, it has to be an array in the first place
-    hosts = [
-        {
-            'name': 'ello',
+    hosts = {
+        'ello': {
             'address' : 'somehost',
             'dbs': []
-        },
-    ]
+        }
+    }
     assert_raises(ValueError, mongo.make_backup_files, hosts=hosts)
 
-    hosts[0]["dbs"] = 123
+    hosts['ello']["dbs"] = 123
     assert_raises(ValueError, mongo.make_backup_files, hosts=hosts)
 
 
-    hosts[0]["dbs"] = ['asd', 123]
+    hosts['ello']["dbs"] = ['asd', 123]
     assert_raises(TypeError, mongo.make_backup_files, hosts=hosts)
 
