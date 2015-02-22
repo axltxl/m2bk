@@ -140,9 +140,8 @@ def shutdown():
     """
     Cleanup
     """
-    log.msg("Exiting...")
-    #
     fs.cleanup()
+    log.msg("Exiting...")
 
 
 def _handle_except(e):
