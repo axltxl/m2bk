@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 Copyright (c) Alejandro Ricoveri
 m2bk: A command line tool to simplify MongoDB backups
@@ -26,13 +29,14 @@ from setuptools import setup, find_packages
 import versioneer
 import sys
 import os
+from m2bk.const import PKG_NAME
 
 # versioneer
 versioneer.VCS = 'git'
-versioneer.versionfile_source = 'm2bk/_version.py'
-versioneer.versionfile_build = 'm2bk/_version.py'
+versioneer.versionfile_source = "{p}/_version.py".format(p=PKG_NAME)
+versioneer.versionfile_build = "{p}/_version.py".format(p=PKG_NAME)
 versioneer.tag_prefix = ''
-versioneer.parentdir_prefix = 'm2bk-'
+versioneer.parentdir_prefix = "{p}-".format(p=PKG_NAME)
 
 # default config file location
 if sys.prefix != '/usr':
@@ -40,11 +44,32 @@ if sys.prefix != '/usr':
 else:
     conf_dir = '/etc'
 
+pkg_url = "https://github.com/axltxl/{p}".format(p=PKG_NAME)
+pkg_ver = versioneer.get_version()
+
 setup(
-    name = "m2bk",
-    version=versioneer.get_version(),
+    name=PKG_NAME,
+    version=pkg_ver,
     cmdclass=versioneer.get_cmdclass(),
-    packages = find_packages(exclude=["tests"]),
+    packages=find_packages(exclude=["tests"]),
+    author="Alejandro Ricoveri",
+    author_email="alejandroricoveri@gmail.com",
+    description="A command line tool to simplify MongoDB backups",
+    long_description=open('README.rst').read(),
+    url=pkg_url,
+    license='MIT',
+    download_url="{url}/tarball/{version}".format(url=pkg_url, version=pkg_ver),
+    keywords=['mongodb', 'aws', 'backup', 's3'],
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console	',
+        'Topic :: Database',
+        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.3',
+    ],
     entry_points={
         'console_scripts': [
             'm2bk = m2bk.app:main',
@@ -55,16 +80,7 @@ setup(
         'envoy >= 0.0.3',
         'pyyaml >= 3.11',
     ],
-    tests_require = [
-        'nose >= 1.3'
-    ],
-    author = "Alejandro Ricoveri",
-    author_email = "alejandroricoveri@gmail.com",
-    description = "mongodump straight to Amazon S3",
-    long_description = "m2bk is able to perform mongodb backups via mongodump "
-                       "and then send them straight to Amazon S3 buckets",
+    tests_require = ['nose >= 1.3'],
     test_suite="nose.collector",
-    data_files = [
-        (conf_dir, ['data/m2bk.yaml'])
-    ]
+    data_files=[(conf_dir, ['data/m2bk.yaml'])]
 )
