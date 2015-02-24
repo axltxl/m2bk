@@ -74,7 +74,7 @@ def cleanup():
     """
     Cleanup the output directory
     """
-    if os.path.exists(_output_dir):
+    if _output_dir and os.path.exists(_output_dir):
         log.msg_warn("Cleaning up output directory at '{output_dir}' ...".format(output_dir=_output_dir))
         shutil.rmtree(_output_dir)
 
