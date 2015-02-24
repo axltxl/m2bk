@@ -29,7 +29,7 @@ from setuptools import setup, find_packages
 import versioneer
 import sys
 import os
-from m2bk.const import PKG_NAME
+from m2bk.const import PKG_NAME, PKG_URL
 
 # versioneer
 versioneer.VCS = 'git'
@@ -44,7 +44,6 @@ if sys.prefix != '/usr':
 else:
     conf_dir = '/etc'
 
-pkg_url = "https://github.com/axltxl/{p}".format(p=PKG_NAME)
 pkg_ver = versioneer.get_version()
 
 setup(
@@ -56,9 +55,9 @@ setup(
     author_email="alejandroricoveri@gmail.com",
     description="A command line tool to simplify MongoDB backups",
     long_description=open('README.rst').read(),
-    url=pkg_url,
+    url=PKG_URL,
     license='MIT',
-    download_url="{url}/tarball/{version}".format(url=pkg_url, version=pkg_ver),
+    download_url="{url}/tarball/{version}".format(url=PKG_URL, version=pkg_ver),
     keywords=['mongodb', 'aws', 'backup', 's3'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

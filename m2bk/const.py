@@ -26,6 +26,7 @@ Constants
 
 # Basics
 PKG_NAME = "m2bk"
+PKG_URL  = "https://github.com/axltxl/{pkg_name}".format(pkg_name=PKG_NAME)
 
 # Logs
 LOG_LVL_DEFAULT = 0

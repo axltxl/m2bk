@@ -33,7 +33,7 @@ from m2bk import config, log, mongo, s3, fs
 from m2bk import __version__ as version
 from m2bk.const import (
     LOG_LVL_DEFAULT,
-    PKG_NAME,
+    PKG_NAME, PKG_URL,
     CONF_DEFAULT_FILE
 )
 
@@ -89,6 +89,7 @@ def init_parsecmdline(argv=[]):
     log.init(_opt['log_lvl'], _opt["log_to_stdout"])
 
     # Mark the start of executions
+    log.msg("{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL))
     log.msg('***************************************')
 
     # Merge configuration with a JSON file
