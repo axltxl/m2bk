@@ -87,7 +87,7 @@ def make_tmp_dir(prefix):
     return out_dir
 
 
-def make_file(src_dir):
+def make_tarball(src_dir):
     """
     Make gzipped tarball from a source directory
 

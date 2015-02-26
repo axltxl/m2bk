@@ -183,7 +183,7 @@ def _make_backup_file(**kwargs):
     for db in dbs:
         _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, auth_db, dry_run)
     # After all has been done, make a gzipped tarball from it
-    return fs.make_file(out_dir)
+    return fs.make_tarball(out_dir)
 
 
 def _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, auth_db, dry_run):
