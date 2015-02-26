@@ -12,13 +12,9 @@ gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
 -  `Requirements <#requirements>`_
 -  `Contributing <#contributing>`_
--  `Copyright and licensing <#copyright-and-licensing>`_
--  `Usage <#usage>`_
-
-   -  `Options <#options>`_
-
 -  `Installation <#installation>`_
 -  `Basic usage <#basic-usage>`_
+-  `Options <#options>`_
 -  `Configuration file <#configuration-file>`_
 
    -  `Sections and directives <#configuration-file-sections-and-directives>`_
@@ -30,6 +26,7 @@ gzipped tarball and finally sends them to an **AWS S3 bucket**.
          -  `mongodb.hosts section <#mongodbhosts-section>`_
 
       -  `aws section <#aws-section>`_
+-  `Copyright and licensing <#copyright-and-licensing>`_
 
 Requirements
 ============
@@ -38,7 +35,7 @@ Requirements
 -  `boto <http://docs.pythonboto.org/en/latest/>`_ >= 2.33
 -  `envoy <https://pypi.python.org/pypi/envoy>`_ >= 0.0.3
 -  `pyyaml <http://pyyaml.org>`_ >= 3.11
--  mongodb >= 2.4
+-  `mongodb <http://www.mongodb.org>`_ >= 2.4
 
 
 Contributing
@@ -93,55 +90,12 @@ the most recent changes from "upstream" before making a pull request.
   git commit -a -m "My commit message"
   git push origin my_feature_branch
 
-5. Submit a `pull request <https://github.com/axltxl/m2bk/compare/>`_ with your feature branch containing your changes
-
-
-Copyright and Licensing
-=======================
-
-Copyright (c) 2014 Alejandro Ricoveri
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Usage
-=====
-
-::
-
-    m2bk [options]
-
-Options
--------
-
--  ``--version`` show version number and exit
--  ``-h | --help`` show a help message and exit
--  ``-c [file] | --config=[file] | --config [file]`` specify configuration file to use
--  ``-d | --dry-run`` don't actually do anything
--  ``-s | --stdout`` log messages to stdout too
--  ``--ll | --log-level=[num]`` set logging output level
+5. Submit a `pull request <https://github.com/axltxl/m2bk/compare/>`_ with your feature branch containing your changes.
 
 Installation
 ============
 
-Once the source distribution has been downloaded, installation can be
-made via `pip <https://github.com/pypa/pip>`_ or
+Installation of m2bk can be made directly from source, via `pip <https://github.com/pypa/pip>`_ or
 `easy_install <http://pythonhosted.org/setuptools/easy_install.html>`_, whichever you prefer.
 
 Option # 1: pip
@@ -169,7 +123,6 @@ From this point you can edit your `configuration file <#configuration-file>`_
 
   $ vi /etc/m2bk/m2bk.yaml
 
-
 Basic Usage
 ===========
 Normal execution
@@ -192,6 +145,20 @@ Specify an alternate configuration file
 
   $ m2bk -c /path/to/my/custom/m2bk.yaml
 
+
+Options
+=======
+::
+
+    m2bk [options]
+
+
+-  ``--version`` show version number and exit
+-  ``-h | --help`` show a help message and exit
+-  ``-c [file] | --config=[file] | --config [file]`` specify configuration file to use
+-  ``-d | --dry-run`` don't actually do anything
+-  ``-s | --stdout`` log messages to stdout too
+-  ``--ll | --log-level=[num]`` set logging output level
 
 Configuration file
 ------------------
@@ -433,3 +400,28 @@ aws.aws_id
 -  Required: NO
 -  Default value: ``m2bk``
 -  Role: name of the main S3 bucket where m2bk is going to upload the compressed backups for each mongodb server specified in ``mongodb`` section
+
+
+Copyright and Licensing
+=======================
+
+Copyright (c) Alejandro Ricoveri
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
