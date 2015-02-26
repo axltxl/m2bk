@@ -17,6 +17,8 @@ gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
    -  `Options <#options>`_
 
+-  `Installation <#installation>`_
+-  `Basic usage <#basic-usage>`_
 -  `Configuration file <#configuration-file>`_
 
    -  `Sections and directives <#configuration-file-sections-and-directives>`_
@@ -142,18 +144,54 @@ Once the source distribution has been downloaded, installation can be
 made via `pip <https://github.com/pypa/pip>`_ or
 `easy_install <http://pythonhosted.org/setuptools/easy_install.html>`_, whichever you prefer.
 
+Option # 1: pip
+---------------
 ::
 
-  $ # setuptools installation
-  $ cd m2bk
-  $ python3 setup.py install
-  $ # from this point, you can create your configuration file
-  $ vi /etc/m2bk/m2bk.yaml
-  $ # Once installed, you can try it
-  $ m2bk -c /path/to/myconfig.yaml
+    $ pip install m2bk
 
-If everything went well, you can then check out your S3 bucket to see
-the backup.
+Option # 2: from source
+-----------------------
+::
+
+    $ git clone git@github.com:axltxl/m2bk.git
+    $ cd m2bk
+    $ python3 setup.py install
+
+Option # 3: easy_install
+------------------------
+::
+
+    $ easy_install m2bk
+
+From this point you can edit your `configuration file <#configuration-file`_
+::
+
+  $ vi /etc/m2bk/m2bk.yaml
+
+
+Basic Usage
+===========
+Normal execution
+::
+
+  $ m2bk
+
+Display output on stdout
+::
+
+  $ m2bk -s
+
+Dry run
+::
+
+  $ m2bk -d
+
+Specify an alternate configuration file
+::
+
+  $ m2bk -c /path/to/my/custom/m2bk.yaml
+
 
 Configuration file
 ------------------
