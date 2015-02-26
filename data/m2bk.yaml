@@ -59,7 +59,8 @@ mongodb:
 # under a single section, this is entirely optional but also 
 # it is the best for easily manageable configuration files 
 # in order to avoid redundancy. 
-# The supported directives are user_name, password, dbs and port . See hosts section.
+# The supported directives are user_name, password, dbs, auth_db and port.
+# See hosts section.
   host_defaults: {}
 
 #
