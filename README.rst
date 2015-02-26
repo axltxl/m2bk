@@ -164,7 +164,7 @@ Option # 3: easy_install
 
     $ easy_install m2bk
 
-From this point you can edit your `configuration file <#configuration-file`_
+From this point you can edit your `configuration file <#configuration-file>`_
 ::
 
   $ vi /etc/m2bk/m2bk.yaml
