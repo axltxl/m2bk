@@ -12,9 +12,6 @@ Database backups via mongodump
 """
 
 
-import os
-import time
-import uuid
 from . import log, utils, fs, shell
 from .const import (
     MONGODB_DEFAULT_PORT,
@@ -124,7 +121,6 @@ def make_backup_files(**kwargs):
         mongodump_files[mongodb_host_name] = _make_backup_file(dry_run=dry_run, mongodump=mongodump,
                                                                output_dir=output_dir, name=mongodb_host_name,
                                                                **mongodb_host)
-
     # .. and finally, give it
     return mongodump_files
 
@@ -142,8 +138,7 @@ def _make_backup_file(**kwargs):
 
     # Path to the mongodump executable
     mongodump = kwargs.get('mongodump')
-    # Output directory
-    out = kwargs.get('output_dir')
+
     # Host and port
     address = kwargs.get('address')
     port = kwargs.get('port')
@@ -182,15 +177,7 @@ def _make_backup_file(**kwargs):
 
     # The mongodump directory is going to have a name indicating
     # the UNIX timestamp corresponding to the current creation time
-    now = time.strftime("%Y-%m-%d_%H%M", time.gmtime(time.time()))
-    # A random UUID is appended to the output directory in order to
-    # avoid name collisions
-    f_uuid = uuid.uuid4().hex
-    out_dir = "{out}/mongodump-{name}-{now}-{uuid}"\
-              .format(name=name, out=out, now=now, uuid=f_uuid)
-    # create the current backup directory
-    os.makedirs(out_dir)
-    log.msg_debug("Output directory: {out_dir}".format(out_dir=out_dir))
+    out_dir = fs.make_tmp_dir("mongodump-{name}".format(name=name))
 
     # For each database specified, run mongodump on it
     for db in dbs:
