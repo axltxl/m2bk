@@ -163,6 +163,7 @@ file including a series of *sections* (which are YAML objects), each one
 composed by *directives* (YAML numbers, strings or arrays), these will
 determine a corresponding behavior on **m2bk**. If **m2bk** does not receive
 any configuration file on command line, it will try to read ``/etc/m2bk.yaml``.
+**Please note the configuration format is still a work in progress and will most likely change in the early stages of m2bk.**
 
 
 The following is an example of what a configuration file looks like:
