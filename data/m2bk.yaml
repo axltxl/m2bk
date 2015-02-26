@@ -13,6 +13,13 @@
 #
 debug: false
 
+# This section has directives regarding
+# files and directories used
+#fs:
+#  Full path to the temporary directory
+#  in which backups are going to be written
+#  output_dir: "/tmp/my_backups"
+
 #
 # This section holds directives regarding mongodb servers m2bk 
 # is going to connect to, including databases that 
@@ -25,7 +32,6 @@ mongodb:
 
 #  Directory where m2bk is going to temporarily save backup files
 #  Default value: /tmp/m2bk
-#  output_dir: "/tmp/my_backups"
 
 # This is an object/hash, where each element contains a series of 
 # directives relative to a mongodb database located at a server,
