@@ -25,11 +25,20 @@ SOFTWARE.
 setuptools config file
 """
 
+import sys
+
+# Check minimum Python version
+PYVER_MAJOR = 3
+PYVER_MINOR = 3
+if not (sys.version_info[0] == PYVER_MAJOR and sys.version_info[1] >= PYVER_MINOR):
+    print("Sorry, Python >= 3.3 is supported (for the moment")
+    sys.exit(1)
+
 from setuptools import setup, find_packages
 import versioneer
-import sys
 import os
 from m2bk.const import PKG_NAME, PKG_URL
+
 
 # versioneer
 versioneer.VCS = 'git'
