@@ -80,6 +80,8 @@ def test_make_backup_files_invalid_kwargs():
     _test_make_backup_files(ValueError, host_defaults={"password": ''})
     # name must be str
     assert_raises(TypeError, mongo.make_backup_files, hosts={123:''})
+    # auth_db must be string
+    _test_make_backup_files(TypeError, host_defaults={"auth_db":123})
 
     # with either invalid or empty dbs, it has to be an array in the first place
     hosts = {

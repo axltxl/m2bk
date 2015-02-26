@@ -21,6 +21,7 @@ from .const import (
     MONGODB_DEFAULT_MONGODUMP,
     MONGODB_DEFAULT_USER,
     MONGODB_DEFAULT_PWD,
+    MONGODB_DEFAULT_AUTH
 )
 
 
@@ -106,25 +107,23 @@ def make_backup_files(**kwargs):
         sub-section within 'mongodb', as a last resort, its hardcoded default
         value is going to be picked.
         """
-        _set_mongodb_host_val('user_name', MONGODB_DEFAULT_USER,
-                              mongodb_host, mongodb_defaults)
-        _set_mongodb_host_val('password', MONGODB_DEFAULT_PWD,
-                              mongodb_host, mongodb_defaults)
-        _set_mongodb_host_val('port', MONGODB_DEFAULT_PORT,
-                              mongodb_host, mongodb_defaults)
+        #TODO: there has to be something better than this
+        _set_mongodb_host_val('user_name', MONGODB_DEFAULT_USER, mongodb_host, mongodb_defaults)
+        _set_mongodb_host_val('password', MONGODB_DEFAULT_PWD, mongodb_host, mongodb_defaults)
+        _set_mongodb_host_val('port', MONGODB_DEFAULT_PORT, mongodb_host, mongodb_defaults)
+        _set_mongodb_host_val('auth_db', MONGODB_DEFAULT_AUTH, mongodb_host, mongodb_defaults)
 
         """Merge dbs list with that of the host_defaults section (if any)"""
         if 'dbs' in mongodb_defaults:
             if 'dbs' in mongodb_host:
-                mongodb_host['dbs'] = _merge_dbs(mongodb_defaults['dbs'],
-                                                 mongodb_host['dbs'])
+                mongodb_host['dbs'] = _merge_dbs(mongodb_defaults['dbs'], mongodb_host['dbs'])
             else:
                 mongodb_host['dbs'] = mongodb_defaults['dbs']
 
         # Add the file name to the list to be returned
-        mongodump_files[mongodb_host_name] \
-            = _make_backup_file(dry_run=dry_run, mongodump=mongodump,
-                                output_dir=output_dir, name=mongodb_host_name, **mongodb_host)
+        mongodump_files[mongodb_host_name] = _make_backup_file(dry_run=dry_run, mongodump=mongodump,
+                                                               output_dir=output_dir, name=mongodb_host_name,
+                                                               **mongodb_host)
 
     # .. and finally, give it
     return mongodump_files
@@ -157,12 +156,15 @@ def _make_backup_file(**kwargs):
     dry_run = kwargs.get('dry_run')
     # name
     name = kwargs.get('name')
+    # auth_db
+    auth_db = kwargs.get('auth_db')
 
     # Type checks
     utils.chkstr(name, 'name')
     utils.chkstr(address, 'address')
     utils.chkstr(user, 'user_name')
     utils.chkstr(passwd, 'password')
+    utils.chkstr(auth_db, 'auth_db')
 
     # Check port
     if type(port) != int:
@@ -192,12 +194,12 @@ def _make_backup_file(**kwargs):
 
     # For each database specified, run mongodump on it
     for db in dbs:
-        _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, dry_run)
+        _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, auth_db, dry_run)
     # After all has been done, make a gzipped tarball from it
     return fs.make_file(out_dir)
 
 
-def _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, dry_run):
+def _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, auth_db, dry_run):
     """
     Run mongodump on a database
 
@@ -206,19 +208,22 @@ def _mongodump_exec(mongodump, address, port, user, passwd, db, out_dir, dry_run
     :param user: user name
     :param passwd: password
     :param db: database name
+    :param out_dir: output directory
+    :param auth_db: authentication database
+    :param dry_run: dry run mode
     :raises OSError: if mongodump process returns error
     """
 
     # Log the call
-    log.msg("mongodump [{mongodump}] db={db} "
+    log.msg("mongodump [{mongodump}] db={db} auth_db={auth_db}"
             "mongodb://{user}@{host}:{port} > {output}"
             .format(mongodump=mongodump, user=user, host=address,
-                    port=port, db=db, output=out_dir))
+                    port=port, db=db, auth_db=auth_db, output=out_dir))
 
     # Prepare the call
     args = "--host {host}:{port} -d {db} -u {user} -p {passwd} " \
-           "--authenticationDatabase admin -o {output}"\
-          .format(host=address, port=port, db=db, user=user, passwd=passwd, output=out_dir)
+           "--authenticationDatabase {auth_db} -o {output}"\
+          .format(host=address, port=port, db=db, user=user, passwd=passwd, auth_db=auth_db, output=out_dir)
 
     if not dry_run:
         # Make the actual call to mongodump
