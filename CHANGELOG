@@ -6,6 +6,7 @@ Version 0.3.0:
 * [config] mongodb.output_dir has been migrated to fs.output_dir
 * [config] configuration file format has been changed from JSON to YAML
 * [config] New option mongodb.hosts.*.auth_db for specifying authentication database per host
+* ISO8601 format is used for naming temporary directories
 
 Version 0.2.3:
 ------------
