@@ -11,7 +11,6 @@ mongodump straight to Amazon S3
 gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
 -  `Requirements <#requirements>`_
--  `Issues <#issues>`_
 -  `Contributing <#contributing>`_
 -  `Copyright and licensing <#copyright-and-licensing>`_
 -  `Usage <#usage>`_
