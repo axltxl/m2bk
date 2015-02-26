@@ -3,7 +3,7 @@ m2bk
 
 .. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop
 
-mongodump straight to Amazon S3
+Send your mongodump backups straight to AWS S3
 -------------------------------
 
 *m2bk* is command line tool that performs a number of
