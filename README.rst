@@ -6,7 +6,7 @@ m2bk
 mongodump straight to Amazon S3
 -------------------------------
 
-*m2bk* is a small DevOps command line tool who performs a number of
+*m2bk* is command line tool that performs a number of
 **mongodb database backups via mongodump**, compresses them into a
 gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
@@ -22,7 +22,7 @@ gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
    -  `Sections and directives <#configuration-file-sections-and-directives>`_
 
-      -  `log section <#log-section>`_
+      -  `fs section <#fs-section>`_
       -  `mongodb section <#mongodb-section>`_
 
          -  `mongodb.host_defaults section <#mongodbhost_defaults-section>`_
@@ -37,27 +37,63 @@ Requirements
 -  `boto <http://docs.pythonboto.org/en/latest/>`_ >= 2.33
 -  `envoy <https://pypi.python.org/pypi/envoy>`_ >= 0.0.3
 -  `pyyaml <http://pyyaml.org>`_ >= 3.11
--  mongodump >= 2.4
+-  mongodb >= 2.4
 
-Issues
-======
-
-Feel free to submit issues and enhancement requests.
 
 Contributing
 ============
 
-Please refer to each project's style guidelines and guidelines for
-submitting patches and additions. In general, we follow the
-"fork-and-pull" Git workflow.
+There are many ways in which you can contribute to m2bk.
+Code patches are just one thing amongst others that you can submit to help the project.
+We also welcome feedback, bug reports, feature requests, documentation improvements,
+advertisement and testing.
 
-1. Fork the repo on GitHub
-2. Commit changes to a branch in your fork
-3. Pull request "upstream" with your changes
-4. Merge changes in to "upstream" repo
+Feedback contributions
+----------------------
 
-NOTE: Be sure to merge the latest from "upstream" before making a pull
-request!
+This is by far the easiest way to contribute something.
+If you’re using m2bk for your own benefit, don’t hesitate sharing.
+Feel free to `submit issues and enhancement requests. <https://github.com/axltxl/m2bk/issues>`_
+
+Code contributions
+------------------
+
+Code contributions (patches, new features) are the most obvious way to help with the project’s development.
+Since this is so common we ask you to follow our workflow to most efficiently work with us.
+For code contributions, we follow the "fork-and-pull" Git workflow.
+
+
+1. Fork, then clone your repo on GitHub
+::
+
+  git clone git@github.com:your-username/m2bk.git
+  git add origin upstream https://github.com/axltxl/m2bk.git
+
+If you already forked the repo, then be sure to merge
+the most recent changes from "upstream" before making a pull request.
+::
+
+  git pull upstream
+
+2. Create a new feature branch in your local repo
+::
+
+  git checkout -b my_feature_branch
+
+3. Make your changes, then make sure the tests passes
+::
+
+  virtualenv pyve && source pyve/bin/activate
+  python3 setup.py test
+
+4. Commit your changes once done
+::
+
+  git commit -a -m "My commit message"
+  git push origin my_feature_branch
+
+5. Submit a `pull request <https://github.com/axltxl/m2bk/compare/>`_ with your feature branch containing your changes
+
 
 Copyright and Licensing
 =======================
@@ -104,16 +140,18 @@ Installation
 ============
 
 Once the source distribution has been downloaded, installation can be
-made via **setuptools** or **pip**, whichever you prefer.
+made via `pip <https://github.com/pypa/pip>`_ or
+`easy_install <http://pythonhosted.org/setuptools/easy_install.html>`_, whichever you prefer.
 
 ::
 
- $ # setuptools installation
- $ cd m2bk
- $ python setup.py install
- $ # from this point, you can create your configuration file
- $ vi /etc/m2bk/m2bk.yaml $ # Once installed, you can try it
- $ m2bk -c /path/to/myconfig.yaml``
+  $ # setuptools installation
+  $ cd m2bk
+  $ python3 setup.py install
+  $ # from this point, you can create your configuration file
+  $ vi /etc/m2bk/m2bk.yaml
+  $ # Once installed, you can try it
+  $ m2bk -c /path/to/myconfig.yaml
 
 If everything went well, you can then check out your S3 bucket to see
 the backup.
@@ -124,10 +162,9 @@ Configuration file
 The configuration is handled through a simple `YAML <http://yaml.org/>`_
 file including a series of *sections* (which are YAML objects), each one
 composed by *directives* (YAML numbers, strings or arrays), these will
-determine a corresponding behavior on **m2bk**.
+determine a corresponding behavior on **m2bk**. If **m2bk** does not receive
+any configuration file on command line, it will try to read ``/etc/m2bk.yaml``.
 
-If **m2bk** does not receive any configuration file on command line,
-it will try to read ``/etc/m2bk.yaml``.
 
 The following is an example of what a configuration file looks like:
 
@@ -138,24 +175,29 @@ The following is an example of what a configuration file looks like:
   aws:
     aws_id: "SDF73HSDF3663KSKDJ"
     aws_access_key: "d577273ff885c3f84dadb8578bb41399"
-    mongodb:
-      mongodump: "/opt/bin/mongodump"
-      output_dir: "/opt/tmp/mydir"
-      host_defaults:
-        port: 666
-        user_name: "satan"
-        password: "14mh4x0r"
-        hosts:
-          foo:
-            address: "foo.example.local"
-            port: 34127
-            dbs:
-              - "app"
-              - "sessions"
-              - "another_one"
-            bar:
-              address: "bar.example.com"
-              password: "1AmAn07h3rh4x0r"
+  fs:
+    output_dir: "/opt/tmp/mydir"
+  mongodb:
+    mongodump: "/opt/bin/mongodump"
+    host_defaults:
+      port: 666
+      user_name: "satan"
+      password: "14mh4x0r"
+    hosts:
+      foo:
+        address: "foo.example.local"
+        port: 34127
+        dbs:
+          - "app"
+          - "sessions"
+          - "another_one"
+      bar:
+        address: "bar.example.com"
+        password: "1AmAn07h3rh4x0r"
+        auth_db: bar
+        dbs:
+            - customers
+            - sessions
 
 Through this configuration file, you can set key variables about the
 databases you want to backup and the AWS S3 bucket you wish to send them
@@ -174,6 +216,22 @@ Root section directives
 - Default value: ``false``
 - Role: Debug mode is activated if ``true``
 
+``fs`` section
+^^^^^^^^^^^^^^
+
+This section has directives regarding files and directories manipulation
+
+Directives
+^^^^^^^^^^
+
+``fs.output_dir``
+"""""""""""""""""
+
+-  Type: **string**
+-  Default value : ``/tmp/m2bk``
+-  Role: directory where m2bk is going to temporarily save backup files
+
+
 ``mongodb`` section
 ^^^^^^^^^^^^^^^^^^^
 
@@ -185,14 +243,13 @@ to connect to, including databases that are going to be backed up through *mongo
 
     mongodb:
         mongodump: "/opt/bin/mongodump"
-        output_dir: "/tmp/backups"
         host_defaults:
             user_name: tom
             address: db.example.local
             password: "457893mnfs3j"
             dbs:
-              - "test"
-              - "test2"
+              - halloran
+              - grady
         hosts:
             foo:
                 address: db0.example.internal
@@ -200,25 +257,22 @@ to connect to, including databases that are going to be backed up through *mongo
                 user_name: matt
                 password: "myS3cr37P455w0rd"
                 dbs:
-                  - "jack"
-                  - "wendy"
-                  - "danny"
+                  # This list is going to be merged with dbs at host_defaults, thus
+                  # the resulting dbs will be: ['halloran', 'grady', 'jack', 'wendy', 'danny']
+                  - jack
+                  - wendy
+                  - danny
             bar: {} # This one is going to acquire all host_defaults values
             host_with_mixed_values:
                 # This host will inherit port, password and dbs from host_defaults
-                user_name: jeff
+                address: moloko.example.internal
+                user_name: alex
                 address: localhost
+                auth_db: milk_plus
 
 
 Directives
 ^^^^^^^^^^
-
-``mongodb.output_dir``
-""""""""""""""""""""""
-
--  Type: **string**
--  Default value : ``/tmp/m2bk``
--  Role: directory where m2bk is going to temporarily save backup files
 
 ``mongodb.mongodump``
 """""""""""""""""""""
@@ -235,7 +289,7 @@ among the databases that are going to be backed up. For this reason, it
 is best to simply put those common directives under a single section,
 this is entirely optional but also it is the best for easily manageable
 configuration files in order to avoid redundancy, the supported
-directives are ``user_name``, ``password``, ``dbs`` and ``port`` .
+directives are ``user_name``, ``password``, ``port``, ``dbs`` and ``auth_db`` .
 See ``hosts`` section.
 
 ``mongodb.hosts`` section
@@ -252,11 +306,10 @@ Directives
 ^^^^^^^^^^
 
 ``mongodb.hosts.*.address``
-""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""
 
 -  Type: **string**
 -  Required: YES
--  Default value : "localhost"
 -  Role: mongodb server location
 
 ``mongodb.hosts.*.port``
@@ -282,6 +335,14 @@ Directives
 -  Required: NO
 -  Default value : ``mongodb.host_defaults.pass | "pass"``
 -  Role: password used for authentication against the mongodb server
+
+``mongodb.hosts.*.auth_db``
+"""""""""""""""""""""""""""
+
+-  Type: **string**
+-  Required: NO
+-  Default value : ``admin``
+-  Role: authentication database
 
 ``mongodb.hosts.*.dbs``
 """""""""""""""""""""""
