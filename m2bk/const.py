@@ -16,7 +16,7 @@ PKG_NAME = "m2bk"
 PKG_URL  = "https://github.com/axltxl/{pkg_name}".format(pkg_name=PKG_NAME)
 
 # Logs
-LOG_LVL_DEFAULT = 0
+LOG_LVL_DEFAULT = 1
 
 # Amazon S3
 AWS_DEFAULT_ID = ""

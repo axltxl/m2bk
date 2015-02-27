@@ -176,7 +176,6 @@ The following is an example of what a configuration file looks like:
 ::
 
   ---
-  debug: true
   aws:
     aws_id: "SDF73HSDF3663KSKDJ"
     aws_access_key: "d577273ff885c3f84dadb8578bb41399"
@@ -210,16 +209,6 @@ to.
 
 Configuration file: sections and directives
 -------------------------------------------
-
-Root section directives
-^^^^^^^^^^^^^^^^^^^^^^^
-
-``debug``
-"""""""""
-
-- Type: **boolean**
-- Default value: ``false``
-- Role: Debug mode is activated if ``true``
 
 ``fs`` section
 ^^^^^^^^^^^^^^

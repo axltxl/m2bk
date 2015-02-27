@@ -8,11 +8,6 @@
 # (YAML numbers, strings or arrays). 
 # These will determine a corresponding behavior on m2bk.
 
-#
-# Set this to true if you want to see debugging output
-#
-debug: false
-
 # This section has directives regarding
 # files and directories used
 #fs:

@@ -7,6 +7,7 @@ Version 0.3.0:
 * [config] configuration file format has been changed from JSON to YAML
 * [config] New option mongodb.hosts.*.auth_db for specifying authentication database per host
 * ISO8601 format is used for naming temporary directories
+* [config] Removed 'debug' directive
 
 Version 0.2.3:
 ------------
