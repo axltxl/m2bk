@@ -98,14 +98,12 @@ def init(argv):
     """
     # Setting initial configuration values
     config.set_default({
-        # Debug flag
-        "debug": False,
+        # fs section
+        "fs": {},
         # Amazon Web Services section
         "aws": {},
         # MongoDB section
         "mongodb": {},
-        # fs section
-        "fs": {},
     })
 
     # Parse the command line
