@@ -4,7 +4,7 @@ m2bk
 .. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop
 
 Send your mongodump backups straight to AWS S3
--------------------------------
+----------------------------------------------
 
 *m2bk* is command line tool that performs a number of
 **mongodb database backups via mongodump**, compresses them into a
@@ -231,7 +231,7 @@ Directives
 ``mongodb`` section
 ^^^^^^^^^^^^^^^^^^^
 
-This section holds directives regarding `mongodb <http://mongodb.org>`_ servers **m2bk** is going
+This section holds directives regarding mongodb servers **m2bk** is going
 to connect to, including databases that are going to be backed up through *mongodump*.
 
 **Example**:
@@ -254,7 +254,8 @@ to connect to, including databases that are going to be backed up through *mongo
                 password: "myS3cr37P455w0rd"
                 dbs:
                   # This list is going to be merged with dbs at host_defaults, thus
-                  # the resulting dbs will be: ['halloran', 'grady', 'jack', 'wendy', 'danny']
+                  # the resulting dbs will be: 
+                  # ['halloran', 'grady', 'jack', 'wendy', 'danny']
                   - jack
                   - wendy
                   - danny
