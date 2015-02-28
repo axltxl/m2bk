@@ -1,41 +1,32 @@
+# -*- coding: utf-8 -*-
+
 """
-Copyright (c) Alejandro Ricoveri
-m2bk: A command line tool to simplify MongoDB backups
+m2bk.app
+~~~~~~~~
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
----------------------------
 Main module
+
+:copyright: (c) 2015 by Alejandro Ricoveri
+:license: MIT, see LICENSE for more details.
+
 """
 
 import os
 import sys
 import traceback
 import argparse
-from m2bk import config, log, mongo, s3
+import signal
+from m2bk import config, log, mongo, s3, fs
 from m2bk import __version__ as version
 from m2bk.const import (
     LOG_LVL_DEFAULT,
-    PKG_NAME,
+    PKG_NAME, PKG_URL,
     CONF_DEFAULT_FILE
 )
 
 # command line options and flags
 _opt = {}
+
 
 def init_parsecmdline(argv=[]):
     """
@@ -85,6 +76,7 @@ def init_parsecmdline(argv=[]):
     log.init(_opt['log_lvl'], _opt["log_to_stdout"])
 
     # Mark the start of executions
+    log.msg("{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL))
     log.msg('***************************************')
 
     # Merge configuration with a JSON file
@@ -106,16 +98,38 @@ def init(argv):
     """
     # Setting initial configuration values
     config.set_default({
-        # Debug flag
-        "debug": False,
+        # fs section
+        "fs": {},
         # Amazon Web Services section
         "aws": {},
         # MongoDB section
-        "mongodb": {}
+        "mongodb": {},
     })
 
     # Parse the command line
     init_parsecmdline(argv[1:])
+
+    # Initiatize the output directory
+    fs.init(**config.get_entry('fs'))
+
+    # This baby will handle UNIX signals
+    signal.signal(signal.SIGINT,  _handle_signal)
+    signal.signal(signal.SIGTERM, _handle_signal)
+
+
+def _handle_signal(signum, frame):
+    """
+    UNIX signal handler
+    """
+    shutdown()
+
+
+def shutdown():
+    """
+    Cleanup
+    """
+    fs.cleanup()
+    log.msg("Exiting...")
 
 
 def _handle_except(e):
@@ -136,15 +150,18 @@ def _handle_except(e):
 
 
 def make_backup_files(mongodb, aws):
+
+    #  dry run
+    dry_run = _opt["dry_run"]
+
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
+    mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
 
-    mongodump_files = mongo.make_backup_files(
-        dry_run=_opt["dry_run"], **mongodb)
+    # Upload the resulting file to AWS
+    for key_name, file_name in mongodump_files.items():
+        s3.upload_file(file_name, key_name, dry_run=dry_run, **aws)
 
-    for file, key in mongodump_files:
-        # Upload the resulting file to AWS
-        s3.upload_file(file, key, dry_run=_opt["dry_run"], **aws)
 
 def main(argv=None):
     """
@@ -173,7 +190,7 @@ def main(argv=None):
         _handle_except(e)
         exit_code = 1
     finally:
-        log.msg("Exiting...")
+        shutdown()
         return exit_code
 
 

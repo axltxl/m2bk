@@ -1,0 +1,84 @@
+---
+#
+# Copyright (c) Alejandro Ricoveri
+# m2bk: A command line tool to simplify MongoDB backups
+
+# This is a configuration file which includes a series of sections 
+# (which are YAML objects), each one composed by directives 
+# (YAML numbers, strings or arrays). 
+# These will determine a corresponding behavior on m2bk.
+
+# This section has directives regarding
+# files and directories used
+#fs:
+#  Full path to the temporary directory
+#  in which backups are going to be written
+#  output_dir: "/tmp/my_backups"
+
+#
+# This section holds directives regarding mongodb servers m2bk 
+# is going to connect to, including databases that 
+# are going to be backed up through mongodump.
+#
+mongodb:
+#  Full path to the mongodump executable used by m2bk
+#  Default value: mongodump
+#  mongodump: "/usr/bin/mongodump"
+
+#  Directory where m2bk is going to temporarily save backup files
+#  Default value: /tmp/m2bk
+
+# This is an object/hash, where each element contains a series of 
+# directives relative to a mongodb database located at a server,
+# its specifications and databases themselves held by it, 
+# these are the main values used by mongodump when it does its magic.
+  hosts:
+    my_host:
+#     mongodb server location
+#     Default value: localhost
+      address: "localhost"
+
+#     A list of databases who are expected to be inside the mongodb server
+      dbs:
+        - "test"
+
+#    mongodb server listening port
+#    Default value: 27173
+#    port: 27173
+
+#    User name used for authentication against the mongodb server
+#    Default value: m2bk
+#    user_name: "m2bk"
+
+#    Password used for authentication against the mongodb server
+#    Default value: pass
+#    password: "pass"
+
+# Many directives (such as user name and/or password)
+# could be common among the databases that are going to be backed up. 
+# For this reason, it is best to simply put those common directives 
+# under a single section, this is entirely optional but also 
+# it is the best for easily manageable configuration files 
+# in order to avoid redundancy. 
+# The supported directives are user_name, password, dbs, auth_db and port.
+# See hosts section.
+  host_defaults: {}
+
+#
+# Amazon Web Services credentials
+# This sections holds directives regarding AWS credentials 
+# that m2bk is going to use in order to upload the mongodump backups to S3.
+#
+aws:
+# AWS access ID
+# Default value: ''
+  aws_id: ""
+
+# AWS access key
+# Default value: ''
+  aws_access_key: ""
+
+# Name of the main S3 bucket where m2bk is going to upload 
+# the compressed backups for each mongodb server specified in mongodb section
+# Default value: m2bk
+#  s3_bucket: "m2bk"

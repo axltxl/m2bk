@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Test for: config
 """
@@ -5,7 +7,7 @@ Test for: config
 
 from nose.tools import raises, eq_, ok_, assert_raises
 from m2bk import config
-import json, os
+import yaml, os
 
 
 def_config = {
@@ -78,7 +80,8 @@ def test_nonexistent_file():
     config.set_from_file("thisisnothere.txt")
 
 
-@raises(ValueError)
+#@raises(ValueError)
+@raises(yaml.reader.ReaderError)
 def test_set_from_file_bin():
     # Test set_from_file with binary file
     file_name = '/tmp/random.bin'
@@ -95,8 +98,8 @@ def test_set_from_file_nonstr():
 
 def test_set_from_file():
     # Test set_from_file with valid json file
-    file_name = '/tmp/thisisnothere.json'
+    file_name = '/tmp/thisisnothere.yaml'
     with open(file_name, 'w') as file:
-        json.dump(def_config, file)
+        yaml.dump(def_config, file)
     config.set_from_file(file_name)
     eq_(config.get_config(), def_config)
