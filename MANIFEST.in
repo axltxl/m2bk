@@ -1,3 +1,4 @@
 include versioneer.py
 include m2bk/_version.py
 include data/m2bk.yaml
+include README.rst
