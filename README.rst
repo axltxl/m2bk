@@ -1,7 +1,22 @@
 m2bk
 ====
 
-.. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop
+.. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop 
+
+.. image:: https://pypip.in/download/m2bk/badge.svg?period=day
+    :target: https://pypi.python.org/pypi/m2bk/
+
+.. image:: https://pypip.in/format/m2bk/badge.svg
+    :target: https://pypi.python.org/pypi/m2bk/
+
+.. image:: https://pypip.in/py_versions/m2bk/badge.svg
+    :target: https://pypi.python.org/pypi/m2bk/
+
+.. image:: https://pypip.in/version/m2bk/badge.svg
+    :target: https://pypi.python.org/pypi/m2bk/
+
+.. image:: https://pypip.in/license/m2bk/badge.svg
+    :target: https://pypi.python.org/pypi/m2bk/
 
 Send your mongodump backups straight to AWS S3
 ----------------------------------------------
@@ -10,7 +25,7 @@ Send your mongodump backups straight to AWS S3
 **mongodb database backups via mongodump**, compresses them into a
 gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
-.. image:: http://i.imgur.com/7uiVOSI.gif
+.. image:: http://i.imgur.com/7uiVOSI.gif  
 
 -  `Requirements <#requirements>`_
 -  `Contributing <#contributing>`_
