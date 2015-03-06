@@ -1,6 +1,10 @@
 m2bk
 ====
 
+.. image:: https://badges.gitter.im/Join%20Chat.svg
+   :alt: Join the chat at https://gitter.im/axltxl/m2bk
+   :target: https://gitter.im/axltxl/m2bk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 .. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop 
 
 .. image:: https://pypip.in/download/m2bk/badge.svg?period=day
