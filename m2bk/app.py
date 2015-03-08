@@ -74,9 +74,8 @@ def init_parsecmdline(argv=[]):
     # Initiate the log level
     log.init(options.log_lvl, options.log_quiet)
 
-    # Mark the start of executions
-    log.msg("{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL))
-    log.msg('***************************************')
+    # Print the splash
+    _splash()
 
     # Merge configuration with a JSON file
     config_file = os.path.abspath(options.config_file)
@@ -87,6 +86,12 @@ def init_parsecmdline(argv=[]):
     except FileNotFoundError:
         raise FileNotFoundError("Configuration file '{config_file}' not found!"
                                 .format(config_file=config_file))
+
+def _splash():
+    """Print the splash"""
+    splash_title = "{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL)
+    log.to_stdout(splash_title)
+    log.to_stdout('-' * len(splash_title))
 
 
 def init(argv):
