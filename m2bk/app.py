@@ -69,7 +69,6 @@ def init_parsecmdline(argv=[]):
     # Set whether we are going to perform a dry run
     global _opt
     _opt["dry_run"] = options.dry_run
-    _opt["log_lvl"] = options.log_lvl
 
     # Initiate the log level
     log.init(options.log_lvl, options.log_quiet)
