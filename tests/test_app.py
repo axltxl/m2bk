@@ -53,4 +53,4 @@ def test_args_noargs():
     except FileNotFoundError:
         pass
     eq_(config.get_config_file_name(), const.CONF_DEFAULT_FILE,
-        msg="CONF_DEFAULT_FILE expected")
+        msg="CONF_DEFAULT_FILE expected, got '{f}'".format(f=config.get_config_file_name()))
