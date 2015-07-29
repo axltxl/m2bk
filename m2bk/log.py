@@ -15,8 +15,10 @@ System-wide messages are logged through logging.
 
 import sys
 import logging
-from clint.textui import colored
+#from clint.textui import colored
 from .const import PKG_NAME
+
+from clint.textui.colored import white, red, cyan, yellow
 
 # Globals
 _logger = None
@@ -71,9 +73,9 @@ def init(threshold_lvl, quiet_stdout):
         _stdout = True
 
 
-def to_stdout(msg):
+def to_stdout(msg, *, colorf=white, bold=False):
     if _stdout:
-        print(msg)
+        print(colorf(msg, bold=bold))
 
 def msg(message):
     """
@@ -81,7 +83,7 @@ def msg(message):
 
     :param message: the message to be logged
     """
-    to_stdout(colored.white(message))
+    to_stdout(message)
     if _logger:
         _logger.info(message)
 
@@ -92,7 +94,7 @@ def msg_warn(message):
 
     :param message: the message to be logged
     """
-    to_stdout(colored.yellow(message, bold=True))
+    to_stdout(message, colorf=yellow, bold=True)
     if _logger:
         _logger.warn(message)
 
@@ -103,7 +105,7 @@ def msg_err(message):
 
     :param message: the message to be logged
     """
-    to_stdout(colored.red(message, bold=True))
+    to_stdout(message, colorf=red, bold=True)
     if _logger:
         _logger.error(message)
 
@@ -114,6 +116,6 @@ def msg_debug(message):
 
     :param message: the message to be logged
     """
-    to_stdout(colored.cyan(message))
+    to_stdout(message, colorf=cyan)
     if _logger:
         _logger.debug(message)

@@ -89,8 +89,8 @@ def init_parsecmdline(argv=[]):
 def _splash():
     """Print the splash"""
     splash_title = "{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL)
-    log.to_stdout(splash_title)
-    log.to_stdout('-' * len(splash_title))
+    log.to_stdout(splash_title, colorf=log.yellow, bold=True)
+    log.to_stdout('-' * len(splash_title), colorf=log.yellow, bold=True)
 
 
 def init(argv):
@@ -132,7 +132,7 @@ def shutdown():
     Cleanup
     """
     fs.cleanup()
-    log.msg("Exiting...")
+    log.msg("Exiting ...")
 
 
 def _handle_except(e):
@@ -203,6 +203,3 @@ def main(argv=None):
 # exit status.
 if __name__ == '__main__':
     sys.exit(main())
-
-
-
