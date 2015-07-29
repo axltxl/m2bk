@@ -15,11 +15,14 @@ System-wide messages are logged through logging.
 
 import sys
 import logging
+#from clint.textui import colored
 from .const import PKG_NAME
+
+from clint.textui.colored import white, red, cyan, yellow
 
 # Globals
 _logger = None
-
+_stdout = False
 
 def _set_lvl(lvl):
     if lvl == 0:
@@ -36,7 +39,7 @@ def _set_lvl(lvl):
         return logging.INFO
 
 
-def init(threshold_lvl, to_stdout):
+def init(threshold_lvl, quiet_stdout):
     """
     Initiate the log module
 
@@ -65,13 +68,14 @@ def init(threshold_lvl, to_stdout):
     _logger.addHandler(syslog_h)
 
     # create stout handler
-    if to_stdout:
-        stdout_h = logging.StreamHandler(sys.stdout)
-        #formatter
-        stdout_fmt = logging.Formatter("* {fmt}".format(fmt=base_fmt))
-        stdout_h.setFormatter(stdout_fmt)
-        _logger.addHandler(stdout_h)
+    if not quiet_stdout:
+        global _stdout
+        _stdout = True
 
+
+def to_stdout(msg, *, colorf=white, bold=False):
+    if _stdout:
+        print(colorf(msg, bold=bold))
 
 def msg(message):
     """
@@ -79,6 +83,7 @@ def msg(message):
 
     :param message: the message to be logged
     """
+    to_stdout(message)
     if _logger:
         _logger.info(message)
 
@@ -89,6 +94,7 @@ def msg_warn(message):
 
     :param message: the message to be logged
     """
+    to_stdout(message, colorf=yellow, bold=True)
     if _logger:
         _logger.warn(message)
 
@@ -99,6 +105,7 @@ def msg_err(message):
 
     :param message: the message to be logged
     """
+    to_stdout(message, colorf=red, bold=True)
     if _logger:
         _logger.error(message)
 
@@ -109,5 +116,6 @@ def msg_debug(message):
 
     :param message: the message to be logged
     """
+    to_stdout(message, colorf=cyan)
     if _logger:
         _logger.debug(message)

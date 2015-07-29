@@ -67,6 +67,7 @@ setup(
         'boto  == 2.34.0',
         'envoy >= 0.0.3',
         'pyyaml >= 3.11',
+        'clint >= 0.4.1'
     ],
     tests_require = ['nose >= 1.3'],
     test_suite="nose.collector",

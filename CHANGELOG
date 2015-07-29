@@ -1,9 +1,16 @@
-Version 0.3.1:
+Version 0.4.0
+------------
+
+* Colored stdout
+* The argument -s/--stdout has been swapped by -q/--quiet which specifies the opposite, this means that m2bk will print on stdout by default
+
+
+Version 0.3.1
 ------------
 
 * [hotfix] README.rst was not included in the distribution package
 
-Version 0.3.0:
+Version 0.3.0
 ------------
 
 * New module 'fs' handles file-related operations
@@ -14,22 +21,22 @@ Version 0.3.0:
 * ISO8601 format is used for naming temporary directories
 * [config] Removed 'debug' directive
 
-Version 0.2.3:
+Version 0.2.3
 ------------
 * The project is now distributed under the MIT License
 * Project renamed to: m2bk
 
-Version 0.2.2:
+Version 0.2.2
 ------------
 * Output directories have their UUID at the end of their names
 
-Version 0.2.1:
+Version 0.2.1
 ------------
 * FIX: mongodump specifies --authenticationDatabase admin. That means
   the 'admin' database is assumed to hold the users used for authentication
   against the listed mongodb server on configuration
 
-Version 0.2.0:
+Version 0.2.0
 ------------
 + Upgrade to boto 2.34
 + Each file will be inside its own bucket key (s3_bucket+name)
