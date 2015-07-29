@@ -1,26 +1,8 @@
 m2bk
 ====
-
-.. image:: https://badges.gitter.im/Join%20Chat.svg
-   :alt: Join the chat at https://gitter.im/axltxl/m2bk
-   :target: https://gitter.im/axltxl/m2bk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-
-.. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop 
-
-.. image:: https://pypip.in/download/m2bk/badge.svg?period=day
-    :target: https://pypi.python.org/pypi/m2bk/
-
-.. image:: https://pypip.in/format/m2bk/badge.svg
-    :target: https://pypi.python.org/pypi/m2bk/
-
-.. image:: https://pypip.in/py_versions/m2bk/badge.svg
-    :target: https://pypi.python.org/pypi/m2bk/
-
-.. image:: https://pypip.in/version/m2bk/badge.svg
-    :target: https://pypi.python.org/pypi/m2bk/
-
-.. image:: https://pypip.in/license/m2bk/badge.svg
-    :target: https://pypi.python.org/pypi/m2bk/
+.. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop
+.. image:: https://img.shields.io/gratipay/axltxl.svg
+   :target: https://gratipay.com/axltxl
 
 Send your mongodump backups straight to AWS S3
 ----------------------------------------------
@@ -29,7 +11,7 @@ Send your mongodump backups straight to AWS S3
 **mongodb database backups via mongodump**, compresses them into a
 gzipped tarball and finally sends them to an **AWS S3 bucket**.
 
-.. image:: http://i.imgur.com/7uiVOSI.gif  
+.. image:: http://i.imgur.com/7uiVOSI.gif
 
 -  `Requirements <#requirements>`_
 -  `Contributing <#contributing>`_
@@ -47,6 +29,7 @@ gzipped tarball and finally sends them to an **AWS S3 bucket**.
          -  `mongodb.hosts section <#mongodbhosts-section>`_
 
       -  `aws section <#aws-section>`_
+-  `Donating <#donating>`_
 -  `Copyright and licensing <#copyright-and-licensing>`_
 
 Requirements
@@ -273,7 +256,7 @@ to connect to, including databases that are going to be backed up through *mongo
                 password: "myS3cr37P455w0rd"
                 dbs:
                   # This list is going to be merged with dbs at host_defaults, thus
-                  # the resulting dbs will be: 
+                  # the resulting dbs will be:
                   # ['halloran', 'grady', 'jack', 'wendy', 'danny']
                   - jack
                   - wendy
@@ -412,6 +395,13 @@ aws.aws_id
 -  Default value: ``m2bk``
 -  Role: name of the main S3 bucket where m2bk is going to upload the compressed backups for each mongodb server specified in ``mongodb`` section
 
+Donating
+========
+
+Show your love and support this project via `gratipay <https://gratipay.com/axltxl>`_
+
+.. image:: https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.png
+   :target: https://gratipay.com/axltxl
 
 Copyright and Licensing
 =======================
