@@ -24,6 +24,7 @@ from m2bk.const import (
     CONF_DEFAULT_FILE
 )
 from m2bk import driver
+from m2bk.utils import debug
 
 # command line options and flags
 _opt = {}
@@ -166,7 +167,7 @@ def make_backup_files(mongodb):
     # This file should be compressed as a gzipped tarball
     mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
 
-    # Upload the resulting file to AWS
+    # Transfer the backup using a driver
     driver.load(dry_run=dry_run, **config.get_entry('driver'))
     for host_name, file_name in mongodump_files.items():
         driver.backup_file(file=file_name, host=host_name)
@@ -192,7 +193,6 @@ def main(argv=None):
         init(argv)
 
         #
-        #make_backup_files(config.get_entry('mongodb'), config.get_entry('aws'))
         make_backup_files(config.get_entry('mongodb'))
 
     except Exception as e:

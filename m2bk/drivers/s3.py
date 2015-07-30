@@ -95,7 +95,7 @@ def backup_file(file, host):
         log.msg_warn("Bucket '{bucket_name}' does not exist!, creating it..."
                      .format(bucket_name=_bucket_name))
         if not _dry_run:
-            bucket = conn.create_bucket(bucket_name)
+            bucket = conn.create_bucket(_bucket_name)
         log.msg("Created bucket '{bucket}'".format(bucket=_bucket_name))
 
     # The key is the name of the file itself who needs to be stripped
