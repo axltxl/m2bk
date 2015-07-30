@@ -16,13 +16,14 @@ import sys
 import traceback
 import argparse
 import signal
-from m2bk import config, log, mongo, s3, fs
+from m2bk import config, log, mongo, fs
 from m2bk import __version__ as version
 from m2bk.const import (
     LOG_LVL_DEFAULT,
     PKG_NAME, PKG_URL,
     CONF_DEFAULT_FILE
 )
+from m2bk import driver
 
 # command line options and flags
 _opt = {}
@@ -101,6 +102,8 @@ def init(argv):
     """
     # Setting initial configuration values
     config.set_default({
+        # driver section
+        "driver": {},
         # fs section
         "fs": {},
         # Amazon Web Services section
@@ -132,6 +135,7 @@ def shutdown():
     Cleanup
     """
     fs.cleanup()
+    driver.dispose()
     log.msg("Exiting ...")
 
 
@@ -152,7 +156,8 @@ def _handle_except(e):
     return 1
 
 
-def make_backup_files(mongodb, aws):
+#def make_backup_files(mongodb, aws):
+def make_backup_files(mongodb):
 
     #  dry run
     dry_run = _opt["dry_run"]
@@ -162,8 +167,9 @@ def make_backup_files(mongodb, aws):
     mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
 
     # Upload the resulting file to AWS
-    for key_name, file_name in mongodump_files.items():
-        s3.upload_file(file_name, key_name, dry_run=dry_run, **aws)
+    driver.load(dry_run=dry_run, **config.get_entry('driver'))
+    for host_name, file_name in mongodump_files.items():
+        driver.backup_file(file=file_name, host=host_name)
 
 
 def main(argv=None):
@@ -186,7 +192,8 @@ def main(argv=None):
         init(argv)
 
         #
-        make_backup_files(config.get_entry('mongodb'), config.get_entry('aws'))
+        #make_backup_files(config.get_entry('mongodb'), config.get_entry('aws'))
+        make_backup_files(config.get_entry('mongodb'))
 
     except Exception as e:
         # ... and if everything else fails
