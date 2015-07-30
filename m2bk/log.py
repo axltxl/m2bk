@@ -87,7 +87,7 @@ def msg(message):
 
     :param message: the message to be logged
     """
-    to_stdout(message)
+    to_stdout(" --- {message}".format(message=message))
     if _logger:
         _logger.info(message)
 
@@ -98,7 +98,7 @@ def msg_warn(message):
 
     :param message: the message to be logged
     """
-    to_stdout(message, colorf=yellow, bold=True)
+    to_stdout(" (!) {message}".format(message=message), colorf=yellow, bold=True)
     if _logger:
         _logger.warn(message)
 
@@ -109,7 +109,7 @@ def msg_err(message):
 
     :param message: the message to be logged
     """
-    to_stdout(message, colorf=red, bold=True)
+    to_stdout(" !!! {message}".format(message=message), colorf=red, bold=True)
     if _logger:
         _logger.error(message)
 
@@ -121,6 +121,6 @@ def msg_debug(message):
     :param message: the message to be logged
     """
     if _log_lvl == logging.DEBUG:
-        to_stdout(message, colorf=cyan)
+        to_stdout(" (*) {message}".format(message=message), colorf=cyan)
         if _logger:
             _logger.debug(message)
