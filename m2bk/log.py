@@ -18,7 +18,7 @@ import logging
 #from clint.textui import colored
 from .const import PKG_NAME
 
-from clint.textui.colored import white, red, cyan, yellow
+from clint.textui.colored import white, red, cyan, yellow, green
 
 # Globals
 _logger = None
@@ -73,7 +73,7 @@ def init(threshold_lvl, quiet_stdout):
         _stdout = True
 
 
-def to_stdout(msg, *, colorf=white, bold=False):
+def to_stdout(msg, *, colorf=green, bold=False):
     if _stdout:
         print(colorf(msg, bold=bold))
 
