@@ -20,10 +20,10 @@ from ..const import (
     AWS_S3_DEFAULT_BUCKET_NAME
 )
 
-#
+# Dry run mode
 _dry_run = False
 
-#
+# AWS-specific options
 _aws_id = None
 _aws_access_key = None
 _bucket_name = None
@@ -31,7 +31,9 @@ _boto_conn = None
 
 def load(**options):
     """
-    :param \*\*options: arbitrary keyword arguments
+    Load this driver
+
+    :param \*\*options: A variadic list of options
     """
     global _dry_run
     global _aws_id, _aws_access_key, _bucket_name, _boto_conn
@@ -71,13 +73,19 @@ def load(**options):
     log.msg("Connected to AWS S3 service successfully!")
 
 def dispose():
+    """
+    Perform cleanup
+    """
     pass
 
 def get_name():
+    """
+    Return this driver's name
+    """
     return "s3"
 
 
-def backup_file(file, host):
+def backup_file(*, file, host):
     """
     Backup a file on S3
 
@@ -102,15 +110,19 @@ def backup_file(file, host):
     # from its full path
     key_path = "{key}/{file}".format(key=host, file=ntpath.basename(file))
 
+    # Create a new bucket key
     if not _dry_run:
-        # Create a new bucket key
         k = boto.s3.key.Key(bucket)
         k.key = key_path
+
     # Upload the file to Amazon
     log.msg("Uploading '{key_path}' to bucket '{bucket_name}' ..."
             .format(key_path=key_path, bucket_name=_bucket_name))
+
+    # It is important to encrypt the data on the server side
     if not _dry_run:
-        # It is important to encrypt the data on the server side
         k.set_contents_from_filename(file, encrypt_key=True)
+
+    # Log the thing
     log.msg("The file '{key_path}' has been successfully uploaded to S3!"
             .format(key_path=key_path))

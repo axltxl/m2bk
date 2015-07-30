@@ -66,9 +66,9 @@ mongodb:
 
 #
 # This section holds all information regarding the
-# backup driver to be used by m2bk. A driver is file
-# transfer agent that takes resulting backups files
-# and delivers them to storage media.
+# backup driver to be used by m2bk. A driver is a file
+# transfer 'agent' that takes resulting backup files
+# and delivers them to some storage (depending on the driver).
 #
 driver:
   #
@@ -87,7 +87,7 @@ driver:
   # Amazon Web Services credentials
   # This sections holds directives regarding AWS credentials
   # that m2bk is going to use in order to upload the mongodump backups to S3.
-    
+
   # AWS access ID
   # Default value: ''
     aws_id: ""
