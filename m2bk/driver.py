@@ -34,9 +34,12 @@ def load(*, name="dummy", **kwargs):
             .format(driver=_driver.get_name()))
 
 def backup_file(*, file, host):
+    log.msg_debug("[{driver}] Backing up file '{file}'"
+        .format(driver=_driver.get_name(), file=file))
     if _driver:
         _driver.backup_file(file=file, host=host)
 
 def dispose():
+    log.msg_debug("[{driver}] dispose".format(driver=_driver.get_name()))
     if _driver:
         _driver.dispose()
