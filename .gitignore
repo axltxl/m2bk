@@ -9,3 +9,4 @@ dist
 .python-version
 .tox
 .idea
+nosetests.json
