@@ -23,7 +23,6 @@ from .const import FS_DEFAULT_OUTPUT_DIR
 # Output directory name
 _output_dir = None
 
-
 def get_output_dir():
     """
     Get the name of the output directory
