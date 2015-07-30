@@ -49,7 +49,7 @@ setup(
     download_url="{url}/tarball/{version}".format(url=PKG_URL, version=pkg_ver),
     keywords=['mongodb', 'aws', 'backup', 's3'],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Environment :: Console	',
         'Topic :: Database',
         'Natural Language :: English',
