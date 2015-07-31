@@ -190,8 +190,8 @@ The following is an example of what a configuration file looks like:
   driver:
     name: s3
     options:
-      aws_id: "SDF73HSDF3663KSKDJ"
-      aws_access_key: "d577273ff885c3f84dadb8578bb41399"
+      aws_access_key_id: "SDF73HSDF3663KSKDJ"
+      aws_secret_access_key: "d577273ff885c3f84dadb8578bb41399"
   fs:
     output_dir: "/opt/tmp/mydir"
   mongodb:
@@ -403,6 +403,9 @@ will be logged at debug level.
 
 This driver holds directives regarding AWS credentials that **m2bk**
 is going to use in order to upload the *mongodump* backups to S3.
+If either ``aws_access_key_id`` or ``aws_secret_access_key`` are not specified,
+this driver will not try to use them to authenticate against AWS and will rely
+on `boto config <http://boto.readthedocs.org/en/latest/boto_config_tut.html>`_ for that matter.
 
 **Example**:
 ::
@@ -410,15 +413,15 @@ is going to use in order to upload the *mongodump* backups to S3.
     driver:
         name: s3
         options:
-            aws_id": "HAS6NBASD8787SD"
-            aws_access_key: "d41d8cd98f00b204e9800998ecf8427e"
+            aws_access_key_id": "HAS6NBASD8787SD"
+            aws_secret_access_key: "d41d8cd98f00b204e9800998ecf8427e"
             s3_bucket: "mybucket"
 
 Options
 ^^^^^^^
 
-``aws_id``
-""""""""""
+``aws_access_key_id``
+"""""""""""""""""""""
 
 -  Type: **string**
 -  Required: NO
@@ -426,8 +429,8 @@ Options
 -  Role: AWS access key ID
 
 
-``aws_access_key``
-""""""""""""""""""
+``aws_secret_access_key``
+"""""""""""""""""""""""""
 
 -  Type: **string**
 -  Required: NO

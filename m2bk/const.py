@@ -20,8 +20,6 @@ LOG_LVL_DEFAULT = 1
 LOG_FILE_DEFAULT = "{pkg_name}.log".format(pkg_name=PKG_NAME)
 
 # Amazon S3
-AWS_DEFAULT_ID = ""
-AWS_DEFAULT_ACCESS_KEY = ""
 AWS_S3_DEFAULT_BUCKET_NAME = PKG_NAME
 
 # Config

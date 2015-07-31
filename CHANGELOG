@@ -8,6 +8,8 @@ Version 0.4.0
 * dummy driver introduced
 * log module does not use syslog anymore, instead it handles its own log file (no /dev/log required anymore).
   Log file can be specified via the parameter -l | --log-file
+* [s3 driver] Option aws_id renamed to aws_access_key_id
+* [s3 driver] Option aws_access_key renamed to aws_secret_access_key
 
 Version 0.3.1
 ------------

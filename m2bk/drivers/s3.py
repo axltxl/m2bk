@@ -15,8 +15,6 @@ import boto
 import ntpath
 from .. import log
 from ..const import (
-    AWS_DEFAULT_ACCESS_KEY,
-    AWS_DEFAULT_ID,
     AWS_S3_DEFAULT_BUCKET_NAME
 )
 
@@ -24,8 +22,8 @@ from ..const import (
 _dry_run = False
 
 # AWS-specific options
-_aws_id = None
-_aws_access_key = None
+_aws_access_key_id = None
+_aws_secret_access_key = None
 _bucket_name = None
 _boto_conn = None
 
@@ -36,18 +34,18 @@ def load(**options):
     :param \*\*options: A variadic list of options
     """
     global _dry_run
-    global _aws_id, _aws_access_key, _bucket_name, _boto_conn
+    global _aws_access_key_id, _aws_secret_access_key, _bucket_name, _boto_conn
 
     #dry run
     _dry_run = options.get('dry_run', False)
 
     # AWS parameters from kwargs
-    _aws_id = options.get('aws_id', AWS_DEFAULT_ID)
-    _aws_access_key = options.get('aws_access_key', AWS_DEFAULT_ACCESS_KEY)
-    if type(_aws_id) != str:
-        raise TypeError('aws_id must be str')
-    if type(_aws_access_key) != str:
-        raise TypeError('aws_access_key must be str')
+    _aws_access_key_id = options.get('aws_access_key_id', None)
+    _aws_secret_access_key = options.get('aws_secret_access_key', None)
+    if _aws_access_key_id is not None and type(_aws_access_key_id) != str:
+        raise TypeError('aws_access_key_id must be str')
+    if _aws_secret_access_key is not None and type(_aws_secret_access_key) != str:
+        raise TypeError('aws_secret_access_key must be str')
 
     # Check the bucket name before doing anything
     _bucket_name = options.get('s3_bucket', AWS_S3_DEFAULT_BUCKET_NAME)
@@ -58,18 +56,13 @@ def load(**options):
 
     # Connect to S3 service
     log.msg("Connecting to Amazon S3 Service")
-    if not _aws_id and not _aws_access_key:
-        log.msg_warn('No AWS credentials given. Assuming access via IAM role')
+    if not _aws_access_key_id or not _aws_secret_access_key:
+        log.msg_warn('No AWS credentials were given. Authentication will be done via boto.config/IAM role')
         if not _dry_run:
             _boto_conn = boto.connect_s3()
-    elif not _aws_id or not _aws_access_key:
-        if _aws_id:
-            raise ValueError("aws_id given with no aws_access_key")
-        else:
-            raise ValueError("aws_access_key given with no aws_id")
     elif not _dry_run:
-        _boto_conn = boto.connect_s3(aws_access_key_id=aws_id,
-                               aws_secret_access_key=aws_key)
+        _boto_conn = boto.connect_s3(aws_access_key_id=_aws_access_key_id,
+                               aws_secret_access_key=_aws_secret_access_key)
     log.msg("Connected to AWS S3 service successfully!")
 
 def dispose():
