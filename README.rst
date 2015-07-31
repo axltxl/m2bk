@@ -190,8 +190,8 @@ The following is an example of what a configuration file looks like:
   driver:
     name: s3
     options:
-      aws_id: "SDF73HSDF3663KSKDJ"
-      aws_access_key: "d577273ff885c3f84dadb8578bb41399"
+      aws_access_key_id: "SDF73HSDF3663KSKDJ"
+      aws_secret_access_key: "d577273ff885c3f84dadb8578bb41399"
   fs:
     output_dir: "/opt/tmp/mydir"
   mongodb:
