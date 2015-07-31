@@ -20,6 +20,10 @@ def load(**options):
     :param \*\*options: A variadic list of options
     """
     log.msg("Hello!, I am a dummy, so I won't do a thing!")
+    if len(options):
+        log.msg_debug("I have received a bunch of options y'all!, here they come ...")
+        for o, v in options.items():
+            log.msg_debug("Option: name={name}, value={value}".format(name=o, value=v))
 
 def dispose():
     """
