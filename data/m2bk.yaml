@@ -43,8 +43,8 @@ mongodb:
         - "test"
 
 #    mongodb server listening port
-#    Default value: 27173
-#    port: 27173
+#    Default value: 27017
+#    port: 27017
 
 #    User name used for authentication against the mongodb server
 #    Default value: m2bk
