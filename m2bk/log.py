@@ -42,7 +42,7 @@ def _set_lvl(lvl):
         return logging.INFO
 
 
-def init(threshold_lvl, quiet_stdout):
+def init(*, threshold_lvl=1, quiet_stdout=False, log_file):
     """
     Initiate the log module
 
@@ -59,17 +59,17 @@ def init(threshold_lvl, quiet_stdout):
     _logger.setLevel(_log_lvl)
 
     # create syslog handler and set level to info
-    syslog_h = logging.handlers.SysLogHandler(address='/dev/log')
-    #log_h = logging.FileHandler('/var/log/m2bk.log') # for later
+    #syslog_h = logging.handlers.SysLogHandler(address='/dev/log')
+    log_h = logging.FileHandler(log_file)
 
     # Base message format
-    base_fmt = '%(name)s - [%(levelname)s] - %(message)s'
+    base_fmt = '%(asctime)s - %(name)s - [%(levelname)s] - %(message)s'
 
     # set formatter
-    syslog_fmt = logging.Formatter(base_fmt)
-    syslog_h.setFormatter(syslog_fmt)
+    log_fmt = logging.Formatter(base_fmt)
+    log_h.setFormatter(log_fmt)
     # add Handler
-    _logger.addHandler(syslog_h)
+    _logger.addHandler(log_h)
 
     # create stout handler
     if not quiet_stdout:
