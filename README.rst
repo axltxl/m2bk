@@ -91,7 +91,7 @@ the most recent changes from "upstream" before making a pull request.
 3. Make your changes, then make sure the tests passes
 ::
 
-  virtualenv pyve && source pyve/bin/activate
+  pyvenv m2bk-pyve && source m2bk-pyve/bin/activate
   python3 setup.py test
 
 4. Commit your changes once done
