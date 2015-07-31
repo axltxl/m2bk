@@ -364,7 +364,7 @@ Directives
 Drivers (``driver`` section)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Once a backup files have been generated, they are then handled by a driver, whose
+Once backup files have been generated, they are then handled by a driver, whose
 job is to transfer resulting backup files to some form of storage (depending
 on the driver set on configuration). Drivers (and their options) are
 set and configured inside the ``driver`` section like so:
