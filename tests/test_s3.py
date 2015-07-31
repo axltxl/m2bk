@@ -9,12 +9,6 @@ from m2bk.drivers import s3
 
 FILE = 'example.txt'
 
-def test_upload_file_incomplete_aws_credentials():
-    # Raises Value error if either id or access_key are not present
-    assert_raises(ValueError, s3.load, aws_id='123456')
-    assert_raises(ValueError, s3.load, aws_access_key='asd')
-
-
 def test_upload_file_invalid_types():
     # Wrong ID
     assert_raises(TypeError, s3.load, aws_access_key_id=123)

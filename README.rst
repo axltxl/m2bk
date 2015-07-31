@@ -403,6 +403,9 @@ will be logged at debug level.
 
 This driver holds directives regarding AWS credentials that **m2bk**
 is going to use in order to upload the *mongodump* backups to S3.
+If either ``aws_access_key_id`` or ``aws_secret_access_key`` are not specified,
+this driver will not try to use them to authenticate against AWS and will rely
+on `boto config <http://boto.readthedocs.org/en/latest/boto_config_tut.html>`_ for that matter.
 
 **Example**:
 ::
