@@ -12,7 +12,7 @@ Send your mongodump backups straight to AWS S3
 gzipped tarball and finally sends them to an **AWS S3 bucket**
 (more options are about to be available).
 
-.. image:: http://i.imgur.com/7uiVOSI.gif
+.. image:: http://i.imgur.com/PxqbEPA.gif
 
 -  `Requirements <#requirements>`_
 -  `Contributing <#contributing>`_
