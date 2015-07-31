@@ -3,7 +3,9 @@ Version 0.4.0
 
 * Colored stdout
 * The argument -s/--stdout has been swapped by -q/--quiet which specifies the opposite, this means that m2bk will print on stdout by default
-
+* Introducing drivers: backups are transferred via drivers in order for m2bk to have more flexibility
+* s3 module reimplemented as a driver
+* dummy driver introduced
 
 Version 0.3.1
 ------------
