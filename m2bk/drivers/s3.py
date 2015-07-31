@@ -91,12 +91,12 @@ def backup_file(*, file, host):
     # If the destination bucket does not exist, create one
     try:
         if not _dry_run:
-            bucket = conn.get_bucket(_bucket_name)
+            bucket = _boto_conn.get_bucket(_bucket_name)
     except boto.exception.S3ResponseError:
         log.msg_warn("Bucket '{bucket_name}' does not exist!, creating it..."
                      .format(bucket_name=_bucket_name))
         if not _dry_run:
-            bucket = conn.create_bucket(_bucket_name)
+            bucket = _boto_conn.create_bucket(_bucket_name)
         log.msg("Created bucket '{bucket}'".format(bucket=_bucket_name))
 
     # The key is the name of the file itself who needs to be stripped

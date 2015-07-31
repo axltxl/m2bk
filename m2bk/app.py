@@ -171,12 +171,14 @@ def make_backup_files(mongodb):
     #  dry run
     dry_run = _opt["dry_run"]
 
+    # Load the driver before attempting anything
+    driver.load(dry_run=dry_run, **config.get_entry('driver'))
+
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
     mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
 
     # Transfer the backup using a driver
-    driver.load(dry_run=dry_run, **config.get_entry('driver'))
     for host_name, file_name in mongodump_files.items():
         driver.backup_file(file=file_name, host=host_name)
 
