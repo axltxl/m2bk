@@ -425,7 +425,6 @@ Options
 
 -  Type: **string**
 -  Required: NO
--  Default value : ``""``
 -  Role: AWS access key ID
 
 
@@ -434,7 +433,6 @@ Options
 
 -  Type: **string**
 -  Required: NO
--  Default value : ``""``
 -  Role: AWS access key ID
 
 ``s3_bucket``
