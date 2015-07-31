@@ -24,8 +24,8 @@ from ..const import (
 _dry_run = False
 
 # AWS-specific options
-_aws_id = None
-_aws_access_key = None
+_aws_access_key_id = None
+_aws_secret_access_key = None
 _bucket_name = None
 _boto_conn = None
 
@@ -36,7 +36,7 @@ def load(**options):
     :param \*\*options: A variadic list of options
     """
     global _dry_run
-    global _aws_id, _aws_access_key, _bucket_name, _boto_conn
+    global _aws_access_key_id, _aws_secret_access_key, _bucket_name, _boto_conn
 
     #dry run
     _dry_run = options.get('dry_run', False)

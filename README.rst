@@ -410,15 +410,15 @@ is going to use in order to upload the *mongodump* backups to S3.
     driver:
         name: s3
         options:
-            aws_id": "HAS6NBASD8787SD"
-            aws_access_key: "d41d8cd98f00b204e9800998ecf8427e"
+            aws_access_key_id": "HAS6NBASD8787SD"
+            aws_secret_access_key: "d41d8cd98f00b204e9800998ecf8427e"
             s3_bucket: "mybucket"
 
 Options
 ^^^^^^^
 
-``aws_id``
-""""""""""
+``aws_access_key_id``
+"""""""""""""""""""""
 
 -  Type: **string**
 -  Required: NO
@@ -426,8 +426,8 @@ Options
 -  Role: AWS access key ID
 
 
-``aws_access_key``
-""""""""""""""""""
+``aws_secret_access_key``
+"""""""""""""""""""""""""
 
 -  Type: **string**
 -  Required: NO
