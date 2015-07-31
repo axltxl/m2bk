@@ -9,7 +9,8 @@ Send your mongodump backups straight to AWS S3
 
 *m2bk* is command line tool that performs a number of
 **mongodb database backups via mongodump**, compresses them into a
-gzipped tarball and finally sends them to an **AWS S3 bucket**.
+gzipped tarball and finally sends them to an **AWS S3 bucket**
+(more options are about to be available).
 
 .. image:: http://i.imgur.com/7uiVOSI.gif
 
@@ -28,7 +29,11 @@ gzipped tarball and finally sends them to an **AWS S3 bucket**.
          -  `mongodb.host_defaults section <#mongodbhost_defaults-section>`_
          -  `mongodb.hosts section <#mongodbhosts-section>`_
 
-      -  `aws section <#aws-section>`_
+      -  `Drivers (driver section) <#drivers-driver-section>`_
+
+         - `dummy <#dummy>`_
+         - `s3 <#s3>`_
+
 -  `Donating <#donating>`_
 -  `Copyright and licensing <#copyright-and-licensing>`_
 
@@ -40,6 +45,7 @@ Requirements
 -  `envoy <https://pypi.python.org/pypi/envoy>`_ >= 0.0.3
 -  `pyyaml <http://pyyaml.org>`_ >= 3.11
 -  `mongodb <http://www.mongodb.org>`_ >= 2.4
+-  `clint <https://github.com/kennethreitz/clint>`_ >= 0.4.1
 
 
 Contributing
@@ -134,10 +140,10 @@ Normal execution
 
   $ m2bk
 
-Display output on stdout
+Quiet output
 ::
 
-  $ m2bk -s
+  $ m2bk -q
 
 Dry run
 ::
@@ -161,7 +167,7 @@ Options
 -  ``-h | --help`` show a help message and exit
 -  ``-c [file] | --config=[file] | --config [file]`` specify configuration file to use
 -  ``-d | --dry-run`` don't actually do anything
--  ``-s | --stdout`` log messages to stdout too
+-  ``-q | --quiet`` quiet output
 -  ``--ll | --log-level=[num]`` set logging output level
 
 Configuration file
@@ -180,9 +186,11 @@ The following is an example of what a configuration file looks like:
 ::
 
   ---
-  aws:
-    aws_id: "SDF73HSDF3663KSKDJ"
-    aws_access_key: "d577273ff885c3f84dadb8578bb41399"
+  driver:
+    name: s3
+    options:
+      aws_id: "SDF73HSDF3663KSKDJ"
+      aws_access_key: "d577273ff885c3f84dadb8578bb41399"
   fs:
     output_dir: "/opt/tmp/mydir"
   mongodb:
@@ -353,24 +361,62 @@ Directives
 
 **NOTE: particular "dbs" on one host will be merged with those of "host_defaults"**
 
-``aws`` section
-^^^^^^^^^^^^^^^
+Drivers (``driver`` section)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This sections holds directives regarding AWS credentials that **m2bk**
+Once a backup files have been generated, they are then handled by a driver, whose
+job is to transfer resulting backup files to some form of storage (depending
+on the driver set on configuration). Drivers (and their options) are
+set and configured inside the ``driver`` section like so:
+
+::
+
+    driver:
+        # First of all, you need to tell m2bk which driver to use
+        name: dummy
+
+        # Inside this key, driver options are set
+        options:
+          hello: world
+          another_option: another_value
+
+Per driver, there are a bunch of available ``options`` to tweak them.
+These options vary among drivers. Though there is only one driver available on
+m2bk, there will be more drivers available with new releases. Current available
+drivers are the following:
+
+``dummy``
+^^^^^^^^^
+
+This driver is just a placeholder for testing out the driver interface as
+it won't do a thing on backup files.
+
+Options
+^^^^^^^
+
+There are no options for this driver. Any option passed to this driver
+will be logged at debug level.
+
+``s3``
+^^^^^^
+
+This driver holds directives regarding AWS credentials that **m2bk**
 is going to use in order to upload the *mongodump* backups to S3.
 
 **Example**:
 ::
 
-    aws:
-        aws_id": "HAS6NBASD8787SD"
-        aws_access_key: "d41d8cd98f00b204e9800998ecf8427e"
-        s3_bucket: "mybucket"
+    driver:
+        name: s3
+        options:
+            aws_id": "HAS6NBASD8787SD"
+            aws_access_key: "d41d8cd98f00b204e9800998ecf8427e"
+            s3_bucket: "mybucket"
 
-Directives
-^^^^^^^^^^
+Options
+^^^^^^^
 
-aws.aws_id
+``aws_id``
 """"""""""
 
 -  Type: **string**
@@ -379,16 +425,16 @@ aws.aws_id
 -  Role: AWS access key ID
 
 
-``aws.aws_access_key``
-""""""""""""""""""""""
+``aws_access_key``
+""""""""""""""""""
 
 -  Type: **string**
 -  Required: NO
 -  Default value : ``""``
 -  Role: AWS access key ID
 
-``aws.s3_bucket``
-"""""""""""""""""
+``s3_bucket``
+"""""""""""""
 
 -  Type: **string**
 -  Required: NO
