@@ -43,6 +43,9 @@ def load(*, name="dummy", **kwargs):
 
     # Try to load specified driver
     if name in VALID_DRIVERS:
+        # log the thing first
+        log.msg_debug("Attempting to load driver: {d}".format(d=name))
+
         # List options that are passed to the driver
         options = kwargs.get('options', {})
 
