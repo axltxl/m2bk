@@ -21,8 +21,7 @@ _driver = None
 
 # List of supported drivers to load
 VALID_DRIVERS = [
-    'dummy',
-    's3'
+    'dummy', 's3', 'ftp'
 ]
 
 
