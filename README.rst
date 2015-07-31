@@ -1,6 +1,7 @@
 m2bk
 ====
 .. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop
+   :target: https://travis-ci.org/axltxl/m2bk
 .. image:: https://badge.fury.io/py/m2bk.svg
    :target: http://badge.fury.io/py/m2bk
 .. image:: https://img.shields.io/gratipay/axltxl.svg
