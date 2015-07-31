@@ -6,6 +6,8 @@ Version 0.4.0
 * Introducing drivers: backups are transferred via drivers in order for m2bk to have more flexibility
 * s3 module reimplemented as a driver
 * dummy driver introduced
+* log module does not use syslog anymore, instead it handles its own log file (no /dev/log required anymore).
+  Log file can be specified via the parameter -l | --log-file
 
 Version 0.3.1
 ------------

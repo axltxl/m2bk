@@ -17,6 +17,7 @@ PKG_URL  = "https://github.com/axltxl/{pkg_name}".format(pkg_name=PKG_NAME)
 
 # Logs
 LOG_LVL_DEFAULT = 1
+LOG_FILE_DEFAULT = "{pkg_name}.log".format(pkg_name=PKG_NAME)
 
 # Amazon S3
 AWS_DEFAULT_ID = ""

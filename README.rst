@@ -169,6 +169,7 @@ Options
 -  ``-d | --dry-run`` don't actually do anything
 -  ``-q | --quiet`` quiet output
 -  ``--ll | --log-level=[num]`` set logging output level
+-  ``-l LOG_FILE | --log-file LOG_FILE set log file``
 
 Configuration file
 ------------------

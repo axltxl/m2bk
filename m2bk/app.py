@@ -20,6 +20,7 @@ from m2bk import config, log, mongo, fs
 from m2bk import __version__ as version
 from m2bk.const import (
     LOG_LVL_DEFAULT,
+    LOG_FILE_DEFAULT,
     PKG_NAME, PKG_URL,
     CONF_DEFAULT_FILE
 )
@@ -65,6 +66,12 @@ def init_parsecmdline(argv=[]):
                   dest="log_lvl", default=LOG_LVL_DEFAULT,
                   help="set logging level")
 
+    # -l, --log-file
+    parser.add_argument("-l", "--log-file",
+                  action="store",
+                  dest="log_file", default=LOG_FILE_DEFAULT,
+                  help="set log file")
+
     # Absorb the options
     options = parser.parse_args(argv)
 
@@ -73,7 +80,8 @@ def init_parsecmdline(argv=[]):
     _opt["dry_run"] = options.dry_run
 
     # Initiate the log level
-    log.init(options.log_lvl, options.log_quiet)
+    log.init(threshold_lvl=options.log_lvl,
+        quiet_stdout=options.log_quiet, log_file=options.log_file)
 
     # Print the splash
     _splash()
