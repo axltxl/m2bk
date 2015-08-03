@@ -135,15 +135,17 @@ def _handle_signal(signum, frame):
     """
     UNIX signal handler
     """
-    shutdown()
+    # Raise a SystemExit exception
+    sys.exit(1)
 
 
 def shutdown():
     """
     Cleanup
     """
-    fs.cleanup()
+    # TODO: driver.abort()
     driver.dispose()
+    fs.cleanup()
     log.msg("Exiting ...")
 
 
@@ -209,6 +211,7 @@ def main(argv=None):
         _handle_except(e)
         exit_code = 1
     finally:
+        # All cleanup actions are taken from here
         shutdown()
         return exit_code
 
