@@ -24,7 +24,7 @@ FTP_DEFAULT_PORT = 21
 FTP_DEFAULT_HOST = 'localhost'
 FTP_DEFAULT_USER = 'anonymous'
 FTP_DEFAULT_PASS = ''
-FTP_DEFAULT_PWD  = '/'
+FTP_DEFAULT_PWD = '/'
 
 #
 # Global variables
@@ -34,10 +34,11 @@ _ftp_user = None
 _ftp_pass = None
 _ftp_host = None
 _ftp_port = None
-_ftp_pwd  = None
+_ftp_pwd = None
 
 # Dry run mode
 _dry_run = False
+
 
 def load(**options):
     """
@@ -46,7 +47,8 @@ def load(**options):
     :param \*\*options: A variadic list of options
     """
     # Dry run mode
-    global _dry_run; _dry_run = options.get('dry_run', False)
+    global _dry_run
+    dry_run = options.get('dry_run', False)
 
     # Set up global variables
     global _ftp_host, _ftp_port, _ftp_user, _ftp_pass, _ftp_pwd
@@ -54,14 +56,16 @@ def load(**options):
     _ftp_port = options.get('port', FTP_DEFAULT_PORT)
     _ftp_user = options.get('user_name', FTP_DEFAULT_USER)
     _ftp_pass = options.get('password', FTP_DEFAULT_PASS)
-    _ftp_pwd  = options.get('pwd', FTP_DEFAULT_PWD)
+    _ftp_pwd = options.get('pwd', FTP_DEFAULT_PWD)
 
     # Log the thing prior to actual connection to FTP server
     log.msg("Attempting connection to ftp://{user}@{host}:{port}"
-        .format(user=_ftp_user, host=_ftp_host, port=_ftp_port))
+            .format(user=_ftp_user, host=_ftp_host, port=_ftp_port))
 
     # Connect to FTP server and log in
-    global _ftp; _ftp = FTP()
+    global _ftp
+    _ftp = FTP()
+
     if not _dry_run:
         _ftp.connect(host=_ftp_host, port=_ftp_port)
     log.msg("Connection to FTP server successful!")
@@ -105,15 +109,17 @@ def backup_file(*, file, host):
         try:
             _ftp.cwd(host)
         except ftplib.error_perm:
-            log.msg_warn("Destination directory at '/{pwd}/{dir}'"
-                + " does not exist. I will proceed to create it.".format(pwd=_ftp_pwd, dir=host))
-            _ftp.mkd(host); _ftp.cwd(host)
+            log.msg_warn("Destination directory at '/{pwd}/{dir}'" +
+                         " does not exist. I will proceed to create it."
+                         .format(pwd=_ftp_pwd, dir=host))
+            _ftp.mkd(host)  # Create new directory
+            _ftp.cwd(host)  # Move to the new directory
 
     # The actual STOR command to be sent to the FTP server
     store_cmd = "STOR {file}".format(file=os.path.basename(file))
 
     # Log the thing prior to action
-    log.msg("[{host}] Storing file '{file}'".format(host=host,file=file))
+    log.msg("[{host}] Storing file '{file}'".format(host=host, file=file))
     log.msg_debug("ftp {cmd}".format(cmd=store_cmd))
 
     # Store the file onto destination directory
@@ -122,5 +128,6 @@ def backup_file(*, file, host):
             _ftp.storbinary(store_cmd, f)
 
     # Log the thing
-    log.msg("The file has been properly stored at: ftp://{host}:{port}/{pwd}/{dir}"
-        .format(host=_ftp_host, port=_ftp_port, pwd=_ftp_pwd, dir=host))
+    log.msg("The file has been properly stored at: " +
+            "ftp://{host}:{port}/{pwd}/{dir}"
+            .format(host=_ftp_host, port=_ftp_port, pwd=_ftp_pwd, dir=host))
