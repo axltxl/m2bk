@@ -19,10 +19,7 @@ import signal
 from m2bk import config, log, mongo, fs
 from m2bk import __version__ as version
 from m2bk.const import (
-    LOG_LVL_DEFAULT,
-    LOG_FILE_DEFAULT,
-    PKG_NAME, PKG_URL,
-    CONF_DEFAULT_FILE
+    PKG_NAME, PKG_URL
 )
 from m2bk import driver
 from m2bk.utils import debug
@@ -46,7 +43,7 @@ def init_parsecmdline(argv=[]):
     # -c, --config <file_name>
     parser.add_argument("-c", "--config",
                   action="store",
-                  dest="config_file", default=CONF_DEFAULT_FILE,
+                  dest="config_file", default=config.CONF_DEFAULT_FILE,
                   help="specify configuration file to use")
 
     # --dry-run
@@ -63,13 +60,13 @@ def init_parsecmdline(argv=[]):
     # logging level
     parser.add_argument("--ll", "--log-level",
                   action="store", type=int,
-                  dest="log_lvl", default=LOG_LVL_DEFAULT,
+                  dest="log_lvl", default=log.LOG_LVL_DEFAULT,
                   help="set logging level")
 
     # -l, --log-file
     parser.add_argument("-l", "--log-file",
                   action="store",
-                  dest="log_file", default=LOG_FILE_DEFAULT,
+                  dest="log_file", default=log.LOG_FILE_DEFAULT,
                   help="set log file")
 
     # Absorb the options

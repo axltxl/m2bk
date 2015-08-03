@@ -13,14 +13,16 @@ Database backups via mongodump
 
 
 from . import log, utils, fs, shell
-from .const import (
-    MONGODB_DEFAULT_PORT,
-    MONGODB_DEFAULT_MONGODUMP,
-    MONGODB_DEFAULT_USER,
-    MONGODB_DEFAULT_PWD,
-    MONGODB_DEFAULT_AUTH
-)
+from .const import PKG_NAME
 
+#
+# Constants
+#
+MONGODB_DEFAULT_MONGODUMP = "mongodump"
+MONGODB_DEFAULT_USER = PKG_NAME
+MONGODB_DEFAULT_PWD = "pass"
+MONGODB_DEFAULT_PORT = 27017
+MONGODB_DEFAULT_AUTH = "admin"
 
 def _set_mongodb_host_val(key, default, mongodb_host, mongodb_defaults):
     """

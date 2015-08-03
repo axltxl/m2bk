@@ -14,23 +14,3 @@ Constants
 # Basics
 PKG_NAME = "m2bk"
 PKG_URL  = "https://github.com/axltxl/{pkg_name}".format(pkg_name=PKG_NAME)
-
-# Logs
-LOG_LVL_DEFAULT = 1
-LOG_FILE_DEFAULT = "{pkg_name}.log".format(pkg_name=PKG_NAME)
-
-# Amazon S3
-AWS_S3_DEFAULT_BUCKET_NAME = PKG_NAME
-
-# Config
-CONF_DEFAULT_FILE = "/etc/{pkg_name}.yaml".format(pkg_name=PKG_NAME)
-
-# mongodump
-MONGODB_DEFAULT_MONGODUMP = "mongodump"
-MONGODB_DEFAULT_USER = PKG_NAME
-MONGODB_DEFAULT_PWD = "pass"
-MONGODB_DEFAULT_PORT = 27017
-MONGODB_DEFAULT_AUTH = "admin"
-
-#fs
-FS_DEFAULT_OUTPUT_DIR = "/tmp/{pkg_name}".format(pkg_name=PKG_NAME)

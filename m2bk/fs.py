@@ -18,7 +18,12 @@ import shutil
 from datetime import datetime
 import uuid
 from . import utils, log
-from .const import FS_DEFAULT_OUTPUT_DIR
+from .const import PKG_NAME
+
+#
+# Constants
+#
+FS_DEFAULT_OUTPUT_DIR = "/tmp/{pkg_name}".format(pkg_name=PKG_NAME)
 
 # Output directory name
 _output_dir = None

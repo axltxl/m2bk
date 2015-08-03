@@ -22,6 +22,11 @@ from .utils import debug
 
 from clint.textui.colored import white, red, cyan, yellow, green
 
+#
+# Constants
+#
+LOG_LVL_DEFAULT = 1
+LOG_FILE_DEFAULT = "{pkg_name}.log".format(pkg_name=PKG_NAME)
 # Globals
 _logger = None
 _log_lvl = 0

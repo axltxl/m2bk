@@ -14,9 +14,12 @@ Backup files on a S3 bucket
 import boto
 import ntpath
 from .. import log
-from ..const import (
-    AWS_S3_DEFAULT_BUCKET_NAME
-)
+from ..const import PKG_NAME
+
+#
+# Constants
+#
+AWS_S3_DEFAULT_BUCKET_NAME = PKG_NAME
 
 # Dry run mode
 _dry_run = False

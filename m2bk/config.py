@@ -11,7 +11,13 @@ Configuration dictionary via a YAML file
 
 """
 
+from .const import PKG_NAME
 import yaml
+
+#
+# Constants
+#
+CONF_DEFAULT_FILE = "/etc/{pkg_name}.yaml".format(pkg_name=PKG_NAME)
 
 # Base configuration object
 _config = {}
