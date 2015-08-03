@@ -57,7 +57,8 @@ def load(*, name="dummy", options={}, dry_run=False, **kwargs):
                           " has been loaded successfully!"
                           .format(driver=_driver.get_name()))
     else:
-        raise ValueError('Invalid backup driver name')
+        raise ValueError("Invalid backup driver name: {driver}"
+                         .format(driver=name))
 
 
 def backup_file(*, file, host):
