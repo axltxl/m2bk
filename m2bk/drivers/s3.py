@@ -24,6 +24,9 @@ AWS_S3_DEFAULT_BUCKET_NAME = PKG_NAME
 # Dry run mode
 _dry_run = False
 
+# Initialisation flag
+_has_init = False
+
 # AWS-specific options
 _aws_access_key_id = None
 _aws_secret_access_key = None
@@ -81,11 +84,14 @@ def load(*,
                                aws_secret_access_key=_aws_secret_access_key)
     log.msg("Connected to AWS S3 service successfully!")
 
+    # Indicate this driver has been properly initialised
+    _has_init = True
+
 def dispose():
     """
     Perform cleanup
     """
-    pass
+    global _has_init; _has_init = False
 
 def get_name():
     """
@@ -103,6 +109,11 @@ def backup_file(*, file, host):
     :raises TypeError: if an argument in kwargs does not have the type expected
     :raises ValueError: if an argument within kwargs has an invalid value
     """
+
+    # This driver won't do a thing unless it has been properly initialised
+    # via load()
+    if not _has_init:
+        raise RuntimeError("This driver has not been properly initialised!")
 
     # If the destination bucket does not exist, create one
     try:
