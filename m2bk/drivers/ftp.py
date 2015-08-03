@@ -18,15 +18,6 @@ from .. import log
 from ..const import PKG_NAME
 
 #
-# Default values for variables within this driver
-#
-FTP_DEFAULT_PORT = 21
-FTP_DEFAULT_HOST = 'localhost'
-FTP_DEFAULT_USER = 'anonymous'
-FTP_DEFAULT_PASS = ''
-FTP_DEFAULT_PWD = '/'
-
-#
 # Global variables
 #
 _ftp = None
@@ -40,7 +31,14 @@ _ftp_pwd = None
 _dry_run = False
 
 
-def load(**options):
+def load(*,
+         host='localhost',
+         port=21,
+         user_name='anonymous',
+         password='',
+         pwd='/',
+         dry_run=False,
+         **kwargs):
     """
     Load this driver
 
@@ -48,15 +46,15 @@ def load(**options):
     """
     # Dry run mode
     global _dry_run
-    dry_run = options.get('dry_run', False)
+    _dry_run = dry_run
 
     # Set up global variables
     global _ftp_host, _ftp_port, _ftp_user, _ftp_pass, _ftp_pwd
-    _ftp_host = options.get('host', FTP_DEFAULT_HOST)
-    _ftp_port = options.get('port', FTP_DEFAULT_PORT)
-    _ftp_user = options.get('user_name', FTP_DEFAULT_USER)
-    _ftp_pass = options.get('password', FTP_DEFAULT_PASS)
-    _ftp_pwd = options.get('pwd', FTP_DEFAULT_PWD)
+    _ftp_host = host
+    _ftp_port = port
+    _ftp_user = str(user_name)
+    _ftp_pass = str(password)
+    _ftp_pwd = pwd
 
     # Log the thing prior to actual connection to FTP server
     log.msg("Attempting connection to ftp://{user}@{host}:{port}"
@@ -109,9 +107,10 @@ def backup_file(*, file, host):
         try:
             _ftp.cwd(host)
         except ftplib.error_perm:
-            log.msg_warn("Destination directory at '/{pwd}/{dir}'" +
-                         " does not exist. I will proceed to create it."
-                         .format(pwd=_ftp_pwd, dir=host))
+            log.msg_warn("Destination directory at '/{pwd}{dir}'"
+                         .format(pwd=_ftp_pwd, dir=host) +
+                         " does not exist. I will proceed to create it.")
+
             _ftp.mkd(host)  # Create new directory
             _ftp.cwd(host)  # Move to the new directory
 
