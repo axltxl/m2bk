@@ -16,16 +16,21 @@ System-wide messages are logged through logging.
 import sys
 import logging
 import logging.handlers
-#from clint.textui import colored
 from .const import PKG_NAME
 from .utils import debug
-
 from clint.textui.colored import white, red, cyan, yellow, green
+
+#
+# Constants
+#
+LOG_LVL_DEFAULT = 1
+LOG_FILE_DEFAULT = "{pkg_name}.log".format(pkg_name=PKG_NAME)
 
 # Globals
 _logger = None
 _log_lvl = 0
 _stdout = False
+
 
 def _set_lvl(lvl):
     if lvl == 0:
@@ -59,7 +64,6 @@ def init(*, threshold_lvl=1, quiet_stdout=False, log_file):
     _logger.setLevel(_log_lvl)
 
     # create syslog handler and set level to info
-    #syslog_h = logging.handlers.SysLogHandler(address='/dev/log')
     log_h = logging.FileHandler(log_file)
 
     # Base message format
@@ -81,6 +85,7 @@ def to_stdout(msg, *, colorf=green, bold=False):
     if _stdout:
         print(colorf(msg, bold=bold))
 
+
 def msg(message):
     """
     Log a regular message
@@ -98,7 +103,8 @@ def msg_warn(message):
 
     :param message: the message to be logged
     """
-    to_stdout(" (!) {message}".format(message=message), colorf=yellow, bold=True)
+    to_stdout(" (!) {message}".format(message=message),
+              colorf=yellow, bold=True)
     if _logger:
         _logger.warn(message)
 

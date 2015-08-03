@@ -19,10 +19,7 @@ import signal
 from m2bk import config, log, mongo, fs
 from m2bk import __version__ as version
 from m2bk.const import (
-    LOG_LVL_DEFAULT,
-    LOG_FILE_DEFAULT,
-    PKG_NAME, PKG_URL,
-    CONF_DEFAULT_FILE
+    PKG_NAME, PKG_URL
 )
 from m2bk import driver
 from m2bk.utils import debug
@@ -45,32 +42,32 @@ def init_parsecmdline(argv=[]):
 
     # -c, --config <file_name>
     parser.add_argument("-c", "--config",
-                  action="store",
-                  dest="config_file", default=CONF_DEFAULT_FILE,
-                  help="specify configuration file to use")
+                        action="store",
+                        dest="config_file", default=config.CONF_DEFAULT_FILE,
+                        help="specify configuration file to use")
 
     # --dry-run
     parser.add_argument("-d", "--dry-run",
-                   action="store_true",  dest="dry_run", default=False,
-                   help="don't actually do anything")
+                        action="store_true",  dest="dry_run", default=False,
+                        help="don't actually do anything")
 
     # --quiet
     parser.add_argument("-q", "--quiet",
-                   action="store_true",  dest="log_quiet", default=False,
-                   help="quiet output")
+                        action="store_true",  dest="log_quiet", default=False,
+                        help="quiet output")
 
     # --ll <level>
     # logging level
     parser.add_argument("--ll", "--log-level",
-                  action="store", type=int,
-                  dest="log_lvl", default=LOG_LVL_DEFAULT,
-                  help="set logging level")
+                        action="store", type=int,
+                        dest="log_lvl", default=log.LOG_LVL_DEFAULT,
+                        help="set logging level")
 
     # -l, --log-file
     parser.add_argument("-l", "--log-file",
-                  action="store",
-                  dest="log_file", default=LOG_FILE_DEFAULT,
-                  help="set log file")
+                        action="store",
+                        dest="log_file", default=log.LOG_FILE_DEFAULT,
+                        help="set log file")
 
     # Absorb the options
     options = parser.parse_args(argv)
@@ -81,9 +78,11 @@ def init_parsecmdline(argv=[]):
 
     # Initiate the log level
     log.init(threshold_lvl=options.log_lvl,
-        quiet_stdout=options.log_quiet, log_file=options.log_file)
+             quiet_stdout=options.log_quiet, log_file=options.log_file)
 
+    #
     # Print the splash
+    #
     _splash()
 
     # Merge configuration with a JSON file
@@ -96,9 +95,11 @@ def init_parsecmdline(argv=[]):
         raise FileNotFoundError("Configuration file '{config_file}' not found!"
                                 .format(config_file=config_file))
 
+
 def _splash():
     """Print the splash"""
-    splash_title = "{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL)
+    splash_title = "{pkg} [{version}] - {url}".format(pkg=PKG_NAME,
+                                                      version=version, url=PKG_URL)
     log.to_stdout(splash_title, colorf=log.yellow, bold=True)
     log.to_stdout('-' * len(splash_title), colorf=log.yellow, bold=True)
 
@@ -115,8 +116,6 @@ def init(argv):
         "driver": {},
         # fs section
         "fs": {},
-        # Amazon Web Services section
-        "aws": {},
         # MongoDB section
         "mongodb": {},
     })
@@ -125,7 +124,7 @@ def init(argv):
     init_parsecmdline(argv[1:])
 
     # Initiatize the output directory
-    fs.init(**config.get_entry('fs'))
+    fs.init(dry_run=_opt["dry_run"], **config.get_entry('fs'))
 
     # This baby will handle UNIX signals
     signal.signal(signal.SIGINT,  _handle_signal)
@@ -136,15 +135,17 @@ def _handle_signal(signum, frame):
     """
     UNIX signal handler
     """
-    shutdown()
+    # Raise a SystemExit exception
+    sys.exit(1)
 
 
 def shutdown():
     """
     Cleanup
     """
-    fs.cleanup()
+    # TODO: driver.abort()
     driver.dispose()
+    fs.cleanup()
     log.msg("Exiting ...")
 
 
@@ -165,8 +166,7 @@ def _handle_except(e):
     return 1
 
 
-#def make_backup_files(mongodb, aws):
-def make_backup_files(mongodb):
+def make_backup_files():
 
     #  dry run
     dry_run = _opt["dry_run"]
@@ -176,7 +176,8 @@ def make_backup_files(mongodb):
 
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
-    mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
+    mongodump_files = mongo.make_backup_files(dry_run=dry_run,
+                                              **config.get_entry('mongodb'))
 
     # Transfer the backup using a driver
     for host_name, file_name in mongodump_files.items():
@@ -202,14 +203,15 @@ def main(argv=None):
         # Bootstrap
         init(argv)
 
-        #
-        make_backup_files(config.get_entry('mongodb'))
+        # Perform the actual backup job
+        make_backup_files()
 
     except Exception as e:
         # ... and if everything else fails
         _handle_except(e)
         exit_code = 1
     finally:
+        # All cleanup actions are taken from here
         shutdown()
         return exit_code
 

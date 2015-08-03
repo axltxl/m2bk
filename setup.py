@@ -65,7 +65,7 @@ setup(
         ],
     },
     install_requires = [
-        'boto  == 2.34.0',
+        'boto  == 2.38.0',
         'envoy >= 0.0.3',
         'pyyaml >= 3.11',
         'clint >= 0.4.1'
