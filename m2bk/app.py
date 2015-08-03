@@ -93,6 +93,7 @@ def init_parsecmdline(argv=[]):
         raise FileNotFoundError("Configuration file '{config_file}' not found!"
                                 .format(config_file=config_file))
 
+
 def _splash():
     """Print the splash"""
     splash_title = "{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL)
@@ -160,7 +161,6 @@ def _handle_except(e):
     return 1
 
 
-#def make_backup_files(mongodb, aws):
 def make_backup_files(mongodb):
 
     #  dry run

@@ -25,15 +25,17 @@ VALID_DRIVERS = [
     's3'
 ]
 
+
 def get_name():
     return _driver.get_name()
+
 
 def load(*, name="dummy", options={}, dry_run=False, **kwargs):
     """
     Load a backup driver
 
     :param name(str, optional): name of the backup driver to load
-    :param options(dict, optional): A dictionary of options to be passed to the driver
+    :param options(dict, optional): A dictionary passed to the driver
     :param dry_run(bool, optional): Whether to activate dry run mode
     :param \*\*kwargs: arbitrary keyword arguments
     :raises ValueError: if specified driver does not exist
@@ -47,13 +49,16 @@ def load(*, name="dummy", options={}, dry_run=False, **kwargs):
 
         # Load the driver (which is actually a python
         # module inside the drivers directory)
-        _driver = importlib.import_module(".drivers.{name}".format(name=name), __package__)
+        _driver = importlib.import_module(".drivers.{name}"
+                                          .format(name=name), __package__)
         if _driver:
             _driver.load(dry_run=dry_run, **options)
-            log.msg_debug("Backup driver '{driver}' has been loaded successfully!"
-                .format(driver=_driver.get_name()))
+            log.msg_debug("Backup driver '{driver}'" +
+                          " has been loaded successfully!"
+                          .format(driver=_driver.get_name()))
     else:
         raise ValueError('Invalid backup driver name')
+
 
 def backup_file(*, file, host):
     """
@@ -64,8 +69,9 @@ def backup_file(*, file, host):
     """
     if _driver:
         log.msg_debug("[{driver}] Backing up file '{file}'"
-            .format(driver=_driver.get_name(), file=file))
+                      .format(driver=_driver.get_name(), file=file))
         _driver.backup_file(file=file, host=host)
+
 
 def dispose():
     """

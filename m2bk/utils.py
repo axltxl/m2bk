@@ -25,5 +25,6 @@ def chkstr(s, v):
     if not s:
         raise ValueError("{var} cannot be empty".format(var=v))
 
+
 def debug():
     import pudb; pu.db

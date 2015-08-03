@@ -33,6 +33,7 @@ _aws_secret_access_key = None
 _bucket_name = None
 _boto_conn = None
 
+
 def load(*,
          aws_access_key_id=None,
          aws_secret_access_key=None,
@@ -43,19 +44,19 @@ def load(*,
     Load this driver
 
     Note that if either aws_access_key_id or aws_secret_access_key are
-    not specified, they will not be taken into account and instead Authentication
-    towards AWS will solely rely on boto config
+    not specified, they will not be taken into account and instead
+    authentication towards AWS will solely rely on boto config
 
     :param aws_access_key_id(str, optional): Access key ID
     :param aws_secret_access_key(str, optional): Secret access key
-    :param s3_bucket(str, optional): Name of the S3 bucket to be used/created to store the file
+    :param s3_bucket(str, optional): Name of the S3 bucket to be used to store the file
     :param dry_run(bool, optional): Whether to activate dry run mode on this driver
     :param \*\*kwargs: arbitrary keyword arguments
     """
     global _dry_run, _has_init
     global _aws_access_key_id, _aws_secret_access_key, _bucket_name, _boto_conn
 
-    #dry run
+    # dry run
     _dry_run = dry_run
 
     # AWS parameters from kwargs
@@ -63,7 +64,8 @@ def load(*,
     _aws_secret_access_key = aws_secret_access_key
     if _aws_access_key_id is not None and type(_aws_access_key_id) != str:
         raise TypeError('aws_access_key_id must be str')
-    if _aws_secret_access_key is not None and type(_aws_secret_access_key) != str:
+    if _aws_secret_access_key is not None \
+       and type(_aws_secret_access_key) != str:
         raise TypeError('aws_secret_access_key must be str')
 
     # Check the bucket name before doing anything
@@ -76,22 +78,26 @@ def load(*,
     # Connect to S3 service
     log.msg("Connecting to Amazon S3 Service")
     if not _aws_access_key_id or not _aws_secret_access_key:
-        log.msg_warn('No AWS credentials were given. Authentication will be done via boto.config/IAM role')
+        log.msg_warn("No AWS credentials were given. " +
+                     "Authentication will be done via boto.config/IAM role")
         if not _dry_run:
             _boto_conn = boto.connect_s3()
     elif not _dry_run:
         _boto_conn = boto.connect_s3(aws_access_key_id=_aws_access_key_id,
-                               aws_secret_access_key=_aws_secret_access_key)
+                                     aws_secret_access_key=_aws_secret_access_key)
     log.msg("Connected to AWS S3 service successfully!")
 
     # Indicate this driver has been properly initialised
     _has_init = True
 
+
 def dispose():
     """
     Perform cleanup
     """
-    global _has_init; _has_init = False
+    global _has_init
+    _has_init = False
+
 
 def get_name():
     """

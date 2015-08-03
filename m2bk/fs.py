@@ -28,6 +28,7 @@ FS_DEFAULT_OUTPUT_DIR = "/tmp/{pkg_name}".format(pkg_name=PKG_NAME)
 # Output directory name
 _output_dir = None
 
+
 def get_output_dir():
     """
     Get the name of the output directory
@@ -41,21 +42,24 @@ def init(*, output_dir=FS_DEFAULT_OUTPUT_DIR, **kwargs):
     """
     Set up output directory
 
-    :param output_dir(str, optional): Output directory for holding temporary files
+    :param output_dir(str, optional): Output dir for holding temporary files
     :param \*\*kwargs: arbitrary keyword arguments
     """
     # Output directory
-    global _output_dir; _output_dir = output_dir
+    global _output_dir
+    _output_dir = output_dir
 
     # Type checks
     utils.chkstr(_output_dir, 'output_dir')
 
     # log the thing
-    log.msg("Output directory will be: {output_dir}".format(output_dir=_output_dir))
+    log.msg("Output directory will be: {output_dir}"
+            .format(output_dir=_output_dir))
 
     # Create output directory if it does not exist
     if not os.path.exists(_output_dir):
-        log.msg_warn("Output path '{output_dir}' does not exist, creating it ...".format(output_dir=_output_dir))
+        log.msg_warn("Output path '{out_dir}' does not exist, creating it ..."
+                     .format(out_dir=_output_dir))
         # create the actual root output directory
         os.makedirs(_output_dir)
         # set folder permissions to 0770
@@ -65,7 +69,8 @@ def init(*, output_dir=FS_DEFAULT_OUTPUT_DIR, **kwargs):
 def cleanup():
     """Cleanup the output directory"""
     if _output_dir and os.path.exists(_output_dir):
-        log.msg_warn("Cleaning up output directory at '{output_dir}' ...".format(output_dir=_output_dir))
+        log.msg_warn("Cleaning up output directory at '{output_dir}' ..."
+                     .format(output_dir=_output_dir))
         shutil.rmtree(_output_dir)
 
 
@@ -85,7 +90,8 @@ def make_tmp_dir(prefix):
     f_uuid = uuid.uuid4().hex
 
     # Directory name and path
-    out_dir = "{out}/{p}-{now}-{uuid}".format(out=_output_dir, p=prefix, now=now, uuid=f_uuid)
+    out_dir = "{out}/{p}-{now}-{uuid}".format(out=_output_dir, p=prefix,
+                                              now=now, uuid=f_uuid)
 
     # create the actual directory
     os.makedirs(out_dir)

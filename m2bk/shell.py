@@ -34,7 +34,8 @@ def run(cmd, *, args='', timeout=600):
     # log stdout
     log.msg_debug("{cmd} > {stdout}".format(cmd=cmd, stdout=r.std_out.strip()))
 
-     # In this way, we will know what went wrong on execution
+    # In this way, we will know what went wrong on execution
     if r.status_code:
-        log.msg_err("{cmd} > {stderr}".format(cmd=cmd, stderr=r.std_err.strip()))
+        log.msg_err("{cmd} > {stderr}".format(cmd=cmd,
+                                              stderr=r.std_err.strip()))
         raise OSError("[{cmd}] execution failed!".format(cmd=cmd))
