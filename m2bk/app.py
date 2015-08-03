@@ -124,7 +124,7 @@ def init(argv):
     init_parsecmdline(argv[1:])
 
     # Initiatize the output directory
-    fs.init(**config.get_entry('fs'))
+    fs.init(dry_run=_opt["dry_run"], **config.get_entry('fs'))
 
     # This baby will handle UNIX signals
     signal.signal(signal.SIGINT,  _handle_signal)
