@@ -164,7 +164,7 @@ def _handle_except(e):
     return 1
 
 
-def make_backup_files(mongodb):
+def make_backup_files():
 
     #  dry run
     dry_run = _opt["dry_run"]
@@ -174,7 +174,8 @@ def make_backup_files(mongodb):
 
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
-    mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
+    mongodump_files = mongo.make_backup_files(dry_run=dry_run,
+                                              **config.get_entry('mongodb'))
 
     # Transfer the backup using a driver
     for host_name, file_name in mongodump_files.items():
@@ -200,8 +201,8 @@ def main(argv=None):
         # Bootstrap
         init(argv)
 
-        #
-        make_backup_files(config.get_entry('mongodb'))
+        # Perform the actual backup job
+        make_backup_files()
 
     except Exception as e:
         # ... and if everything else fails
