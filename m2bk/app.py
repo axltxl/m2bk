@@ -112,8 +112,6 @@ def init(argv):
         "driver": {},
         # fs section
         "fs": {},
-        # Amazon Web Services section
-        "aws": {},
         # MongoDB section
         "mongodb": {},
     })
