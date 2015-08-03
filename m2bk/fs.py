@@ -37,16 +37,15 @@ def get_output_dir():
     return _output_dir
 
 
-def init(**kwargs):
+def init(*, output_dir=FS_DEFAULT_OUTPUT_DIR, **kwargs):
     """
     Set up output directory
 
+    :param output_dir(str, optional): Output directory for holding temporary files
     :param \*\*kwargs: arbitrary keyword arguments
-    :return:
     """
     # Output directory
-    global _output_dir
-    _output_dir = kwargs.get('output_dir', FS_DEFAULT_OUTPUT_DIR)
+    global _output_dir; _output_dir = output_dir
 
     # Type checks
     utils.chkstr(_output_dir, 'output_dir')
@@ -71,7 +70,12 @@ def cleanup():
 
 
 def make_tmp_dir(prefix):
-    """Create a temporary directory"""
+    """
+    Create a temporary directory
+
+    :param prefix(str): Name prefix for the new directory
+    :return: a string with the resulting name of new directory
+    """
 
     # Time in ISO8601 format
     now = datetime.now().isoformat()

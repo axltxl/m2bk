@@ -30,28 +30,41 @@ _aws_secret_access_key = None
 _bucket_name = None
 _boto_conn = None
 
-def load(**options):
+def load(*,
+         aws_access_key_id=None,
+         aws_secret_access_key=None,
+         s3_bucket=AWS_S3_DEFAULT_BUCKET_NAME,
+         dry_run=False,
+         **kwargs):
     """
     Load this driver
 
-    :param \*\*options: A variadic list of options
+    Note that if either aws_access_key_id or aws_secret_access_key are
+    not specified, they will not be taken into account and instead Authentication
+    towards AWS will solely rely on boto config
+
+    :param aws_access_key_id(str, optional): Access key ID
+    :param aws_secret_access_key(str, optional): Secret access key
+    :param s3_bucket(str, optional): Name of the S3 bucket to be used/created to store the file
+    :param dry_run(bool, optional): Whether to activate dry run mode on this driver
+    :param \*\*kwargs: arbitrary keyword arguments
     """
-    global _dry_run
+    global _dry_run, _has_init
     global _aws_access_key_id, _aws_secret_access_key, _bucket_name, _boto_conn
 
     #dry run
-    _dry_run = options.get('dry_run', False)
+    _dry_run = dry_run
 
     # AWS parameters from kwargs
-    _aws_access_key_id = options.get('aws_access_key_id', None)
-    _aws_secret_access_key = options.get('aws_secret_access_key', None)
+    _aws_access_key_id = aws_access_key_id
+    _aws_secret_access_key = aws_secret_access_key
     if _aws_access_key_id is not None and type(_aws_access_key_id) != str:
         raise TypeError('aws_access_key_id must be str')
     if _aws_secret_access_key is not None and type(_aws_secret_access_key) != str:
         raise TypeError('aws_secret_access_key must be str')
 
     # Check the bucket name before doing anything
-    _bucket_name = options.get('s3_bucket', AWS_S3_DEFAULT_BUCKET_NAME)
+    _bucket_name = s3_bucket
     if type(_bucket_name) != str:
         raise TypeError('s3_bucket must be str')
     if not _bucket_name:

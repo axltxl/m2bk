@@ -28,26 +28,22 @@ VALID_DRIVERS = [
 def get_name():
     return _driver.get_name()
 
-def load(*, name="dummy", **kwargs):
+def load(*, name="dummy", options={}, dry_run=False, **kwargs):
     """
     Load a backup driver
 
-    :param name: name of the backup driver to load
+    :param name(str, optional): name of the backup driver to load
+    :param options(dict, optional): A dictionary of options to be passed to the driver
+    :param dry_run(bool, optional): Whether to activate dry run mode
     :param \*\*kwargs: arbitrary keyword arguments
     :raises ValueError: if specified driver does not exist
     """
     global _driver
 
-    #dry run
-    dry_run = kwargs.get('dry_run', False)
-
     # Try to load specified driver
     if name in VALID_DRIVERS:
         # log the thing first
         log.msg_debug("Attempting to load driver: {d}".format(d=name))
-
-        # List options that are passed to the driver
-        options = kwargs.get('options', {})
 
         # Load the driver (which is actually a python
         # module inside the drivers directory)

@@ -52,5 +52,5 @@ def test_args_noargs():
         app.init_parsecmdline()
     except FileNotFoundError:
         pass
-    eq_(config.get_config_file_name(), const.CONF_DEFAULT_FILE,
+    eq_(config.get_config_file_name(), config.CONF_DEFAULT_FILE,
         msg="CONF_DEFAULT_FILE expected, got '{f}'".format(f=config.get_config_file_name()))

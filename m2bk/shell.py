@@ -15,21 +15,17 @@ import envoy  # envoy is awesome for this job
 from . import utils, log
 
 
-def run(cmd, **kwargs):
+def run(cmd, *, args='', timeout=600):
     """
     Execute a process
 
-    :param cmd: name of the executable
-    :param \*\*kwargs: arbitrary keyword arguments
+    :param cmd(str): name of the executable
+    :param args(str, optional): arbitrary arguments
+    :param timeout(int, optional): Execution timeout
     :raises OSError: if the execution of cmd fails
     """
 
-    # command arguments
-    args = kwargs.get('args', '')
-    # execution timeout
-    timeout = kwargs.get('timeout', 600)
-
-    # tyoe checks
+    # type checks
     utils.chkstr(cmd, 'cmd')
     utils.chkstr(args, 'args')
 
@@ -42,5 +38,3 @@ def run(cmd, **kwargs):
     if r.status_code:
         log.msg_err("{cmd} > {stderr}".format(cmd=cmd, stderr=r.std_err.strip()))
         raise OSError("[{cmd}] execution failed!".format(cmd=cmd))
-
-
