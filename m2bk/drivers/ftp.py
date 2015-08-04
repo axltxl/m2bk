@@ -127,6 +127,6 @@ def backup_file(*, file, host):
             _ftp.storbinary(store_cmd, f)
 
     # Log the thing
-    log.msg("The file has been properly stored at: " +
+    log.msg("The file has been properly stored at: " \
             "ftp://{host}:{port}{pwd}{dir}"
             .format(host=_ftp_host, port=_ftp_port, pwd=_ftp_pwd, dir=host))
