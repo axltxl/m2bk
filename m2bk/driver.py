@@ -53,7 +53,7 @@ def load(*, name="dummy", options={}, dry_run=False, **kwargs):
                                           .format(name=name), __package__)
         if _driver:
             _driver.load(dry_run=dry_run, **options)
-            log.msg_debug("Backup driver '{driver}'" +
+            log.msg_debug("Backup driver '{driver}'" \
                           " has been loaded successfully!"
                           .format(driver=_driver.get_name()))
     else:
