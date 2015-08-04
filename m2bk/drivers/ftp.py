@@ -107,7 +107,7 @@ def backup_file(*, file, host):
         try:
             _ftp.cwd(host)
         except ftplib.error_perm:
-            log.msg_warn("Destination directory at '/{pwd}{dir}'"
+            log.msg_warn("Destination directory at '{pwd}{dir}'"
                          .format(pwd=_ftp_pwd, dir=host) +
                          " does not exist. I will proceed to create it.")
 
@@ -128,5 +128,5 @@ def backup_file(*, file, host):
 
     # Log the thing
     log.msg("The file has been properly stored at: " +
-            "ftp://{host}:{port}/{pwd}/{dir}"
+            "ftp://{host}:{port}{pwd}{dir}"
             .format(host=_ftp_host, port=_ftp_port, pwd=_ftp_pwd, dir=host))
