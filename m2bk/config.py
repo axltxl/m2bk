@@ -11,7 +11,13 @@ Configuration dictionary via a YAML file
 
 """
 
+from .const import PKG_NAME
 import yaml
+
+#
+# Constants
+#
+CONF_DEFAULT_FILE = "/etc/{pkg_name}.yaml".format(pkg_name=PKG_NAME)
 
 # Base configuration object
 _config = {}
@@ -99,7 +105,7 @@ def _list_merge(src, dest):
             # ---
             # src could have a key whose value is a list
             # and does not yet exist on dest
-            if not k in dest:
+            if k not in dest:
                 dest[k] = {}
             _list_merge(src[k], dest[k])
 
@@ -120,4 +126,3 @@ def set_from_file(file_name):
         data = yaml.load(file)
     # each value found will overwrite the same value in the config
     _list_merge(data, _config)
-

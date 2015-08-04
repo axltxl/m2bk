@@ -16,13 +16,13 @@ import sys
 import traceback
 import argparse
 import signal
-from m2bk import config, log, mongo, s3, fs
+from m2bk import config, log, mongo, fs
 from m2bk import __version__ as version
 from m2bk.const import (
-    LOG_LVL_DEFAULT,
-    PKG_NAME, PKG_URL,
-    CONF_DEFAULT_FILE
+    PKG_NAME, PKG_URL
 )
+from m2bk import driver
+from m2bk.utils import debug
 
 # command line options and flags
 _opt = {}
@@ -42,26 +42,32 @@ def init_parsecmdline(argv=[]):
 
     # -c, --config <file_name>
     parser.add_argument("-c", "--config",
-                  action="store",
-                  dest="config_file", default=CONF_DEFAULT_FILE,
-                  help="specify configuration file to use")
+                        action="store",
+                        dest="config_file", default=config.CONF_DEFAULT_FILE,
+                        help="specify configuration file to use")
 
     # --dry-run
     parser.add_argument("-d", "--dry-run",
-                   action="store_true",  dest="dry_run", default=False,
-                   help="don't actually do anything")
+                        action="store_true",  dest="dry_run", default=False,
+                        help="don't actually do anything")
 
-    # --log-to-stdout
-    parser.add_argument("-s", "--stdout",
-                   action="store_true",  dest="log_to_stdout", default=False,
-                   help="log also to stdout")
+    # --quiet
+    parser.add_argument("-q", "--quiet",
+                        action="store_true",  dest="log_quiet", default=False,
+                        help="quiet output")
 
     # --ll <level>
     # logging level
     parser.add_argument("--ll", "--log-level",
-                  action="store", type=int,
-                  dest="log_lvl", default=LOG_LVL_DEFAULT,
-                  help="set logging level")
+                        action="store", type=int,
+                        dest="log_lvl", default=log.LOG_LVL_DEFAULT,
+                        help="set logging level")
+
+    # -l, --log-file
+    parser.add_argument("-l", "--log-file",
+                        action="store",
+                        dest="log_file", default=log.LOG_FILE_DEFAULT,
+                        help="set log file")
 
     # Absorb the options
     options = parser.parse_args(argv)
@@ -69,15 +75,15 @@ def init_parsecmdline(argv=[]):
     # Set whether we are going to perform a dry run
     global _opt
     _opt["dry_run"] = options.dry_run
-    _opt["log_to_stdout"] = options.log_to_stdout
-    _opt["log_lvl"] = options.log_lvl
 
     # Initiate the log level
-    log.init(_opt['log_lvl'], _opt["log_to_stdout"])
+    log.init(threshold_lvl=options.log_lvl,
+             quiet_stdout=options.log_quiet, log_file=options.log_file)
 
-    # Mark the start of executions
-    log.msg("{pkg} [{version}] - {url}".format(pkg=PKG_NAME, version=version, url=PKG_URL))
-    log.msg('***************************************')
+    #
+    # Print the splash
+    #
+    _splash()
 
     # Merge configuration with a JSON file
     config_file = os.path.abspath(options.config_file)
@@ -90,6 +96,14 @@ def init_parsecmdline(argv=[]):
                                 .format(config_file=config_file))
 
 
+def _splash():
+    """Print the splash"""
+    splash_title = "{pkg} [{version}] - {url}".format(pkg=PKG_NAME,
+                                                      version=version, url=PKG_URL)
+    log.to_stdout(splash_title, colorf=log.yellow, bold=True)
+    log.to_stdout('-' * len(splash_title), colorf=log.yellow, bold=True)
+
+
 def init(argv):
     """
     Bootstrap the whole thing
@@ -98,10 +112,10 @@ def init(argv):
     """
     # Setting initial configuration values
     config.set_default({
+        # driver section
+        "driver": {},
         # fs section
         "fs": {},
-        # Amazon Web Services section
-        "aws": {},
         # MongoDB section
         "mongodb": {},
     })
@@ -110,7 +124,7 @@ def init(argv):
     init_parsecmdline(argv[1:])
 
     # Initiatize the output directory
-    fs.init(**config.get_entry('fs'))
+    fs.init(dry_run=_opt["dry_run"], **config.get_entry('fs'))
 
     # This baby will handle UNIX signals
     signal.signal(signal.SIGINT,  _handle_signal)
@@ -121,15 +135,18 @@ def _handle_signal(signum, frame):
     """
     UNIX signal handler
     """
-    shutdown()
+    # Raise a SystemExit exception
+    sys.exit(1)
 
 
 def shutdown():
     """
     Cleanup
     """
+    # TODO: driver.abort()
+    driver.dispose()
     fs.cleanup()
-    log.msg("Exiting...")
+    log.msg("Exiting ...")
 
 
 def _handle_except(e):
@@ -149,18 +166,22 @@ def _handle_except(e):
     return 1
 
 
-def make_backup_files(mongodb, aws):
+def make_backup_files():
 
     #  dry run
     dry_run = _opt["dry_run"]
 
+    # Load the driver before attempting anything
+    driver.load(dry_run=dry_run, **config.get_entry('driver'))
+
     # Generate a backup file from mongodump
     # This file should be compressed as a gzipped tarball
-    mongodump_files = mongo.make_backup_files(dry_run=dry_run, **mongodb)
+    mongodump_files = mongo.make_backup_files(dry_run=dry_run,
+                                              **config.get_entry('mongodb'))
 
-    # Upload the resulting file to AWS
-    for key_name, file_name in mongodump_files.items():
-        s3.upload_file(file_name, key_name, dry_run=dry_run, **aws)
+    # Transfer the backup using a driver
+    for host_name, file_name in mongodump_files.items():
+        driver.backup_file(file=file_name, host=host_name)
 
 
 def main(argv=None):
@@ -182,14 +203,15 @@ def main(argv=None):
         # Bootstrap
         init(argv)
 
-        #
-        make_backup_files(config.get_entry('mongodb'), config.get_entry('aws'))
+        # Perform the actual backup job
+        make_backup_files()
 
     except Exception as e:
         # ... and if everything else fails
         _handle_except(e)
         exit_code = 1
     finally:
+        # All cleanup actions are taken from here
         shutdown()
         return exit_code
 
@@ -200,6 +222,3 @@ def main(argv=None):
 # exit status.
 if __name__ == '__main__':
     sys.exit(main())
-
-
-

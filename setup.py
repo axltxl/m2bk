@@ -49,12 +49,13 @@ setup(
     download_url="{url}/tarball/{version}".format(url=PKG_URL, version=pkg_ver),
     keywords=['mongodb', 'aws', 'backup', 's3'],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Environment :: Console	',
         'Topic :: Database',
         'Natural Language :: English',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.3',
     ],
@@ -64,9 +65,10 @@ setup(
         ],
     },
     install_requires = [
-        'boto  == 2.34.0',
+        'boto  == 2.38.0',
         'envoy >= 0.0.3',
         'pyyaml >= 3.11',
+        'clint >= 0.4.1'
     ],
     tests_require = ['nose >= 1.3'],
     test_suite="nose.collector",

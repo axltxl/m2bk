@@ -1,16 +1,21 @@
 m2bk
 ====
-
 .. image:: https://travis-ci.org/axltxl/m2bk.svg?branch=develop
+   :target: https://travis-ci.org/axltxl/m2bk
+.. image:: https://badge.fury.io/py/m2bk.svg
+   :target: http://badge.fury.io/py/m2bk
+.. image:: https://img.shields.io/gratipay/axltxl.svg
+   :target: https://gratipay.com/axltxl
 
 Send your mongodump backups straight to AWS S3
 ----------------------------------------------
 
 *m2bk* is command line tool that performs a number of
 **mongodb database backups via mongodump**, compresses them into a
-gzipped tarball and finally sends them to an **AWS S3 bucket**.
+gzipped tarball and finally sends them to an **AWS S3 bucket**
+(more options are about to be available).
 
-.. image:: http://i.imgur.com/7uiVOSI.gif
+.. image:: http://i.imgur.com/PxqbEPA.gif
 
 -  `Requirements <#requirements>`_
 -  `Contributing <#contributing>`_
@@ -27,7 +32,12 @@ gzipped tarball and finally sends them to an **AWS S3 bucket**.
          -  `mongodb.host_defaults section <#mongodbhost_defaults-section>`_
          -  `mongodb.hosts section <#mongodbhosts-section>`_
 
-      -  `aws section <#aws-section>`_
+      -  `Drivers (driver section) <#drivers-driver-section>`_
+
+         - `dummy <#dummy>`_
+         - `s3 <#s3>`_
+
+-  `Donating <#donating>`_
 -  `Copyright and licensing <#copyright-and-licensing>`_
 
 Requirements
@@ -38,6 +48,7 @@ Requirements
 -  `envoy <https://pypi.python.org/pypi/envoy>`_ >= 0.0.3
 -  `pyyaml <http://pyyaml.org>`_ >= 3.11
 -  `mongodb <http://www.mongodb.org>`_ >= 2.4
+-  `clint <https://github.com/kennethreitz/clint>`_ >= 0.4.1
 
 
 Contributing
@@ -83,7 +94,7 @@ the most recent changes from "upstream" before making a pull request.
 3. Make your changes, then make sure the tests passes
 ::
 
-  virtualenv pyve && source pyve/bin/activate
+  pyvenv m2bk-pyve && source m2bk-pyve/bin/activate
   python3 setup.py test
 
 4. Commit your changes once done
@@ -132,10 +143,10 @@ Normal execution
 
   $ m2bk
 
-Display output on stdout
+Quiet output
 ::
 
-  $ m2bk -s
+  $ m2bk -q
 
 Dry run
 ::
@@ -159,8 +170,9 @@ Options
 -  ``-h | --help`` show a help message and exit
 -  ``-c [file] | --config=[file] | --config [file]`` specify configuration file to use
 -  ``-d | --dry-run`` don't actually do anything
--  ``-s | --stdout`` log messages to stdout too
+-  ``-q | --quiet`` quiet output
 -  ``--ll | --log-level=[num]`` set logging output level
+-  ``-l LOG_FILE | --log-file LOG_FILE set log file``
 
 Configuration file
 ------------------
@@ -178,9 +190,11 @@ The following is an example of what a configuration file looks like:
 ::
 
   ---
-  aws:
-    aws_id: "SDF73HSDF3663KSKDJ"
-    aws_access_key: "d577273ff885c3f84dadb8578bb41399"
+  driver:
+    name: s3
+    options:
+      aws_access_key_id: "SDF73HSDF3663KSKDJ"
+      aws_secret_access_key: "d577273ff885c3f84dadb8578bb41399"
   fs:
     output_dir: "/opt/tmp/mydir"
   mongodb:
@@ -254,7 +268,7 @@ to connect to, including databases that are going to be backed up through *mongo
                 password: "myS3cr37P455w0rd"
                 dbs:
                   # This list is going to be merged with dbs at host_defaults, thus
-                  # the resulting dbs will be: 
+                  # the resulting dbs will be:
                   # ['halloran', 'grady', 'jack', 'wendy', 'danny']
                   - jack
                   - wendy
@@ -351,48 +365,94 @@ Directives
 
 **NOTE: particular "dbs" on one host will be merged with those of "host_defaults"**
 
-``aws`` section
-^^^^^^^^^^^^^^^
+Drivers (``driver`` section)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This sections holds directives regarding AWS credentials that **m2bk**
+Once backup files have been generated, they are then handled by a driver, whose
+job is to transfer resulting backup files to some form of storage (depending
+on the driver set on configuration). Drivers (and their options) are
+set and configured inside the ``driver`` section like so:
+
+::
+
+    driver:
+        # First of all, you need to tell m2bk which driver to use
+        name: dummy
+
+        # Inside this key, driver options are set
+        options:
+          hello: world
+          another_option: another_value
+
+Per driver, there are a bunch of available ``options`` to tweak them.
+These options vary among drivers. Though there is only one driver available on
+m2bk, there will be more drivers available with new releases. Current available
+drivers are the following:
+
+``dummy``
+^^^^^^^^^
+
+This driver is just a placeholder for testing out the driver interface as
+it won't do a thing on backup files.
+
+Options
+^^^^^^^
+
+There are no options for this driver. Any option passed to this driver
+will be logged at debug level.
+
+``s3``
+^^^^^^
+
+This driver holds directives regarding AWS credentials that **m2bk**
 is going to use in order to upload the *mongodump* backups to S3.
+If either ``aws_access_key_id`` or ``aws_secret_access_key`` are not specified,
+this driver will not try to use them to authenticate against AWS and will rely
+on `boto config <http://boto.readthedocs.org/en/latest/boto_config_tut.html>`_ for that matter.
 
 **Example**:
 ::
 
-    aws:
-        aws_id": "HAS6NBASD8787SD"
-        aws_access_key: "d41d8cd98f00b204e9800998ecf8427e"
-        s3_bucket: "mybucket"
+    driver:
+        name: s3
+        options:
+            aws_access_key_id": "HAS6NBASD8787SD"
+            aws_secret_access_key: "d41d8cd98f00b204e9800998ecf8427e"
+            s3_bucket: "mybucket"
 
-Directives
-^^^^^^^^^^
+Options
+^^^^^^^
 
-aws.aws_id
-""""""""""
-
--  Type: **string**
--  Required: NO
--  Default value : ``""``
--  Role: AWS access key ID
-
-
-``aws.aws_access_key``
-""""""""""""""""""""""
+``aws_access_key_id``
+"""""""""""""""""""""
 
 -  Type: **string**
 -  Required: NO
--  Default value : ``""``
 -  Role: AWS access key ID
 
-``aws.s3_bucket``
-"""""""""""""""""
+
+``aws_secret_access_key``
+"""""""""""""""""""""""""
+
+-  Type: **string**
+-  Required: NO
+-  Role: AWS access key ID
+
+``s3_bucket``
+"""""""""""""
 
 -  Type: **string**
 -  Required: NO
 -  Default value: ``m2bk``
 -  Role: name of the main S3 bucket where m2bk is going to upload the compressed backups for each mongodb server specified in ``mongodb`` section
 
+Donating
+========
+
+Show your love and support this project via `gratipay <https://gratipay.com/axltxl>`_
+
+.. image:: https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.png
+   :target: https://gratipay.com/axltxl
 
 Copyright and Licensing
 =======================
