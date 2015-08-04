@@ -14,7 +14,7 @@ FTP driver
 import os
 import ftplib
 from ftplib import FTP
-from .. import log
+from .. import log, utils
 from ..const import PKG_NAME
 
 #
@@ -54,7 +54,22 @@ def load(*,
     _ftp_port = port
     _ftp_user = str(user_name)
     _ftp_pass = str(password)
-    _ftp_pwd = pwd
+
+    # Type checks
+    utils.chkstr(_ftp_host, 'host')
+    utils.chkstr(_ftp_user, 'user_name')
+    utils.chkstr(_ftp_pass, 'password')
+    utils.chkstr(pwd, 'pwd')
+
+    # Set initial PWD
+    _ftp_pwd = os.path.join('/', pwd)
+
+    # Check port
+    if type(port) != int:
+        raise TypeError('port must be int')
+    # check valid range in port
+    if port < 1 or port > 65535:
+        raise ValueError('port must be between 1 and 65535')
 
     # Log the thing prior to actual connection to FTP server
     log.msg("Attempting connection to ftp://{user}@{host}:{port}"
@@ -68,7 +83,8 @@ def load(*,
         _ftp.connect(host=_ftp_host, port=_ftp_port)
     log.msg("Connection to FTP server successful!")
 
-    log.msg("Logging in ...")
+    # Log in
+    log.msg("Logging in as '{usr}' ...".format(usr=user_name))
     if not _dry_run:
         _ftp.login(user=_ftp_user, passwd=_ftp_pass)
     log.msg("Authentication against FTP server successful!")
@@ -98,21 +114,20 @@ def backup_file(*, file, host):
     :param host: Corresponding host name associated with file
     """
 
-    if not _dry_run:
-        # Change PWD to the one set by user
-        _ftp.cwd(_ftp_pwd)
+    # Final destination directory
+    dest_path = os.path.join(_ftp_pwd, host)
 
+    if not _dry_run:
         # Move to the directory with name 'host' where the file
         # is going to  be stored at
         try:
-            _ftp.cwd(host)
+            _ftp.cwd(dest_path)
         except ftplib.error_perm:
-            log.msg_warn("Destination directory at '{pwd}{dir}'"
-                         .format(pwd=_ftp_pwd, dir=host) +
-                         " does not exist. I will proceed to create it.")
-
-            _ftp.mkd(host)  # Create new directory
-            _ftp.cwd(host)  # Move to the new directory
+            log.msg_warn("Destination directory at '{dst}'" \
+                         " does not exist. I will proceed to create it."
+                         .format(dst=dest_path))
+            _ftp.mkd(dest_path)  # Create new directory
+            _ftp.cwd(dest_path)  # Move to the new directory
 
     # The actual STOR command to be sent to the FTP server
     store_cmd = "STOR {file}".format(file=os.path.basename(file))
