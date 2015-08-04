@@ -215,7 +215,7 @@ def _mongodump_exec(mongodump, address, port, user, passwd, db,
     """
 
     # Log the call
-    log.msg("mongodump [{mongodump}] db={db} auth_db={auth_db}" +
+    log.msg("mongodump [{mongodump}] db={db} auth_db={auth_db}" \
             " mongodb://{user}@{host}:{port} > {output}"
             .format(mongodump=mongodump, user=user, host=address,
                     port=port, db=db, auth_db=auth_db, output=out_dir))
