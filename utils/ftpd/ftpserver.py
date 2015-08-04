@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # ftpserver.py
+
+#
 # Call this script with:
 # sudo python ftpserver-cli.py --directory=/tmp/srvtest
+#
 
 import sys
-sys.path.append("/path/to/pyftpdlib-svn") # enter your proper path here
 import argparse
 import os
 
@@ -21,20 +23,19 @@ def processCmdLineOptions():
   optparser.add_argument('-p', '--password', action='store', type=str,
       default="12345", help="password")
   optparser.add_argument('-t', '--port', action='store', type=int,
-      default="21", help="port")
-  optparser.add_argument('-d', '--directory', action='store', type=str,
-      default=os.path.join(os.path.dirname(os.path.realpath(__file__)), "user"), help="port")
+      default="2121", help="port")
   optargs = optparser.parse_args(sys.argv[1:]) #(sys.argv)
   return optargs
 
 
+ftp_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "user")
 optargs = processCmdLineOptions()
 
-print("Using: user: %s pass: %s port: %d dir: %s" % (optargs.username, optargs.password, optargs.port, optargs.directory))
+print("Using: user: %s pass: %s port: %d dir: %s" % (optargs.username, optargs.password, optargs.port, ftp_dir))
 
 authorizer = DummyAuthorizer()
-authorizer.add_user(optargs.username, optargs.password, optargs.directory, perm="elradfmw")
-#authorizer.add_anonymous("/home/nobody")
+authorizer.add_user(optargs.username, optargs.password, ftp_dir, perm="elradfmw")
+authorizer.add_anonymous(os.path.dirname(os.path.realpath(__file__)))
 
 handler = FTPHandler
 handler.authorizer = authorizer

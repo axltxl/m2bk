@@ -1,0 +1,19 @@
+---
+driver:
+  name: ftp
+  options:
+    host: localhost
+    port: 2121
+    user_name: user
+    password: 12345
+
+mongodb:
+  mongodump: /opt/mongodb-linux-x86_64-ubuntu1404-3.0.5/bin/mongodump
+  host_defaults:
+    user_name: test
+    dbs:
+      - test
+  hosts:
+    test:
+      address: localhost
+      password: test
